@@ -5,6 +5,21 @@ tagline: Supporting tagline
 ---
 {% include JB/setup %}
 
+Das ist [http://www.jalg.net](ein Link). Und text und so.
+
+Und hier kommt code
+
+
+    aaaaaa
+    bbbbbb
+
+    cccccc
+    dddddd
+
+
+
+XXXXXXXXXXXXXXX
+
 {% for post in site.posts %}
 <h2>{{ post.title }}</h2>
   <div class="post">
