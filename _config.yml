@@ -8,7 +8,7 @@ pygments: true
 # Themes are encouraged to use these universal variables 
 # so be sure to set them if your theme uses them.
 #
-title : Jekyll Bootstrap
+title : Applying the Web To Enterprise IT
 tagline: Site Tagline
 author :
   name : Jan Algermissen
