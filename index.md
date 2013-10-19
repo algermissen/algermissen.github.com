@@ -1,7 +1,6 @@
 ---
-layout: page
-title: Hello World!
-tagline: Supporting tagline
+layout: default
+title: Applying the Web To Enterprise IT
 ---
 {% include JB/setup %}
 
