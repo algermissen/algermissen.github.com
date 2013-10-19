@@ -1,0 +1,14 @@
+---
+author: algermissen
+comments: false
+date: 2012-10-08 21:01:32+00:00
+layout: post
+slug: jax-rs-2-0-mvc
+title: JAX-RS 2.0 MVC
+wordpress_id: 185
+categories:
+- JavaEE6
+- JAX-RS 2.0
+- Jersey 2
+---
+

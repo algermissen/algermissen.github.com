@@ -6,6 +6,9 @@ tagline: Supporting tagline
 {% include JB/setup %}
 
 
+Das ist [Hi you](http://www.jalg.net). Und text und so.
+
+
 Und hier kommt code
 
 
@@ -15,6 +18,15 @@ Und hier kommt code
     cccccc
     dddddd
 
+
+
+XXXXXXXXXXXXXXX
+
+
+----
+wdwdwdwdwd
+wdwdwdwd
+----
 
 
 XXXXXXXXXXXXXXX
