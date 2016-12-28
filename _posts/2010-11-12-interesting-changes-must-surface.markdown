@@ -22,5 +22,5 @@ Now I can joyfully continue working on my RPC criticism: since changes must surf
 
 REST is the only style that requires changes to surface in a way that is guaranteed not to break clients, because REST is rather specific about what can change in which ways. Except for add-on changes (that are not a problem for existing clients) all surfacing changes to a REST server component are bound by the possibilities to vary representations (you may change as long as you do stick to rules of the media type used)
 
-In RPC-based architectures, change is, you guessed it :-), not constrained at all and might surface in a million ways. Welcome to change impact analysis hell.
+In RPC-based architectures, change is (you guessed it :-) not constrained at all and might surface in a million ways. Welcome to change impact analysis hell.
 
