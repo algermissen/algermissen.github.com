@@ -1,0 +1,273 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Declarative Cache Control with JAX-RS 2.0</title>
+    
+    <meta name="author" content="Jan Algermissen">
+
+    <!-- Enable responsive viewport -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/themes/twitter/bootstrap/css/bootstrap.2.2.2.min.css" rel="stylesheet">
+    <link href="/assets/themes/twitter/css/style.css?body=1" rel="stylesheet" type="text/css" media="all">
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+
+    <!-- atom & rss feed -->
+    <link href="/atom.xml" type="application/atom+xml" rel="alternate" title="Sitewide ATOM Feed">
+    <link href="/rss.xml" type="application/rss+xml" rel="alternate" title="Sitewide RSS Feed">
+
+  </head>
+
+  <body>
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container-narrow">
+          <a class="brand" href="/">Applying the Web To Enterprise IT</a>
+          <ul class="nav">
+            
+            
+            
+
+
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/archive.html">Archive</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/categories.html">Categories</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/pages.html">Pages</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/tags.html">Tags</a></li>
+      	
+      
+    
+  
+
+
+
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-narrow">
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>Declarative Cache Control with JAX-RS 2.0 </h1>
+</div>
+
+<div class="row-fluid post-full">
+  <div class="span12">
+    <div class="date">
+      <span>24 September 2012</span>
+    </div>
+    <div class="content">
+      <p><strong>UPDATE</strong>: The Maven/IDE setup below turned out not to work properly in all cases. Try <a href="http://jalg.net/2012/11/getting-started-playing-around-with-jax-rs-2-0-in-an-ee-container/">this</a> for better results.</p>
+
+<p>The final release of JAX-RS 2.0 is nearing. Time for a closer look at the new features.</p>
+
+<p>As JAX-RS 2.0 isn’t yet part of any standard release, some up front work is inevitable. Fortunately, <a href="http://marek.potociar.net">Marek</a> has some <a href="http://marek.potociar.net/2012/08/10/jersey-2-0-m06-has-been-released/">excellent write ups</a> to get us started using the <a href="http://jax-rs-spec.java.net">JAX-RS</a> 2.0 reference implementation <a href="http://jersey.java.net/jersey20.html">Jersey 2</a>.</p>
+
+<p>I am currently working with Eclipse a lot and here is how you quick-start a JAX-RS 2.0 project with Jersey 2:</p>
+
+<p>In Eclipse, choose New -&gt; Other -&gt; Maven Project and create an archetype-based project. For this you first need to add the archetype Marek is mentioning in his post (I am using the Grizzly version here):</p>
+
+<p>[caption id=”attachment_132” align=”alignnone” width=”614”]<a href="http://jalg.net/wp-content/uploads/2012/09/jersey2archetype.png"><img src="http://jalg.net/wp-content/uploads/2012/09/jersey2archetype.png" alt="" /></a>[/caption]</p>
+
+<p>Then, create a project with that archetype:</p>
+
+<p>[caption id=”attachment_135” align=”alignnone” width=”598”]<a href="http://jalg.net/wp-content/uploads/2012/09/selectArchetype.png"><img src="http://jalg.net/wp-content/uploads/2012/09/selectArchetype.png" alt="" /></a>[/caption]</p>
+
+<p>Now you are all set and ready to explore JAX-RS 2.0.</p>
+
+<p>Making JAX-RS responses cacheable isn’t exactly elegant in 1.1. If you want caching, you need to return a Response object and manually add Cache-Control headers to it. Far from ideal. (And it gets even uglier if you try to unit test your resource classes just to find out that you cannot do so if you return Response objects because the idiomatic invocation of build() demands a JAX-RS runtime).</p>
+
+<p>What, if we instead could annotate a resource method to decorate the response with a Cache-Control header? Turns out, that this is straight forward in JAX-RS 2.0 thanks to the new Filter API.</p>
+
+<p>All we need is a filter and an annotation to selectively bind that filter to any resource method of our liking. Here is the annotation which takes a Cache-Control header value as an argument:</p>
+
+<pre><code>&lt;code&gt;
+package net.jalg.ccdecor;
+import java.lang.annotation.*;
+import javax.ws.rs.NameBinding;
+
+@NameBinding
+@Target({ ElementType.TYPE, ElementType.METHOD })
+@Retention(value = RetentionPolicy.RUNTIME)
+public @interface Cacheable {
+  String cc() default "public, must-revalidate"; 
+}
+&lt;/code&gt;
+</code></pre>
+
+<p>The new @NameBinding annotation tells a JAX-RS 2.0 runtime that our annotation should be used to match filters to resource methods.</p>
+
+<p>Here is the filter:</p>
+
+<pre><code>&lt;code&gt;
+package net.jalg.ccdecor;
+
+import java.io.IOException;
+import java.lang.annotation.Annotation;
+
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.container.ContainerResponseContext;
+import javax.ws.rs.container.ContainerResponseFilter;
+import javax.ws.rs.ext.Provider;
+
+@Provider
+@Cacheable
+public class CacheControlDecorator implements ContainerResponseFilter {
+
+  @Override
+  public void filter(ContainerRequestContext requestContext,
+        ContainerResponseContext responseContext) throws IOException {
+    for (Annotation a : responseContext.getEntityAnnotations()) {
+      if (a.annotationType() == Cacheable.class) {
+        String cc = ((Cacheable) a).cc();
+        responseContext.getHeaders().add("Cache-Control", cc);
+      }
+    }
+  }
+}
+&lt;/code&gt;
+</code></pre>
+
+<p>Don’t worry too much about that code for a minute but look at how the filter can be bound to a resource method:</p>
+
+<pre><code>&lt;code&gt;
+  @GET
+  @Cacheable(cc="public, maxAge=3600")
+  @Produces(MediaType.TEXT_PLAIN)
+  public String getIt() {
+    return "Got it!";
+  }
+&lt;/code&gt;
+</code></pre>
+
+<p>The binding is achieved using our @Cacheable annotation.</p>
+
+<p>Using annotation arguments it is possible to pass usage information to the filter. The annotations of the resource method are available in the filter by way of the getEntityAnnotations() method of the passed ContainerResponseContext argument (see above).</p>
+
+<p>We just need to extract the cache control information from the annotation and add the Cache-Control header to the response.</p>
+
+<p>You can download the example project from <a href="https://github.com/algermissen/cache-control-decorator">github</a>.</p>
+
+
+    </div>
+
+  
+    <ul class="tag_box inline">
+      <li><i class="icon-folder-open"></i></li>
+      
+      
+
+
+  
+     
+    	<li><a href="/categories.html#jax-rs 2.0-ref">
+    		jax-rs 2.0 <span>4</span>
+    	</a></li>
+     
+    	<li><a href="/categories.html#jersey 2-ref">
+    		jersey 2 <span>2</span>
+    	</a></li>
+    
+  
+
+
+    </ul>
+    
+
+    
+
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2012/05/death-by-jboss-6-classloading" title="Death by JBoss 6 Classloading">&larr; Previous</a></li>
+      
+        <li><a href="/archive.html">Archive</a></li>
+      
+        <li class="next"><a href="/2012/10/jax-rs-2-0-mvc" title="JAX-RS 2.0 MVC">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+  </div>
+</div>
+
+
+      </div>
+      <hr>
+      <footer>
+        <p>&copy; 2016 Jan Algermissen
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+        </p>
+      </footer>
+
+    </div>
+
+    
+  </body>
+</html>
+

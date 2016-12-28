@@ -1,0 +1,971 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+ 
+ <title>Applying the Web To Enterprise IT</title>
+ <link href="http://algermissen.github.io/" rel="self"/>
+ <link href="http://algermissen.github.io"/>
+ <updated>2016-12-28T21:04:19+01:00</updated>
+ <id>http://algermissen.github.io</id>
+ <author>
+   <name>Jan Algermissen</name>
+   <email>algermissen@acm.org</email>
+ </author>
+
+ 
+ <entry>
+   <title>Using iron to Encapsulate Cookies</title>
+   <link href="http://algermissen.github.io/2013/05/using-iron-to-encapsulate-cookies"/>
+   <updated>2013-05-29T23:57:30+02:00</updated>
+   <id>http://algermissen.github.io/2013/05/using-iron-to-encapsulate-cookies</id>
+   <content type="html">&lt;p&gt;&lt;a href=&quot;http://hueniverse.com&quot;&gt;Eran Hammer&lt;/a&gt; has recently created &lt;a href=&quot;https://github.com/hueniverse/iron&quot;&gt;iron&lt;/a&gt;, a cryptographic procedure and tool to seal arbitrary data in a way so that it cannot be read and also cannot be changed without being noticed.&lt;/p&gt;
+
+&lt;p&gt;Besides its intended use in combination with &lt;a href=&quot;https://github.com/hueniverse/oz&quot;&gt;Oz&lt;/a&gt; it can also be used in other scenarios. One of them being encapsulated HTTP cookies. While it is in no way a new thing to pass state to Web clients in encrypted form so they cannot read it or tamper with it, doing it right is relatively hard. Hence, it is great to now have a quasi-standard and sound &lt;a href=&quot;https://github.com/hueniverse/iron#introduction&quot;&gt;definition&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Update&lt;/strong&gt;: Looking something up in &lt;a href=&quot;https://twitter.com/postwait&quot;&gt;Theo Schlossnagle&lt;/a&gt;’s &lt;a href=&quot;http://omniti.com/writes/scalable-internet-architectures&quot;&gt;&lt;em&gt;Building Scalable Internet Architectures&lt;/em&gt;&lt;/a&gt; I found a passage &lt;em&gt;Addressing Security and Integrity&lt;/em&gt; in chapter 7, p.130 that resembles the topic of this post.&lt;/p&gt;
+
+&lt;p&gt;To bring iron into the Java world, I have created &lt;a href=&quot;https://github.com/algermissen/jiron&quot;&gt;jiron&lt;/a&gt; and an &lt;a href=&quot;https://github.com/algermissen/iron-cookie&quot;&gt;example project&lt;/a&gt; to illustrate how to use iron for HTTP cookie authentication with encapsulated tokens.&lt;/p&gt;
+
+&lt;p&gt;First, let’s see, how to use jiron to seal and unseal data:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;import net.jalg.jiron.Jiron;
+
+String data = &quot;Some secret stuff we want protected&quot;;
+
+String sealed = Jiron.seal(data, &quot;sealing-password&quot;,
+                                        Jiron.DEFAULT_ENCRYPTION_OPTIONS,
+                                        Jiron.DEFAULT_INTEGRITY_OPTIONS);
+   
+String unsealed = Jiron.unseal(sealed, &quot;sealing-password&quot;,
+					Jiron.DEFAULT_ENCRYPTION_OPTIONS,
+					Jiron.DEFAULT_INTEGRITY_OPTIONS);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The String &lt;code&gt;sealed&lt;/code&gt; is what you can pass around and be sure that nobody can read or modify it, unless in possession of the sealing password.&lt;/p&gt;
+
+&lt;p&gt;Suppose you have a Web site that employs cookie-based authentication and suppose you have some data you want to store in that cookie directly so you do not have to go to a database shared by all server instances for looking up that data. For example the user’s login, her real name and information when the cookie expires and re-authentication is enforced.&lt;/p&gt;
+
+&lt;p&gt;Initially, a user not in possession of the cookie will be redirected to a login form and the cookie will be issued upon submission of valid credentials. Here is an excerpt of the &lt;a href=&quot;https://github.com/algermissen/iron-cookie/blob/master/src/main/java/net/jalg/ironcookie/LoginResource.java&quot;&gt;form processing JAX-RS resource&lt;/a&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;String data = login + &quot;|&quot; + expires + &quot;|&quot; + realname;
+String cookieValue = Jiron.seal(data, ApplicationConfig.ENCRYPTION_KEY,
+					Jiron.DEFAULT_ENCRYPTION_OPTIONS,
+					Jiron.DEFAULT_INTEGRITY_OPTIONS);
+
+NewCookie c = new NewCookie(AuthFilter.COOKIE_NAME, cookieValue);
+return Response.seeOther(redirectUri).cookie(c).build();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In the HTTP response the cookie will look something like (line breaks added for clarity):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Set-Cookie:authtoken=Fe26.1**7A6A689DEC9563773B1264CF4CC585CFC9CF84403EE9143650D2EC2EE&amp;lt;br&amp;gt;&amp;lt;/br&amp;gt;24E36A3*k9yW1ZlC5Tr1a5o2Os_QMQ*sxZkQJfHsfyZE_0DI3ugHKdQ3IXwy1jySoz7GrKiTWU*9C58B956A11&amp;lt;br&amp;gt;&amp;lt;/br&amp;gt;81D1F1E3A1A7A1B67D2CF7738B0BFB16C5EB4B381151CAEEC4C6C*3PxSsg5aThLGvU2e8ItXfep-hpMw5x96&amp;lt;br&amp;gt;&amp;lt;/br&amp;gt;L_PbelhnU84;Version=1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To protect &lt;a href=&quot;https://github.com/algermissen/iron-cookie/blob/master/src/main/java/net/jalg/ironcookie/DashboardResource.java&quot;&gt;a resource class&lt;/a&gt; by enforcing cookie auth, we bind a JAX-RS 2.0 filter to that class using a new &lt;a href=&quot;https://github.com/algermissen/iron-cookie/blob/master/src/main/java/net/jalg/ironcookie/TokenAuthProtected.java&quot;&gt;annotation&lt;/a&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;//...
+@TokenAuthProtected
+public String getDashboard(@Context SecurityContext sc) { ... }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The &lt;a href=&quot;https://github.com/algermissen/iron-cookie/blob/master/src/main/java/net/jalg/ironcookie/AuthFilter.java&quot;&gt;auth enforcing filter class&lt;/a&gt; extracts the cookie, checks expiration time and puts the data contained in the cookie in a place where it can be accessed by the resource class.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Cookie cookie = context.getCookies().get(COOKIE_NAME);
+// Redirect to form if no cookie
+String data = Jiron.unseal(cookie.getValue(), ApplicationConfig.ENCRYPTION_KEY,
+					Jiron.DEFAULT_ENCRYPTION_OPTIONS,
+					Jiron.DEFAULT_INTEGRITY_OPTIONS);
+// ...
+String[] fields = data.split(&quot;\\|&quot;);
+final String username = fields[0];
+final long expires = Long.parseLong(fields[1]);
+final String realname = fields[2];
+// ...
+if (now &amp;gt; expires) {
+  context.abortWith(Response.temporaryRedirect(loginFormUri).build());
+  return;
+}
+
+context.setSecurityContext(new TokenSecurityContext(username, realname));
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Using the security context and a custom Principal, the resource class is provided access to the user’s login and realname.&lt;/p&gt;
+
+&lt;p&gt;(There is currently discussion in the JAX-RS 2 expert group to enable passing information from filters to resource classes using properties on the filter chain. That would be the better solution than the SecurityContext/Principal ‘hack’).&lt;/p&gt;
+
+&lt;p&gt;Please have a look at the source code for the code details.&lt;/p&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Beyond OAuth</title>
+   <link href="http://algermissen.github.io/2013/05/beyond-oauth"/>
+   <updated>2013-05-29T21:54:10+02:00</updated>
+   <id>http://algermissen.github.io/2013/05/beyond-oauth</id>
+   <content type="html">&lt;p&gt;&lt;a href=&quot;http://hueniverse.com&quot;&gt;Eran Hammer&lt;/a&gt;’s &lt;a href=&quot;http://hueniverse.com/2012/07/oauth-2-0-and-the-road-to-hell/&quot;&gt;noisy departure&lt;/a&gt; from &lt;a href=&quot;http://tools.ietf.org/html/rfc6749&quot;&gt;OAuth 2&lt;/a&gt; woke me up to finally engage in that HTTP security investigation that had been buried in my todo list for years. Thanks a bunch for that, Eran!&lt;/p&gt;
+
+&lt;p&gt;Starting from close-to-zero security knowledge it took some time to understand the &lt;a href=&quot;http://hueniverse.com/2010/09/oauth-bearer-tokens-are-a-terrible-idea/&quot;&gt;points&lt;/a&gt; &lt;a href=&quot;http://www.ietf.org/mail-archive/web/oauth/current/msg00507.html&quot;&gt;he&lt;/a&gt; &lt;a href=&quot;http://hueniverse.com/2010/09/oauth-2-0-without-signatures-is-bad-for-the-web/&quot;&gt;is&lt;/a&gt; &lt;a href=&quot;http://hueniverse.com/2010/09/more-oauth-nonsense/&quot;&gt;making&lt;/a&gt; but finally it all came together: Yep - sadly he’s spot on with his &lt;a href=&quot;http://hueniverse.com/2012/11/fuckoauth-realtimeconf/&quot;&gt;criticism&lt;/a&gt;. If in doubt, look at the &lt;a href=&quot;http://tools.ietf.org/html/rfc6819&quot;&gt;OAuth 2.0 Threat Model&lt;/a&gt; or the &lt;a href=&quot;https://datatracker.ietf.org/doc/search/?name=oauth&amp;amp;activeDrafts=on&quot;&gt;bloating OAuth related I-Ds&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Regarding his IETF criticism, I can see where he is coming from, given the amount of Big Co representatives in that WG, but I don’t think the IETF is to blame in general. Personally I like written standards and I like the process to be slow to buffer change. In the end, it depends on the staffing I’d say, not the organization as such.&lt;/p&gt;
+
+&lt;p&gt;Suggestions? Steer clear of OAuth 2, it’s a waste of time. Stick to &lt;a href=&quot;http://tools.ietf.org/html/rfc5849&quot;&gt;OAuth 1&lt;/a&gt; if you need something right now, or, much better, follow the new thing…&lt;/p&gt;
+
+&lt;p&gt;Fortunately &lt;a href=&quot;https://groups.google.com/forum/?fromgroups=#!forum/oz-protocol&quot;&gt;Eran resumed productivity&lt;/a&gt; and started work on a set of &lt;em&gt;the-code-is-the-specification&lt;/em&gt; modules for node.js that each cover a distinct aspect of what really smells like a useful successor of OAuth: &lt;a href=&quot;https://github.com/hueniverse/iron&quot;&gt;iron&lt;/a&gt;, &lt;a href=&quot;https://github.com/hueniverse/hawk&quot;&gt;Hawk&lt;/a&gt;, and &lt;a href=&quot;https://github.com/hueniverse/oz&quot;&gt;Oz&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/hueniverse/iron&quot;&gt;iron&lt;/a&gt; implements a cryptographic procedure for encrypting arbitrary data and ensuring the integrity of the result. In the context of coming up with an OAuth successor it serves as a tool to provide a stateless way of authenticating a request and checking authorization. “Stateless” as in “no shared state between hundreds of scaled-out auth-checking servers”. That in itself is big.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/hueniverse/hawk&quot;&gt;Hawk&lt;/a&gt; implements an HTTP HMAC-based authentication scheme. It builds upon the &lt;a href=&quot;http://tools.ietf.org/html/draft-ietf-oauth-v2-http-mac-01&quot;&gt;work&lt;/a&gt; Eran has done on this in the OAuth 2 context and addresses the requirement of doing authentication without passing passwords around the Web.&lt;/p&gt;
+
+&lt;p&gt;Finally, &lt;a href=&quot;https://github.com/hueniverse/oz&quot;&gt;Oz&lt;/a&gt; addresses the use case of delegated authorization, the stuff you have in mind when you are looking for an OAuth successor. Oz builds upon iron and Hawk to solve some of the statefulness problems of OAuth 1 and to employ a mandatory, sound, yet simpler-than-OAuth-1 signature mechanism.&lt;/p&gt;
+
+&lt;p&gt;Over the past months I have been sort of reengineering the procedures implicitly defined by the three modules to create implementations of them in Java and C. I also work on creating written specs for them to reduce the impact of programming language specifics on the procedures. This should help to create interoperable implementations in other languages. For example, there is quite some implicit encoding stuff going on in the node.js implementation that needs to be nailed down when you do the Java thing.&lt;/p&gt;
+
+&lt;p&gt;So far, I have a Java implementation of iron ready, called &lt;a href=&quot;https://github.com/algermissen/jiron&quot;&gt;jiron&lt;/a&gt; and one in C called &lt;a href=&quot;https://github.com/algermissen/ciron&quot;&gt;ciron&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;There is also an implementation of Hawk in Java, named &lt;a href=&quot;https://github.com/algermissen/hawkj&quot;&gt;hawkj&lt;/a&gt; and I am working on example JAX-RS 2 filter implementations to show how to use it.&lt;/p&gt;
+
+&lt;p&gt;The situation regarding Oz is a bit difficult because Eran has not yet produced a writeup of his ideas and I do not feel capable of extracting these ideas from the existing node.js module code base. AFAIU his ideas are still not completely stable either So I will put this on hold for now. He’s activelu on it so it won’t be too long.&lt;/p&gt;
+
+&lt;p&gt;Another thing is that, while I am excited with what you can see in Oz already, I have use cases in mind for an OAuth successor myself. While Eran is explicitly focussing on mobile and steering clear of typical enterprise use cases (“boss wants to grant secretary access to his calendar” , “Report generator client must have read-access to all calendars of all users”) I am interested in a solution that covers all the use cases you can think of for RESTful APIs. Public-facing as well as intra-enterprise.&lt;/p&gt;
+
+&lt;p&gt;I think I have something there that addresses arbitrary use cases in the HTTP-API space and is not just an &lt;a href=&quot;http://tools.ietf.org/html/rfc6749&quot;&gt;essentially meaningless framework&lt;/a&gt; and also doesn’t end up being an enterprisey, complexity-bloated monster. I am not yet clear whether it can be an evolution of Oz or needs to be a competitor. We’ll see about that.&lt;/p&gt;
+
+&lt;p&gt;In any case, it is a fascinating space to explore once you get over the initial crypto-confusion barrier.&lt;/p&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Getting Started Playing Around with JAX-RS 2.0 in an EE Container</title>
+   <link href="http://algermissen.github.io/2012/11/getting-started-playing-around-with-jax-rs-2-0-in-an-ee-container"/>
+   <updated>2012-11-20T00:41:24+01:00</updated>
+   <id>http://algermissen.github.io/2012/11/getting-started-playing-around-with-jax-rs-2-0-in-an-ee-container</id>
+   <content type="html">&lt;p&gt;Trying out the latest JAX-RS API advancements in an EE container is a bit of a pain because pulling in the latest JAX-RS 2.0 libraries into a Java EE environment creates conflicts with the EE-shipped JAX-RS version. Ah yes, and of course you want your IDE to pick up the correct libs for code completion.&lt;/p&gt;
+
+&lt;p&gt;After trying and tweaking a bit the most workable solution for me was to download the latest Glassfish 4 build. It uses a Jersey version that is usually only a couple of days behind the JAX-RS API Snapshot.&lt;/p&gt;
+
+&lt;p&gt;Here is what I do:&lt;/p&gt;
+
+&lt;p&gt;First, go to the &lt;a href=&quot;http://dlc.sun.com.edgesuite.net/glassfish/4.0/promoted/&quot;&gt;lastest Glassfish builds&lt;/a&gt; and download the file named glassfish-4.0-bxx.zip with xx having the highest number (as of Nov 19th this is &lt;a href=&quot;http://dlc.sun.com.edgesuite.net/glassfish/4.0/promoted/glassfish-4.0-b63.zip&quot;&gt;glassfish-4.0-b63.zip&lt;/a&gt;).&lt;/p&gt;
+
+&lt;p&gt;This will unzip to a glassfish3/ directory, so to start the server do&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;glassfish3/glassfish/bin/asadmin start-domain
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To find the JAX-RS version included in the Glassfish you just downloaded do something like the following:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;jar -xf glassfish3/glassfish/modules/javax.ws.rs-api.jar META-INF/MANIFEST.MF; grep Bundle-Version META-INF/MANIFEST.MF
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;(This will leave a META-INF directory behind you might want to clean up afterwards)&lt;/p&gt;
+
+&lt;p&gt;For the b63 version this yields:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Bundle-Version: 2.0.0.m12
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The next step is to create a project to test things out. I am using the following archetype, but any other EE Web profile archetype should work similarly:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;mvn archetype:generate \
+  -DarchetypeGroupId=org.codehaus.mojo.archetypes \
+  -DarchetypeArtifactId=webapp-javaee6 \
+  -DgroupId=org.example \
+  -DartifactId=test \
+  -DinteractiveMode=false
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now let’s edit the POM to pull in the JAX-RS 2.0-Version used by the Glassfish. First, add the proper repository.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; &amp;lt;repository&amp;gt;
+ &amp;lt;id&amp;gt;snapshot-repository.java.net&amp;lt;/id&amp;gt;
+ &amp;lt;name&amp;gt;Java.net Snapshot Repository for Maven&amp;lt;/name&amp;gt;
+ &amp;lt;url&amp;gt;https://maven.java.net/content/repositories/snapshots/&amp;lt;/url&amp;gt;
+ &amp;lt;layout&amp;gt;default&amp;lt;/layout&amp;gt;
+ &amp;lt;/repository&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then add the dependency to the specific release (note that the version is not literally the same as the bundle version you extracted above):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;dependency&amp;gt;
+  &amp;lt;groupId&amp;gt;javax.ws.rs&amp;lt;/groupId&amp;gt;
+  &amp;lt;artifactId&amp;gt;javax.ws.rs-api&amp;lt;/artifactId&amp;gt;
+  &amp;lt;version&amp;gt;2.0-m12&amp;lt;/version&amp;gt;
+  &amp;lt;scope&amp;gt;provided&amp;lt;/scope&amp;gt;
+&amp;lt;/dependency&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;UPDATE&lt;/strong&gt;: It seems you have to make sure you include this dependency &lt;strong&gt;before&lt;/strong&gt; the dependency to the Java EE Web API. Otherwise, maven insists on trying to use the JAX-RS API version of the Java EE Web API.&lt;/p&gt;
+
+&lt;p&gt;You should now be able to &lt;code&gt;mvn package&lt;/code&gt; and deploy to the Glassfish instance any 2.0-m12 based source code.&lt;/p&gt;
+
+&lt;p&gt;The final step will be to cd into your project folder and set up your IDE project. E.g. with Eclipse run &lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;mvn eclipse:eclipse
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;and import as existing Maven project into Eclipse.&lt;/p&gt;
+
+&lt;p&gt;Code completion should now suggest you the 2.0-m12 API.&lt;/p&gt;
+
+&lt;p&gt;If you want to have code completion work with the SNAPSHOT, simply change the POM dependency and rerun &lt;code&gt;mvn eclipse:eclipse&lt;/code&gt;. This will likely break when deployed in the container (if you use a SNAPSHOT-only API feature) but still it is nice to play around with the very latest API changes.&lt;/p&gt;
+
+&lt;p&gt;This focusses on JAX-RS 2.0 latest features. Keep in mind that for the rest of Java EE we referenced the EE6 Web API  profile. This is not for testing latest EE7 features in general.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;UPDATE&lt;/strong&gt;: You can find the releases, including the apidoc jars &lt;a href=&quot;http://repo1.maven.org/maven2/javax/ws/rs/javax.ws.rs-api/&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
+   <title>JAX-RS 2.0 Essential Bookmarks</title>
+   <link href="http://algermissen.github.io/2012/11/jax-rs-2-0-essential-bookmarks"/>
+   <updated>2012-11-13T18:10:29+01:00</updated>
+   <id>http://algermissen.github.io/2012/11/jax-rs-2-0-essential-bookmarks</id>
+   <content type="html">&lt;p&gt;In my &lt;a href=&quot;http://www.slideshare.net/algermissen/jaxrs-20-new-features&quot;&gt;JAX-RS 2.0 talk&lt;/a&gt; at DEVOXX 2012 I promised to write down the useful links to play around with 2.0. Here they come:&lt;/p&gt;
+
+&lt;h3 id=&quot;jax-rs-20&quot;&gt;JAX-RS 2.0&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;http://www.jcp.org/en/jsr/detail?id=339`&quot;&gt;JSR339 Homepage&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;http://jax-rs-spec.java.net/nonav/2.0-SNAPSHOT/apidocs/&quot;&gt;SNAPSHOT API docs&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;http://java.net/jira/browse/JAX_RS_SPEC&quot;&gt;JAX-RS 2.0 Specification JIRA&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;http://java.net/projects/jax-rs-spec/sources/git/show&quot;&gt;Spec and API latest sources&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;jersey--glassfish&quot;&gt;Jersey + glassfish&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;http://jersey.java.net/nonav/apidocs/snapshot/jersey/&quot;&gt;Jersey 2.0 API docs&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;http://jersey.java.net/nonav/documentation/snapshot/index.html&quot;&gt;Jersey 2.0 Snapshot User Guide&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;http://java.net/jira/browse/JERSEY/&quot;&gt;Jersey JIRA&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;http://dlc.sun.com.edgesuite.net/glassfish/4.0/promoted/&quot;&gt;Glassfish latest builds&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;resteasy&quot;&gt;RESTEasy&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://issues.jboss.org/browse/RESTEASY&quot;&gt;RESTEasy JIRA&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;blogs&quot;&gt;Blogs&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;http://marek.potociar.net&quot;&gt;Marek’s Blog&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;http://bill.burkecentral.com/category/jax-rs/&quot;&gt;Bill’s JAX-RS blogs&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
+   <title>JAX-RS 2.0 MVC</title>
+   <link href="http://algermissen.github.io/2012/10/jax-rs-2-0-mvc"/>
+   <updated>2012-10-08T23:01:32+02:00</updated>
+   <id>http://algermissen.github.io/2012/10/jax-rs-2-0-mvc</id>
+   <content type="html">&lt;p&gt;It is not unusual for services that expose a technical REST API to also need human-targeted UI for configuration, status checks or reporting.&lt;/p&gt;
+
+&lt;p&gt;What I have seen a couple of times is that developers naturally use some form of REST framework (for example JAX-RS) for the technical API but then make use of yet another API technology (for example Spring or JSF) for the human-targeted UI.&lt;/p&gt;
+
+&lt;p&gt;This not only increases the technology mix (something I personally strive to avoid as much as possible), but it also introduces a distinction between technical and human API that should not be made in my opinion. From an API point of view an HTTP interface that serves HTML and AJAX-targeted JSON is as much a REST-API as is one that serves XML or ‘technical’ JSON.&lt;/p&gt;
+
+&lt;p&gt;Instead, you should treat both as aspects of one and the same API. For one you will likely find resources in both API-’parts’ that serve representations of the same concepts (for example calendar events, shopping carts or contract information). Such repesentations of should be produced by one and the same resource. This reduces the amount of code and will help you, for example, to apply corresponding cacheability properties to both representations.&lt;/p&gt;
+
+&lt;p&gt;In addition, it will encourage you to treat the human-targeted API-parts with the same care as the technical ones. For example, you should allow introspection into them using some form of home document. Above all, you’ll never know in which ways clients re-use those HTML pages or snippets you serve.&lt;/p&gt;
+
+&lt;p&gt;Having said that, what might – besides just habits – be the reason that developers do not think ‘REST-API’ when they think ‘GUI’? Is it because many REST frameworks out there have very poor support for serving document-oriented representations such as HTML pages?&lt;/p&gt;
+
+&lt;p&gt;While some JAX-RS implementations have proprietary support for templating, the new JAX-RS 2.0 filter API lets you roll your own with a couple of lines of code.&lt;/p&gt;
+
+&lt;p&gt;Instead of the ‘Web-container-only’-setup I used in the last blog I would like full Java EE6 support this time. Fortunately, Arun Gupta has provided an example of how get JAX-RS 2.0 to work in a Java EE 6 container.&lt;/p&gt;
+
+&lt;p&gt;First I created a project based on the archetype Arun uses:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;mvn archetype:generate \
+   -DarchetypeGroupId=org.codehaus.mojo.archetypes \
+   -DarchetypeArtifactId=webapp-javaee6 \
+   -DgroupId=net.jalg \
+   -DartifactId=mvc \
+   -DinteractiveMode=false
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;and then added the neccessary repository and dependencies the way he describes. Because JAX-RS 2.0 and Jersey currently undergo some sort of last minute changes I have changed the Jersey dependencies to be on 2.0-SNAPSHOT to get the latest developments.&lt;/p&gt;
+
+&lt;p&gt;The templating support I have in mind would let me return any object from a JAX-RS resource method. In addition it would let me annotate the resource method to specify a template to use for constructing the representations. Like so:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;@Path(&quot;user/{userId}/account&quot;)
+public class Facade {
+    @PathParam(&quot;userId&quot;) String userId;
+ 
+    @GET
+    @Produces(&quot;text/html&quot;)
+    @Path(&quot;contract-details&quot;)
+    @Template(&quot;templates/contract.vm&quot;)
+    public Contract getContractDetails() {
+        return new Contract(&quot;123456&quot;, userId, &quot;new&quot;);
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The problem here is that the JAX-RS runtime will pick the MessageBodyWriter implementation based on the returned type. It will not, magically, invoke some sort of templating engine. So, how can we trick the runtime into choosing a different MessageBodyWriter? And how can we pass to that not only the returned object but also the path of the desired template?&lt;/p&gt;
+
+&lt;p&gt;Here the filter API comes in. We can use the @Template annotation to also act as a binding for a particular filter. This is done with the @NameBinding annotation from the new filter API:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;@NameBinding
+@Target({ ElementType.TYPE, ElementType.METHOD })
+@Retention(value = RetentionPolicy.RUNTIME)
+public @interface Template {
+  String value() default &quot;&quot;;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now the runtime will invoke all filters annotated with @Template when our getContractDetails() method is called and we can work the magic in a filter.&lt;/p&gt;
+
+&lt;p&gt;What happens in the filter below is that we replace the response entity with a wrapper object that holds the template path and the original response entity. The template path we can extract from the annotation, the original response entity we extract from the response context.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;@Provider
+@Template
+public class EntityToModelAndViewWrapper implements ContainerResponseFilter {
+ 
+    @Override
+    public void filter(ContainerRequestContext requestContext,
+      ContainerResponseContext responseContext) throws IOException {
+ 
+        for (Annotation a : responseContext.getEntityAnnotations()) {
+            if (a.annotationType() == Template.class) {
+                String templatePath = ((Template) a).value();
+                ModelAndView mav = new ModelAndView(responseContext.getEntity(),templatePath);
+                responseContext.setEntity(mav,
+                   responseContext.getEntityAnnotations(),
+                responseContext.getMediaType());
+                break;
+            }
+        }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;By changing the type of the response entity, we gain control over the MessageBodyWriter selection. And the runtime will now invoke the MessageBodyWriter we have provided for ModelAndView instances:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;@Provider
+...
+public class ModelToViewMBR implements MessageBodyWriter&amp;lt;ModelAndView&amp;gt; {
+  ...
+    @Override
+    void writeTo(ModelAndView mav, Class&amp;lt;?&amp;gt; arg1, Type arg2,
+            Annotation[] arg3, MediaType arg4,
+            MultivaluedMap&amp;lt;String, Object&amp;gt; arg5, OutputStream output)
+            throws IOException, WebApplicationException {
+        Map&amp;lt;String, Object&amp;gt; map = new HashMap&amp;lt;String,Object&amp;gt;();
+        map.put(&quot;entity&quot;, mav.getModel());
+        engine.merge(mav.getView(),output,map);
+    }
+    ...
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In the writeTo() method we make the original response entity available to a templating engine under the name ‘entity’ and invoke the merge of template and entity.&lt;/p&gt;
+
+&lt;p&gt;The engine member is an instance of a template engine wrapper. You can see the details in the TemplateEngine class in the example source code.&lt;/p&gt;
+
+&lt;p&gt;In addition to the response entity it should not be too hard to make available to the template engine all the managed beans of the container runtime’s current session (the request). That way one would have the full power of EJB 3.1 and CDI at one’s disposal.&lt;/p&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Declarative Cache Control with JAX-RS 2.0</title>
+   <link href="http://algermissen.github.io/2012/09/declarative-cache-control-with-jax-rs-2-0"/>
+   <updated>2012-09-24T23:06:20+02:00</updated>
+   <id>http://algermissen.github.io/2012/09/declarative-cache-control-with-jax-rs-2-0</id>
+   <content type="html">&lt;p&gt;&lt;strong&gt;UPDATE&lt;/strong&gt;: The Maven/IDE setup below turned out not to work properly in all cases. Try &lt;a href=&quot;http://jalg.net/2012/11/getting-started-playing-around-with-jax-rs-2-0-in-an-ee-container/&quot;&gt;this&lt;/a&gt; for better results.&lt;/p&gt;
+
+&lt;p&gt;The final release of JAX-RS 2.0 is nearing. Time for a closer look at the new features.&lt;/p&gt;
+
+&lt;p&gt;As JAX-RS 2.0 isn’t yet part of any standard release, some up front work is inevitable. Fortunately, &lt;a href=&quot;http://marek.potociar.net&quot;&gt;Marek&lt;/a&gt; has some &lt;a href=&quot;http://marek.potociar.net/2012/08/10/jersey-2-0-m06-has-been-released/&quot;&gt;excellent write ups&lt;/a&gt; to get us started using the &lt;a href=&quot;http://jax-rs-spec.java.net&quot;&gt;JAX-RS&lt;/a&gt; 2.0 reference implementation &lt;a href=&quot;http://jersey.java.net/jersey20.html&quot;&gt;Jersey 2&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;I am currently working with Eclipse a lot and here is how you quick-start a JAX-RS 2.0 project with Jersey 2:&lt;/p&gt;
+
+&lt;p&gt;In Eclipse, choose New -&amp;gt; Other -&amp;gt; Maven Project and create an archetype-based project. For this you first need to add the archetype Marek is mentioning in his post (I am using the Grizzly version here):&lt;/p&gt;
+
+&lt;p&gt;[caption id=”attachment_132” align=”alignnone” width=”614”]&lt;a href=&quot;http://jalg.net/wp-content/uploads/2012/09/jersey2archetype.png&quot;&gt;&lt;img src=&quot;http://jalg.net/wp-content/uploads/2012/09/jersey2archetype.png&quot; alt=&quot;&quot; /&gt;&lt;/a&gt;[/caption]&lt;/p&gt;
+
+&lt;p&gt;Then, create a project with that archetype:&lt;/p&gt;
+
+&lt;p&gt;[caption id=”attachment_135” align=”alignnone” width=”598”]&lt;a href=&quot;http://jalg.net/wp-content/uploads/2012/09/selectArchetype.png&quot;&gt;&lt;img src=&quot;http://jalg.net/wp-content/uploads/2012/09/selectArchetype.png&quot; alt=&quot;&quot; /&gt;&lt;/a&gt;[/caption]&lt;/p&gt;
+
+&lt;p&gt;Now you are all set and ready to explore JAX-RS 2.0.&lt;/p&gt;
+
+&lt;p&gt;Making JAX-RS responses cacheable isn’t exactly elegant in 1.1. If you want caching, you need to return a Response object and manually add Cache-Control headers to it. Far from ideal. (And it gets even uglier if you try to unit test your resource classes just to find out that you cannot do so if you return Response objects because the idiomatic invocation of build() demands a JAX-RS runtime).&lt;/p&gt;
+
+&lt;p&gt;What, if we instead could annotate a resource method to decorate the response with a Cache-Control header? Turns out, that this is straight forward in JAX-RS 2.0 thanks to the new Filter API.&lt;/p&gt;
+
+&lt;p&gt;All we need is a filter and an annotation to selectively bind that filter to any resource method of our liking. Here is the annotation which takes a Cache-Control header value as an argument:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;code&amp;gt;
+package net.jalg.ccdecor;
+import java.lang.annotation.*;
+import javax.ws.rs.NameBinding;
+
+@NameBinding
+@Target({ ElementType.TYPE, ElementType.METHOD })
+@Retention(value = RetentionPolicy.RUNTIME)
+public @interface Cacheable {
+  String cc() default &quot;public, must-revalidate&quot;; 
+}
+&amp;lt;/code&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The new @NameBinding annotation tells a JAX-RS 2.0 runtime that our annotation should be used to match filters to resource methods.&lt;/p&gt;
+
+&lt;p&gt;Here is the filter:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;code&amp;gt;
+package net.jalg.ccdecor;
+
+import java.io.IOException;
+import java.lang.annotation.Annotation;
+
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.container.ContainerResponseContext;
+import javax.ws.rs.container.ContainerResponseFilter;
+import javax.ws.rs.ext.Provider;
+
+@Provider
+@Cacheable
+public class CacheControlDecorator implements ContainerResponseFilter {
+
+  @Override
+  public void filter(ContainerRequestContext requestContext,
+        ContainerResponseContext responseContext) throws IOException {
+    for (Annotation a : responseContext.getEntityAnnotations()) {
+      if (a.annotationType() == Cacheable.class) {
+        String cc = ((Cacheable) a).cc();
+        responseContext.getHeaders().add(&quot;Cache-Control&quot;, cc);
+      }
+    }
+  }
+}
+&amp;lt;/code&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Don’t worry too much about that code for a minute but look at how the filter can be bound to a resource method:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;code&amp;gt;
+  @GET
+  @Cacheable(cc=&quot;public, maxAge=3600&quot;)
+  @Produces(MediaType.TEXT_PLAIN)
+  public String getIt() {
+    return &quot;Got it!&quot;;
+  }
+&amp;lt;/code&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The binding is achieved using our @Cacheable annotation.&lt;/p&gt;
+
+&lt;p&gt;Using annotation arguments it is possible to pass usage information to the filter. The annotations of the resource method are available in the filter by way of the getEntityAnnotations() method of the passed ContainerResponseContext argument (see above).&lt;/p&gt;
+
+&lt;p&gt;We just need to extract the cache control information from the annotation and add the Cache-Control header to the response.&lt;/p&gt;
+
+&lt;p&gt;You can download the example project from &lt;a href=&quot;https://github.com/algermissen/cache-control-decorator&quot;&gt;github&lt;/a&gt;.&lt;/p&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Death by JBoss 6 Classloading</title>
+   <link href="http://algermissen.github.io/2012/05/death-by-jboss-6-classloading"/>
+   <updated>2012-05-08T00:19:13+02:00</updated>
+   <id>http://algermissen.github.io/2012/05/death-by-jboss-6-classloading</id>
+   <content type="html">&lt;p&gt;During the last week I have spent hour after hour to debug some strange behavior shown by some of my JAX-RS provider classes in two JavaEE6 projects. When I deployed the WARs of the two projects suddenly in one of the projects all providers from both projects where available and in the other none, … zero, zip.&lt;/p&gt;
+
+&lt;p&gt;Naturally, I only saw this by accident, after an extensive two-day search in one of the projects for a potential bug caused by myself. Dang! - When I, frustrated as I was, re-deployed the other project I saw the providers I had been looking for in the first deployed app.&lt;/p&gt;
+
+&lt;p&gt;Yes, I know now, that I should have thought about the interference between the two right away…but you know how these things go.&lt;/p&gt;
+
+&lt;p&gt;When it finally dawned on me that I fell victim to some default configuration in JBoss that (at least to me) is totally counter intuitive the search went reasonably well. (Though documentation at jboss.org is still way to hard to find for my taste)&lt;/p&gt;
+
+&lt;p&gt;I figured I had to isolate my class loaders with something like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;code&amp;gt;&amp;lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&amp;gt;
+&amp;lt;jboss-web&amp;gt;
+&amp;lt;class-loading&amp;gt;
+      &amp;lt;loader-repository&amp;gt;com.example:archive=myapp-1.war
+        &amp;lt;loader-repository-config&amp;gt;java2ParentDelegation=false&amp;lt;/loader-repository-config&amp;gt;
+      &amp;lt;/loader-repository&amp;gt;
+   &amp;lt;/class-loading&amp;gt;
+&amp;lt;/jboss-web&amp;gt;&amp;lt;/code&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The crappy thing about this is that apparently the reason for the non-intuitive default is that versions prior to JBoss 5 exhibit not-isolated class loading. The designers of JBoss 5+ desired to make the old configurations work in the newer JBosses without adjustments. Makes me shiver.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Edit&lt;/strong&gt;: Turns out you also need to set java2ParentDelegation=false in the example above to make it work.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Edit&lt;/strong&gt;: Nope - the above also did not do the trick. After a wasted week of digging around, I give up now, simply installing another JBoss (unable to switch to Glassfish due to external forces :-(.&lt;/p&gt;
+
+&lt;p&gt;Useful references:
+&lt;a href=&quot;https://community.jboss.org/wiki/ClassLoadingConfiguration&quot;&gt;https://community.jboss.org/wiki/ClassLoadingConfiguration&lt;/a&gt;
+&lt;a href=&quot;https://community.jboss.org/wiki/JBossClassLoadingUseCases&quot;&gt;https://community.jboss.org/wiki/JBossClassLoadingUseCases&lt;/a&gt;&lt;/p&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
+   <title>ESI Facelift</title>
+   <link href="http://algermissen.github.io/2011/11/esi-facelift"/>
+   <updated>2011-11-07T17:25:16+01:00</updated>
+   <id>http://algermissen.github.io/2011/11/esi-facelift</id>
+   <content type="html">&lt;p&gt;Recently &lt;a href=&quot;http://www.mnot.net&quot;&gt;Mark&lt;/a&gt; &lt;a href=&quot;http://www.mnot.net/blog/2011/10/21/why_esi_is_still_important_and_how_to_make_it_better&quot;&gt;described&lt;/a&gt; why &lt;a href=&quot;http://en.wikipedia.org/wiki/Edge_Side_Includes&quot;&gt;Edge-Side-Includes&lt;/a&gt; are still a relevant technology and presented some ideas regarding an overhaul of &lt;a href=&quot;http://www.w3.org/TR/esi-lang&quot;&gt;ESI 1.0&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Coincidentally, I ran into an interesting use case for ESI at about the same time and our requirements seem to overlap quite a bit.&lt;/p&gt;
+
+&lt;p&gt;Before I go into the details of what I would like to see in ESI 2.0 (yes, the major version number change indicates incompatibility) here are the aspects that need to be considered during the design process:&lt;/p&gt;
+
+&lt;h3 id=&quot;language-syntax&quot;&gt;Language Syntax&lt;/h3&gt;
+
+&lt;p&gt;ESI 1.0 is an XML language. While this was the obvious choice ten years ago when XML was the proverbial hammer to every nail times have changed. To be a good citizen, ESI 2.0 would need to be friendly to non-XML formats such as JSON and &lt;a href=&quot;http://www.ietf.org/rfc/rfc2445.txt&quot;&gt;certain&lt;/a&gt; &lt;a href=&quot;ttp://www.ietf.org/rfc/rfc2426.txt&quot;&gt;plain text&lt;/a&gt; &lt;a href=&quot;http://www.w3.org/TeamSubmission/turtle/&quot;&gt;species&lt;/a&gt;, too.&lt;/p&gt;
+
+&lt;p&gt;This isn’t too much of a change, given that none of the ESI implementations I have looked at actually parse ESI tags as XML. Which makes sense, because the surrounding (X)HTML is almost guaranteed to choke an XML parser anyhow.&lt;/p&gt;
+
+&lt;h3 id=&quot;functionality&quot;&gt;Functionality&lt;/h3&gt;
+
+&lt;p&gt;This aspect covers two issues, really: what new functionality should ESI 2.0 support and which of the older features can be dropped? Mark mentions (among others) templating capabilities for the latter and &lt;esi:inline&gt; and the _alt_-attribute for the former.&lt;/esi:inline&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;cacheability&quot;&gt;Cacheability&lt;/h3&gt;
+
+&lt;p&gt;Given that the major advantage of integrating services at the edge is leveraging the existing caching architecture the design process of ESI 2.0 requires a close eye on how well the language features can benefit from caching. &lt;/p&gt;
+
+&lt;h3 id=&quot;implementability&quot;&gt;Implementability&lt;/h3&gt;
+
+&lt;p&gt;Whatever the result of an ESI 2.0 design effort, its implementation must be possible using the given architectures of the common open source and non-open source caching products. For example, ESI 2.0 features must not get in the way of an asynchronous request processing model.&lt;/p&gt;
+
+&lt;h3 id=&quot;an-esi-20-use-case&quot;&gt;An ESI 2.0 Use Case&lt;/h3&gt;
+
+&lt;p&gt;Yesterday I &lt;a href=&quot;http://jalg.net/2011/11/cool-uris-and-integration/&quot;&gt;described&lt;/a&gt; an integration scenario where articles in a content management system (CMS) reference (via URIs) company information maintained in another system (CIMS). The articles are published as Web pages and somewhere in the Web page delivery process the company information references are resolved and the returned information is included in the delivered page. The purpose of this setup is twofold: On the one hand the intention is to deliver up to date company information (maybe the stock price is included). On the other hand a clear separation of concerns is achieved, facilitating independent operation and evolution of the two systems.&lt;/p&gt;
+
+&lt;p&gt;There are traditionally two approaches for assembling the article Web page from the data provided by the two services: &lt;a href=&quot;http://en.wikipedia.org/wiki/Web_template_system#Server-side_systems&quot;&gt;Server Side Templating&lt;/a&gt; (e.g. JSPs or Server-Side-Includes) and &lt;a href=&quot;http://en.wikipedia.org/wiki/Web_template_system#Client-Side_Systems&quot;&gt;Client Side Templating&lt;/a&gt; (e.g. AJAX or iframes). However, and here is where the topic of this posting comes in again, there is also a third option: assembling the content on the edge, in short: &lt;em&gt;Edge Side Templating&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;And this is where Mark’s ideas overlap with mine. (Which I am thankful for because I wasn’t entirely sure until our paths crossed, whether embedding a templating mechanism in a Web cache was actually as useful as I thought)&lt;/p&gt;
+
+&lt;p&gt;Regarding the discussion about the pros and cons of doing the templating on the edge please refer to Mark’s &lt;a href=&quot;http://www.mnot.net/blog/2011/10/21/why_esi_is_still_important_and_how_to_make_it_better&quot;&gt;posting&lt;/a&gt; - in the comments there are a bunch of arguments made already for either side.&lt;/p&gt;
+
+&lt;p&gt;Having said all that, let me now talk about what I would like to see in ESI 2.0.&lt;/p&gt;
+
+&lt;h3 id=&quot;language-syntax-1&quot;&gt;Language Syntax&lt;/h3&gt;
+
+&lt;p&gt;While in my scenario the including entity (the article referencing the company information) would likely be HTML I have said above that we need something more non-XML friendly. One way would be to reuse the existing ESI XML-tags but explicitly allowing them in non-XML content:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;GET /article/123
+Host: cms.example.org
+
+200 Ok
+Content-Type: text/plain
+
+ACME in the News
+
+&amp;lt;esi:include src=&quot;http://cims.example.org/company/acme&quot;&amp;gt;&amp;lt;/esi:include&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;(I am deliberately excluding any &lt;a href=&quot;http://www.w3.org/TR/edge-arch&quot;&gt;ESI headers&lt;/a&gt; from all the examples)&lt;/p&gt;
+
+&lt;p&gt;As far as I can tell at the moment, this would work for non-XML and still allow XML-friendly embedding in XML response entities. If &lt;esi:...&gt; is too likely to overlap with actual content more &#39;mangled tags&#39; would need to be used, e.g. (&amp;lt;% ... %&amp;gt;).&lt;/esi:...&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;obsolete-esi-10-functionality&quot;&gt;Obsolete ESI 1.0 Functionality&lt;/h3&gt;
+
+&lt;p&gt;There are a number of more or less sophisticated features in ESI 1.0 that are seldom used and in addition are not implemented by many products. Among these are &lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;The alt-attribute on &lt;esi:inline&gt;&lt;/esi:inline&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;esi:choose&gt;,&lt;esi:when&gt;,&lt;esi:otherwise&gt;: it is likely that this branching construct can be replaced with functionality that will be in the templating language anyway (as Mark suggests in his posting, showing a dynamicly assembled include target URI: &lt;esi:include src=&quot;/{user_prefs.top_left_module}&quot; /&gt;)
+
+  
+&lt;/esi:otherwise&gt;&lt;/esi:when&gt;&lt;/esi:choose&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;esi:vars&gt;: would likely be changed; I agree with Mark&#39;s suggestions regarding variable handling by the templating language as well as with his ideas on providing better access to the request and response via predefined objects
+
+  
+&lt;/esi:vars&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;esi:inline&gt; when you first look at it, it appears rather weired and [it took me a while to figure out how inline works](http://stackoverflow.com/questions/7555172/edge-side-includes-how-do-esiinline-tags-work). But I think &lt;esi:inline&gt; is pretty useful for emulating batch retrievals. However, what I do not like about it is that it couples the referencing and the referenced systems: they need to agree on where to place the inline elements and that is pure out-of-band information coupling hell. I&#39;d rather like to see the combination of [pipelining](http://www.mnot.net/blog/2011/08/05/pipeline_now) and [caching](http://www.mnot.net/cache_docs/) to handle batch retrieval requirements.
+
+
+
+&lt;/esi:inline&gt;&lt;/esi:inline&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Besides the above, the list of features to drop should of course be driven by what people actually implemented and use today.&lt;/p&gt;
+
+&lt;p&gt;But it is time now to turn to the most interesting aspect of all this: new functionality.&lt;/p&gt;
+
+&lt;h3 id=&quot;edge-side-templating&quot;&gt;Edge-Side-Templating&lt;/h3&gt;
+
+&lt;p&gt;This is also #1 on Mark’s list and he refers to it as the ability “to source variables from a URI”. The basic idea is this: an ESI element (say &lt;esi:load&gt;) tells the ESI processor to initiate a request to a target resource and make the response entity available as a variable. That variable could then be used in expressions to assemble the overall Web page.&lt;/esi:load&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;GET /article/123
+Host: cms.example.org
+
+200 Ok
+Content-Type: text/html
+
+&amp;lt;html&amp;gt;
+
+&amp;lt;h1&amp;gt;ACME in the News&amp;lt;/h1&amp;gt;
+&amp;lt;p&amp;gt;
+&amp;lt;esi:load var=&quot;acme&quot; href=&quot;http://cims.example.org/company/acme&quot;&amp;gt;&amp;lt;/esi:load&amp;gt;
+Yesterday, ${acme.name} (${acme.stock.symbol}) had a closing stock price of ${acme.stock.price}.
+&amp;lt;/p&amp;gt;
+&amp;lt;/html&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;However, there are two problems with this.&lt;/p&gt;
+
+&lt;p&gt;The first problem is that there is code in the ESI processor that needs to parse the response entity of the load-request and make it accessible under the variable name. What syntax would this parser expect? Should JSON be mandatory? Or better: XML and JSON because they can both be turned in a generic fashion into the same variable structure? What if both are not feasible because we do not want to change the server of the loaded resource? I can hear a plugin mechanism or code-on-demand knocking at the door. Welcome complexity and feature bloat…&lt;/p&gt;
+
+&lt;p&gt;The second problem is that the code that uses the variable makes assumptions about its structure - apparently based on out-of-band knowledge. This makes my REST alarm bells go off immediately!&lt;/p&gt;
+
+&lt;p&gt;A solution to this issue would be to add an &lt;em&gt;accept&lt;/em&gt; attribute to &lt;esi:load&gt; that would directly translate to the Accept header of the load-request.&lt;/esi:load&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;GET /article/123
+Host: cms.example.org
+
+200 Ok
+Content-Type: text/html
+
+&amp;lt;html&amp;gt;
+
+&amp;lt;h1&amp;gt;ACME in the News&amp;lt;/h1&amp;gt;
+&amp;lt;p&amp;gt;
+&amp;lt;esi:load var=&quot;acme&quot; href=&quot;http://cims.example.org/company/acme&quot; accept=&quot;application/company+json&quot;&amp;gt;&amp;lt;/esi:load&amp;gt;
+Yesterday, ${acme.name} (${acme.stock.symbol}) had a closing stock price of ${acme.stock.price}.
+&amp;lt;/p&amp;gt;
+&amp;lt;/html&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Ah, yes. That immediately looks nice and RESTful.&lt;/p&gt;
+
+&lt;p&gt;Caveat: Do you see the next feature bloat? We could have all sorts of stuff fiddling with the request via more attributes: accept-language,… and then branching based on the response: onContentType=”..” do this or onError=”406” do that. User Agent scripting, sort of.&lt;/p&gt;
+
+&lt;p&gt;It will be a real challenge to pick those features that add real value and maintain simplicity at the same time.&lt;/p&gt;
+
+&lt;p&gt;Regarding problem #1 above this might be one of the rare true use cases for the +json and &lt;a href=&quot;http://tools.ietf.org/html/rfc3023#appendix-A&quot;&gt;+xml&lt;/a&gt; media type suffixes because they provide an elegant way for the ESI processor to pick parsers based on the Content-Type header without entity introspection.&lt;/p&gt;
+
+&lt;h3 id=&quot;request--and-response-objects&quot;&gt;Request- and Response Objects&lt;/h3&gt;
+
+&lt;p&gt;Mark proposes the addition of prepopulated request- and response objects to obtain request information and set response parameters. I agree that this would be extremely useful (and be far more consistent compared to the current ESI variable set).&lt;/p&gt;
+
+&lt;p&gt;However, the same warning applies here: This can end up pretty quickly in a means to script the ESI processor in all sorts of ways and clever balance is required between feature set, and processing performance and implementability.&lt;/p&gt;
+
+&lt;p&gt;After all, we want to improve ESI, not put a Java EE container into an HTTP cache…&lt;/p&gt;
+
+&lt;h3 id=&quot;timeout-and-error-handling&quot;&gt;Timeout and Error Handling&lt;/h3&gt;
+
+&lt;p&gt;This is also from Mark’s list and pretty important. I wonder whether the cache itself would be allowed to override an timeout attribute on &lt;esi:load&gt; or &lt;esi:include&gt;.&lt;/esi:include&gt;&lt;/esi:load&gt;&lt;/p&gt;
+
+&lt;p&gt;I’ll skip error handling for now - the post has grown far too long already.&lt;/p&gt;
+
+&lt;h3 id=&quot;templating-language-functionality&quot;&gt;Templating Language Functionality&lt;/h3&gt;
+
+&lt;p&gt;This one though needs particular attention. A templating mechanism immediately raises the question of how much functionality one wants to offer. Variable souring and access is an inherent requirement. Mark also mentions string manipulation functions. For example:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;esi:load var=&quot;acme&quot; href=&quot;http://cims.example.org/company/acme&quot;&amp;gt;&amp;lt;/esi:load&amp;gt;
+Yesterday, ${substr(acme.name,0.10)} (${toUpper(acme.stock.symbol)}) had a closing stock price of ${acme.stock.price}.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I think branching and looping constructs also make sense but they might conflict with the intermdiary processing model and request handling performance.&lt;/p&gt;
+
+&lt;p&gt;The further new functionality is taken, the closer we get to a full blown scripting engine (e.g. a JavaScript engine) and this sounds definitely not like what we want for ESI 2.0 (..or do we??)&lt;/p&gt;
+
+&lt;p&gt;Either way, it is again a tradeoff to be made between the size of the feature set, and implementability and performance.&lt;/p&gt;
+
+&lt;p&gt;One additional thing to consider with regard to the feature set is the effect on service independence. If the feature set is too small there might be requirements on the service that manages the loaded resource. For example, if there is no string function to uppercase a string that service owner might receive a request to change to service implementation to also include certain data in uppercase form (because that cannot be done in the ESI processor). &lt;/p&gt;
+
+&lt;p&gt;I think that this is the line to draw because it does not make sense to do RESTbased integration to achieve maximal service independence and then let an &lt;esi:include&gt;ing service determine aspects of the implementation of other services. (See the criticism on &lt;esi:inline&gt; above).&lt;/esi:inline&gt;&lt;/esi:include&gt;&lt;/p&gt;
+
+&lt;p&gt;That is my take on ESI 2.0 so far.&lt;/p&gt;
+
+&lt;p&gt;I would be happy to hear who else is interested in pursuing this further.&lt;/p&gt;
+
+&lt;h3 id=&quot;update&quot;&gt;UPDATE&lt;/h3&gt;
+
+&lt;p&gt;Here is a list of issues that come to my mind as I play around with reworking ESI:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;When ESI elements are not defined to be XML anymore, should the ESI processor apply any encoding found in the XML preamble or should it in any case only apply the one found in the HTTP headers?&lt;/li&gt;
+&lt;/ul&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Cool URIs and Integration</title>
+   <link href="http://algermissen.github.io/2011/11/cool-uris-and-integration"/>
+   <updated>2011-11-06T18:08:58+01:00</updated>
+   <id>http://algermissen.github.io/2011/11/cool-uris-and-integration</id>
+   <content type="html">&lt;p&gt;A key design aspect that made the very success of the World Wide Web possible was the removal of the referential integrity constraint from the hypermedia paradigm. In a system of the scale of the Web the problem of ensuring that no hyperlink would ever be broken cannot be solved and the only way to make the system work was to relax the constraint.&lt;/p&gt;
+
+&lt;p&gt;Instead, the constraint was replaced by a best practice, namely that &lt;a href=&quot;http://www.w3.org/Provider/Style/URI&quot;&gt;Cool URIs Don’t Change&lt;/a&gt;. Meaning that an origin server that exposes a given URI should continue to do so forever. (This really only applies to URIs that serve as &lt;a href=&quot;http://tech.groups.yahoo.com/group/rest-discuss/message/12180&quot;&gt;application entry points&lt;/a&gt;, aka &lt;em&gt;bookmarkable URIs&lt;/em&gt;, but that is a different discussion).&lt;/p&gt;
+
+&lt;p&gt;Looking at the title, you might wonder what this has to do with integration? Well, here is the story:&lt;/p&gt;
+
+&lt;p&gt;Suppose an integration scenario with two systems, a content management system (CMS) and a system that manages information about companies (let’s call that system &lt;em&gt;CIMS&lt;/em&gt;). Authors create article pages in the CMS to be published on the Web as part of a financial news site. Whenever an article talks about a certain company the authors search the CIMS for that company and a reference to the company information in the CIMS is placed in the article. When the article is published, the reference is resolved and some HTML fragment with the company information is embedded in the Web page.&lt;/p&gt;
+
+&lt;p&gt;Since the company implementing this scenario does &lt;a href=&quot;http://paulprescod.sys-con.com/node/40442&quot;&gt;cutting edge integration&lt;/a&gt; the CIMS exposes an HTTP interface and the obtained company information references naturally are URIs.&lt;/p&gt;
+
+&lt;p&gt;The bottom line: URIs obtained at some point in time are remembered to be dereferenced in the future. This is what is commonly called a &lt;a href=&quot;http://tech.groups.yahoo.com/group/rest-discuss/message/13606&quot;&gt;&lt;em&gt;bookmark&lt;/em&gt;&lt;/a&gt;. &lt;/p&gt;
+
+&lt;p&gt;The designers of this system, as well as its users, make the assumption that any of the embedded URIs will continue to be the URI of the same company information it was when obtained from the CIMS. In other words, that the mapping of URI to company information will remain stable. This assumption is backed by the aforemetioned best practice of keeping URIs cool.&lt;/p&gt;
+
+&lt;p&gt;The consequence is an implicit (you could equally well argue: &lt;em&gt;explicit&lt;/em&gt;) obligation on the owner of the origin server (the CIMS in this case) to maintain the URIs - well - indefinitely. And this is something service designers and service owners need to be aware of, especially in an enterprise integration context.&lt;/p&gt;
+
+&lt;p&gt;The obligation even exceeds the (probably limited) lifetime of the referenced concept itself (in our case the company information) because the service needs to inform potential clients when there is currently no information available (404 Not Found) or when the information ceased to exist at all (410 Gone). The former case yields a requirement for the client to work around the missing information the latter indicates that the client system should remove the bookmark (here likely indicating a need to rewrite the article).&lt;/p&gt;
+
+&lt;p&gt;This last paragraph, BTW, touches only briefly on the topic of how even HTTP error responses are useful (and essential) to the integration quality. (As opposed to a tightly coupled integration style where the client just goes berserk if some piece of information is missing).&lt;/p&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Agency Boundary</title>
+   <link href="http://algermissen.github.io/2010/11/agency-boundary"/>
+   <updated>2010-11-19T11:36:12+01:00</updated>
+   <id>http://algermissen.github.io/2010/11/agency-boundary</id>
+   <content type="html">&lt;p&gt;A central aspect of the problem space that REST is designed for is that the communicating components are typically not owned by a common authority and that therefore change must be enabled to happen without coordinating the change between the authorities. For example, for Amazon it is simply impossible to ask any of its customers whether such and such a change ‘would be ok’.&lt;/p&gt;
+
+&lt;p&gt;In my recent &lt;a href=&quot;http://www.slideshare.net/algermissen/res-tful-httppatternsantipatterns&quot;&gt;presentation on RESTful HTTP&lt;/a&gt; I used the term ‘administrative boundary’. Today, I came across the much better term &lt;em&gt;Agency Boundary&lt;/em&gt; coined by Rohit Khare and Richard N. Taylor in their ICSE’04 paper &lt;a href=&quot;http://portal.acm.org/citation.cfm?id=999447&quot;&gt;Extending the REpresentational State Transfer (REST) Architectural Style for Decentralized Systems&lt;/a&gt;:&lt;/p&gt;
+
+&lt;blockquote&gt;
+
+  &lt;p&gt;An agency boundary denotes the set of components operating on behalf of a common (human) authority, with the power to establish agreement within that set and the right to disagree beyond it it.&lt;/p&gt;
+&lt;/blockquote&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Interesting Changes *Must* Surface</title>
+   <link href="http://algermissen.github.io/2010/11/interesting-changes-must-surface"/>
+   <updated>2010-11-13T00:56:56+01:00</updated>
+   <id>http://algermissen.github.io/2010/11/interesting-changes-must-surface</id>
+   <content type="html">&lt;p&gt;The human brain is truly strange. It happens surprisingly often that you are (well, at least I am) so tied-up in a false assumption that the ability to understand something new is seriously limited.&lt;/p&gt;
+
+&lt;p&gt;Then, when the clouding assumption disappears you have these special, enlightening aha-moments.&lt;/p&gt;
+
+&lt;p&gt;In this particular case I have been thinking a lot about change impact lately. The false assumption I made was that change would ideally be kept hidden and not surface towards the consumers of some provided capability.&lt;/p&gt;
+
+&lt;p&gt;Given that assumption, it seemed strange to maintain a certain RPC criticism I am trying to rationalize: if the goal is to hide change, what is the problem with RPC in the first place?&lt;/p&gt;
+
+&lt;p&gt;Then it dawned some minutes ago: Change to a component is essentially driven by requirements to do new stuff and in order to do new things with a component, the changes must surface. Changes that remain hidden are not worth talking about - these are called implementation details. Details that per definition do not matter at the capability level.&lt;/p&gt;
+
+&lt;p&gt;Now I can joyfully continue working on my RPC criticism: since changes must surface to be interesting we can compare how they can surface in the various architectural styles.&lt;/p&gt;
+
+&lt;p&gt;REST is the only style that requires changes to surface in a way that is guaranteed not to break clients, because REST is rather specific about what can change in which ways. Except for add-on changes (that are not a problem for existing clients) all surfacing changes to a REST server component are bound by the possibilities to vary representations (you may change as long as you do stick to rules of the media type used)&lt;/p&gt;
+
+&lt;p&gt;In RPC-based architectures, change is (you guessed it :-) not constrained at all and might surface in a million ways. Welcome to change impact analysis hell.&lt;/p&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Generic vs. Specific Media Types and Evolution</title>
+   <link href="http://algermissen.github.io/2010/10/generic-vs-specific-media-types-and-evolution"/>
+   <updated>2010-10-12T00:59:54+02:00</updated>
+   <id>http://algermissen.github.io/2010/10/generic-vs-specific-media-types-and-evolution</id>
+   <content type="html">&lt;p&gt;In addition to the loss of self-descriptiveness there is another problem with generic media types that is not so obvious. &lt;/p&gt;
+
+&lt;p&gt;Let’s think about the problem from the point of view of someone that needs to conduct a change impact analysis. Suppose there is some REST Web service component C, for example an incident management system, that needs to be changed due to some new business requirement. Also suppose the change applies to the resource implementation that allows for retrieval of incident representations. Specifically, the entity needs to be augmented and changed a little.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;GET /incidents/554
+
+200 Ok
+Content-Type: application/xml
+
+&amp;lt;incident&amp;gt;
+  ... whatever happened to what CI ...
+&amp;lt;/incident&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;With the generic media type approach above change impact analysis is quite challenging because it is difficult to figure out, which assumptions the consumers actually make about the entity. Thorough change impact analysis would require the change manager to contact the client owners and investigate their assumptions. Based on that information it is then possible to make changes without breaking existing clients.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;GET /incidents/554
+
+200 Ok
+Content-Type: application/incident
+
+&amp;lt;incident&amp;gt;
+  ... whatever happened to what CI ...
+&amp;lt;/incident&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In contrast, when using a specific media type, there is no need for change impact analysis because the media type itself acts as the contract within which the entity can be changed.&lt;/p&gt;
+
+&lt;p&gt;In other words, REST’s constraint of specifically typed entities provides for a perimeter within which the server can be flexible without a need to consider the effect the changes have on clients.&lt;/p&gt;
+
+&lt;p&gt;Viewing media types as a perimeter for server side change is an important consideration when designing media types. How big you make the perimeter directly determines the bounds within which the server can later on evolve and, of course, how much burden you put on the client for dealing with entities of that media type.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Spotted Alternates Header in the Wild</title>
+   <link href="http://algermissen.github.io/2010/09/spotted-alternates-header-in-the-wild"/>
+   <updated>2010-09-01T10:00:17+02:00</updated>
+   <id>http://algermissen.github.io/2010/09/spotted-alternates-header-in-the-wild</id>
+   <content type="html">&lt;p&gt;Just spotted an &lt;a href=&quot;http://www.ietf.org/rfc/rfc2295.txt&quot;&gt;Alternates header&lt;/a&gt; in the wild:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ curl http://www.w3.org -HAccept:text/foo -I
+
+HTTP/1.1 406 Not Acceptable
+Date: Tue, 31 Aug 2010 22:26:53 GMT
+Server: Apache/2
+Alternates: {&quot;Home.html&quot; 1 {type text/html} {charset utf-8} {length 28437}}, {&quot;Home.xhtml&quot; 0.99 {type application/xhtml+xml} {charset utf-8} {length 28437}}
+Vary: negotiate,accept
+TCN: list
+Connection: close
+Content-Type: text/html; charset=iso-8859-1
+&lt;/code&gt;&lt;/pre&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
+   <title>PUT and Content-Location</title>
+   <link href="http://algermissen.github.io/2010/08/put-and-content-location"/>
+   <updated>2010-08-23T00:54:07+02:00</updated>
+   <id>http://algermissen.github.io/2010/08/put-and-content-location</id>
+   <content type="html">&lt;p&gt;I noticed some days ago that I totally missed the use of the Content-Location header in responses to PUT requests. Used in this scenario, the client does not need an additional GET to obtain a representation of the resource after the PUT.&lt;/p&gt;
+
+&lt;p&gt;And what is even more interesting is that caches can also cache the response of the PUT.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;PUT /orders/42
+Content-Type: application/order
+[...]
+
+200 Ok
+Content-Location: /orders/42
+Content-Type: application/order
+ETag: &quot;1&quot;
+[...]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The Content-Location header is telling the client and intermediary: “This is the entity and entity headers you would receive for a GET to /orders/42”.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Pretending that the network isn't there....</title>
+   <link href="http://algermissen.github.io/2005/10/pretending-that-the-network-isnt-there"/>
+   <updated>2005-10-02T11:27:37+02:00</updated>
+   <id>http://algermissen.github.io/2005/10/pretending-that-the-network-isnt-there</id>
+   <content type="html">&lt;p&gt;Another very nice posting about REST: &lt;a href=&quot;http://web.archive.org/web/20040625132010/http://www.dehora.net/journal/archives/000360.html&quot;&gt;REST WARS&lt;/a&gt; by Bill de hÓra.&lt;/p&gt;
+
+&lt;p&gt;I especially like:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;The problem is that we don’t, generally speaking, do it right - we keep trying to treat web apps like desktop apps and keep trying to pretend the network is not there.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
+   <title>The Fallacy of Business Objects</title>
+   <link href="http://algermissen.github.io/2005/09/the-fallacy-of-business-objects"/>
+   <updated>2005-09-30T11:24:15+02:00</updated>
+   <id>http://algermissen.github.io/2005/09/the-fallacy-of-business-objects</id>
+   <content type="html">&lt;p&gt;…is &lt;a href=&quot;http://www.propylon.com/news/ctoarticles/040330_business_objects.html&quot;&gt;yet another great article&lt;/a&gt; by Sean Mc Grath.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Enterprise computing is simple really. All business data processing can be analyzed and decomposed into a set of so-called “resources”. These are the fundamental real world concepts that make up your business (e.g. a customer, an account, a product and so on).&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;100% agreed!&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Don't Assume a Closed World</title>
+   <link href="http://algermissen.github.io/2005/09/dont-assume-a-closed-world"/>
+   <updated>2005-09-30T01:11:09+02:00</updated>
+   <id>http://algermissen.github.io/2005/09/dont-assume-a-closed-world</id>
+   <content type="html">&lt;p&gt;While digging around for description logics (as with OWL DL) vs. deductive databases (as with Datalog) material I found this lucid explanation of the &lt;a href=&quot;http://web.archive.org/web/20070607164326/http://esw.w3.org/topic/ClosedWorldAssumptions&quot;&gt;Closed World Assumption&lt;/a&gt;:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;I see it in a pragmatic way. When you’re in the open then the Open World Assumption is really, guess what, the only sane thing to do. You dont really give your apartment key to a stranger because googling him up found no pages where he/she was mentioned as a criminal.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;(From &lt;a href=&quot;http://morenews.blogspot.com/2005/06/two-semantic-webs.html&quot;&gt;Two Semantic Webs&lt;/a&gt;.)&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Don Knuth vs. W3C Validator</title>
+   <link href="http://algermissen.github.io/2005/09/don-knuth-vs-w3c-validator"/>
+   <updated>2005-09-17T11:16:19+02:00</updated>
+   <id>http://algermissen.github.io/2005/09/don-knuth-vs-w3c-validator</id>
+   <content type="html">&lt;p&gt;A &lt;a href=&quot;http://lists.w3.org/Archives/Public/www-validator/2005Sep/0052.html&quot;&gt;must read&lt;/a&gt; on the effects of change:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;To change all these pages will cost me a week’s time. I don’t want to delay The Art of Computer Programming by an unnecessary week; I’ve been working on it for 43 years and I have 20 more years of work to do,…&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Validator folks! do not slow down that man! I want to read the rest of the books some day….given I manage to work myself through the three existing volumes in those 20 years :o)&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Is Fowler a RESTafarian?</title>
+   <link href="http://algermissen.github.io/2005/06/is-fowler-a-restafarian"/>
+   <updated>2005-06-30T16:22:27+02:00</updated>
+   <id>http://algermissen.github.io/2005/06/is-fowler-a-restafarian</id>
+   <content type="html">&lt;p&gt;While giving parts of Martin Fowler’s &lt;a href=&quot;http://martinfowler.com/books/eaa.html&quot;&gt;Patterns of Enterprise Application Architecture&lt;/a&gt; another close read, I came accross this subtle sentence (from Service Layer Pattern; p. 135/136):&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;[…] many of the use cases in an enterprise application are fairly boring “CRUD” (create, read,update, delete) use cases on domain objects - create one of these, read a collection of those, update this other thing. My experience is that there is almost allways a one-to-one correspodence between CRUD use cases and Service Layer operations.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;That’s a pretty strong argument for REST’s uniform interface in an EA context I’d say.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Building Web Services</title>
+   <link href="http://algermissen.github.io/2003/04/building-web-services"/>
+   <updated>2003-04-05T13:40:34+02:00</updated>
+   <id>http://algermissen.github.io/2003/04/building-web-services</id>
+   <content type="html">&lt;p&gt;In the first issue of &lt;a href=&quot;http://queue.acm.org&quot;&gt;ACM Queue&lt;/a&gt; there is an interesting &lt;a href=&quot;http://queue.acm.org/detail.cfm?id=640150&quot;&gt;interview&lt;/a&gt; with &lt;a href=&quot;http://adambosworth.wordpress.com&quot;&gt;Adam Bosworth&lt;/a&gt;. The issue has been lying in my cupboard since March and I only discovered this interview yesterday.&lt;/p&gt;
+
+&lt;p&gt;Here is a quote:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;There also are transactional integrity issues to consider. A database can maintain a transaction over a short period of time in a client/server setting. But if you have one application going to another to ask for 1,000 different things at 1,000 different points in time, the odds that consistency will be maintained are pretty slim. So what would make a lot more sense would be to ask for everything you want from that medical record at the same time. That way, it’s just a single transaction over the Web. And then inside the hospital system, they can pull together all the needed data and hand it back as one big screen chunk. Now that model is very efficient for the Web and it doesn’t require you to maintain state. Basically, you’ve got to take a coarse-grain approach like that or your system just isn’t going to scale. That’s true in the database world and it’s even truer in the application world.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Interestingly, the interview sounds as if Bosworth was arguing pro REST-style services!&lt;/p&gt;
+</content>
+ </entry>
+ 
+ 
+</feed>
