@@ -16,8 +16,8 @@
     <![endif]-->
 
     <!-- Le styles -->
-    <link href="/assets/themes/twitter/bootstrap/css/bootstrap.2.2.2.min.css" rel="stylesheet">
-    <link href="/assets/themes/twitter/css/style.css?body=1" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes//bootstrap/css/bootstrap.2.2.2.min.css" rel="stylesheet">
+    <link href="/assets/themes//css/style.css?body=1" rel="stylesheet" type="text/css" media="all">
 
     <!-- Le fav and touch icons -->
   <!-- Update these with your own images
@@ -52,7 +52,7 @@
     
       
       	
-      	<li><a href="/archive.html">Archive</a></li>
+      	<li><a href="/archive">Archive</a></li>
       	
       
     
@@ -64,7 +64,7 @@
     
       
       	
-      	<li><a href="/categories.html">Categories</a></li>
+      	<li><a href="/categories">Categories</a></li>
       	
       
     
@@ -76,7 +76,7 @@
     
       
       	
-      	<li><a href="/pages.html">Pages</a></li>
+      	<li><a href="/pages">Pages</a></li>
       	
       
     
@@ -92,7 +92,7 @@
     
       
       	
-      	<li><a href="/tags.html">Tags</a></li>
+      	<li><a href="/tags">Tags</a></li>
       	
       
     
@@ -137,19 +137,20 @@
 
 <p>First I created a project based on the archetype Arun uses:</p>
 
-<pre><code>mvn archetype:generate \
+<div class="highlighter-rouge"><pre class="highlight"><code>mvn archetype:generate \
    -DarchetypeGroupId=org.codehaus.mojo.archetypes \
    -DarchetypeArtifactId=webapp-javaee6 \
    -DgroupId=net.jalg \
    -DartifactId=mvc \
    -DinteractiveMode=false
 </code></pre>
+</div>
 
 <p>and then added the neccessary repository and dependencies the way he describes. Because JAX-RS 2.0 and Jersey currently undergo some sort of last minute changes I have changed the Jersey dependencies to be on 2.0-SNAPSHOT to get the latest developments.</p>
 
 <p>The templating support I have in mind would let me return any object from a JAX-RS resource method. In addition it would let me annotate the resource method to specify a template to use for constructing the representations. Like so:</p>
 
-<pre><code>@Path("user/{userId}/account")
+<div class="highlighter-rouge"><pre class="highlight"><code>@Path("user/{userId}/account")
 public class Facade {
     @PathParam("userId") String userId;
  
@@ -162,24 +163,26 @@ public class Facade {
     }
 }
 </code></pre>
+</div>
 
 <p>The problem here is that the JAX-RS runtime will pick the MessageBodyWriter implementation based on the returned type. It will not, magically, invoke some sort of templating engine. So, how can we trick the runtime into choosing a different MessageBodyWriter? And how can we pass to that not only the returned object but also the path of the desired template?</p>
 
 <p>Here the filter API comes in. We can use the @Template annotation to also act as a binding for a particular filter. This is done with the @NameBinding annotation from the new filter API:</p>
 
-<pre><code>@NameBinding
+<div class="highlighter-rouge"><pre class="highlight"><code>@NameBinding
 @Target({ ElementType.TYPE, ElementType.METHOD })
 @Retention(value = RetentionPolicy.RUNTIME)
 public @interface Template {
   String value() default "";
 }
 </code></pre>
+</div>
 
 <p>Now the runtime will invoke all filters annotated with @Template when our getContractDetails() method is called and we can work the magic in a filter.</p>
 
 <p>What happens in the filter below is that we replace the response entity with a wrapper object that holds the template path and the original response entity. The template path we can extract from the annotation, the original response entity we extract from the response context.</p>
 
-<pre><code>@Provider
+<div class="highlighter-rouge"><pre class="highlight"><code>@Provider
 @Template
 public class EntityToModelAndViewWrapper implements ContainerResponseFilter {
  
@@ -200,10 +203,11 @@ public class EntityToModelAndViewWrapper implements ContainerResponseFilter {
     }
 }
 </code></pre>
+</div>
 
 <p>By changing the type of the response entity, we gain control over the MessageBodyWriter selection. And the runtime will now invoke the MessageBodyWriter we have provided for ModelAndView instances:</p>
 
-<pre><code>@Provider
+<div class="highlighter-rouge"><pre class="highlight"><code>@Provider
 ...
 public class ModelToViewMBR implements MessageBodyWriter&lt;ModelAndView&gt; {
   ...
@@ -219,6 +223,7 @@ public class ModelToViewMBR implements MessageBodyWriter&lt;ModelAndView&gt; {
     ...
 }
 </code></pre>
+</div>
 
 <p>In the writeTo() method we make the original response entity available to a templating engine under the name ‘entity’ and invoke the merge of template and entity.</p>
 
@@ -238,16 +243,16 @@ public class ModelToViewMBR implements MessageBodyWriter&lt;ModelAndView&gt; {
 
   
      
-    	<li><a href="/categories.html#javaee6-ref">
-    		javaee6 <span>3</span>
+    	<li><a href="/categories.html#JavaEE6-ref">
+    		JavaEE6 <span>3</span>
     	</a></li>
      
-    	<li><a href="/categories.html#jax-rs 2.0-ref">
-    		jax-rs 2.0 <span>4</span>
+    	<li><a href="/categories.html#JAX-RS 2.0-ref">
+    		JAX-RS 2.0 <span>4</span>
     	</a></li>
      
-    	<li><a href="/categories.html#jersey 2-ref">
-    		jersey 2 <span>2</span>
+    	<li><a href="/categories.html#Jersey 2-ref">
+    		Jersey 2 <span>2</span>
     	</a></li>
     
   
@@ -279,7 +284,7 @@ public class ModelToViewMBR implements MessageBodyWriter&lt;ModelAndView&gt; {
       </div>
       <hr>
       <footer>
-        <p>&copy; 2016 Jan Algermissen
+        <p>&copy; 2017 Jan Algermissen
           with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
           and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
         </p>

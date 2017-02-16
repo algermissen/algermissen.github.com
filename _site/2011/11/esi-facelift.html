@@ -16,8 +16,8 @@
     <![endif]-->
 
     <!-- Le styles -->
-    <link href="/assets/themes/twitter/bootstrap/css/bootstrap.2.2.2.min.css" rel="stylesheet">
-    <link href="/assets/themes/twitter/css/style.css?body=1" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes//bootstrap/css/bootstrap.2.2.2.min.css" rel="stylesheet">
+    <link href="/assets/themes//css/style.css?body=1" rel="stylesheet" type="text/css" media="all">
 
     <!-- Le fav and touch icons -->
   <!-- Update these with your own images
@@ -52,7 +52,7 @@
     
       
       	
-      	<li><a href="/archive.html">Archive</a></li>
+      	<li><a href="/archive">Archive</a></li>
       	
       
     
@@ -64,7 +64,7 @@
     
       
       	
-      	<li><a href="/categories.html">Categories</a></li>
+      	<li><a href="/categories">Categories</a></li>
       	
       
     
@@ -76,7 +76,7 @@
     
       
       	
-      	<li><a href="/pages.html">Pages</a></li>
+      	<li><a href="/pages">Pages</a></li>
       	
       
     
@@ -92,7 +92,7 @@
     
       
       	
-      	<li><a href="/tags.html">Tags</a></li>
+      	<li><a href="/tags">Tags</a></li>
       	
       
     
@@ -159,7 +159,7 @@
 
 <p>While in my scenario the including entity (the article referencing the company information) would likely be HTML I have said above that we need something more non-XML friendly. One way would be to reuse the existing ESI XML-tags but explicitly allowing them in non-XML content:</p>
 
-<pre><code>GET /article/123
+<div class="highlighter-rouge"><pre class="highlight"><code>GET /article/123
 Host: cms.example.org
 
 200 Ok
@@ -169,6 +169,7 @@ ACME in the News
 
 &lt;esi:include src="http://cims.example.org/company/acme"&gt;&lt;/esi:include&gt;
 </code></pre>
+</div>
 
 <p>(I am deliberately excluding any <a href="http://www.w3.org/TR/edge-arch">ESI headers</a> from all the examples)</p>
 
@@ -210,21 +211,22 @@ ACME in the News
 
 <p>This is also #1 on Mark’s list and he refers to it as the ability “to source variables from a URI”. The basic idea is this: an ESI element (say <esi:load>) tells the ESI processor to initiate a request to a target resource and make the response entity available as a variable. That variable could then be used in expressions to assemble the overall Web page.</esi:load></p>
 
-<pre><code>GET /article/123
+<div class="highlighter-rouge"><pre class="highlight"><code>GET /article/123
 Host: cms.example.org
 
 200 Ok
 Content-Type: text/html
 
-&lt;html&gt;
+<span class="nt">&lt;html&gt;</span>
 
-&lt;h1&gt;ACME in the News&lt;/h1&gt;
-&lt;p&gt;
-&lt;esi:load var="acme" href="http://cims.example.org/company/acme"&gt;&lt;/esi:load&gt;
+<span class="nt">&lt;h1&gt;</span>ACME in the News<span class="nt">&lt;/h1&gt;</span>
+<span class="nt">&lt;p&gt;</span>
+<span class="nt">&lt;esi:load</span> <span class="na">var=</span><span class="s">"acme"</span> <span class="na">href=</span><span class="s">"http://cims.example.org/company/acme"</span><span class="nt">&gt;&lt;/esi:load&gt;</span>
 Yesterday, ${acme.name} (${acme.stock.symbol}) had a closing stock price of ${acme.stock.price}.
-&lt;/p&gt;
-&lt;/html&gt;
+<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
 </code></pre>
+</div>
 
 <p>However, there are two problems with this.</p>
 
@@ -234,21 +236,22 @@ Yesterday, ${acme.name} (${acme.stock.symbol}) had a closing stock price of ${ac
 
 <p>A solution to this issue would be to add an <em>accept</em> attribute to <esi:load> that would directly translate to the Accept header of the load-request.</esi:load></p>
 
-<pre><code>GET /article/123
+<div class="highlighter-rouge"><pre class="highlight"><code>GET /article/123
 Host: cms.example.org
 
 200 Ok
 Content-Type: text/html
 
-&lt;html&gt;
+<span class="nt">&lt;html&gt;</span>
 
-&lt;h1&gt;ACME in the News&lt;/h1&gt;
-&lt;p&gt;
-&lt;esi:load var="acme" href="http://cims.example.org/company/acme" accept="application/company+json"&gt;&lt;/esi:load&gt;
+<span class="nt">&lt;h1&gt;</span>ACME in the News<span class="nt">&lt;/h1&gt;</span>
+<span class="nt">&lt;p&gt;</span>
+<span class="nt">&lt;esi:load</span> <span class="na">var=</span><span class="s">"acme"</span> <span class="na">href=</span><span class="s">"http://cims.example.org/company/acme"</span> <span class="na">accept=</span><span class="s">"application/company+json"</span><span class="nt">&gt;&lt;/esi:load&gt;</span>
 Yesterday, ${acme.name} (${acme.stock.symbol}) had a closing stock price of ${acme.stock.price}.
-&lt;/p&gt;
-&lt;/html&gt;
+<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
 </code></pre>
+</div>
 
 <p>Ah, yes. That immediately looks nice and RESTful.</p>
 
@@ -276,9 +279,10 @@ Yesterday, ${acme.name} (${acme.stock.symbol}) had a closing stock price of ${ac
 
 <p>This one though needs particular attention. A templating mechanism immediately raises the question of how much functionality one wants to offer. Variable souring and access is an inherent requirement. Mark also mentions string manipulation functions. For example:</p>
 
-<pre><code>&lt;esi:load var="acme" href="http://cims.example.org/company/acme"&gt;&lt;/esi:load&gt;
+<div class="highlighter-rouge"><pre class="highlight"><code>&lt;esi:load var="acme" href="http://cims.example.org/company/acme"&gt;&lt;/esi:load&gt;
 Yesterday, ${substr(acme.name,0.10)} (${toUpper(acme.stock.symbol)}) had a closing stock price of ${acme.stock.price}.
 </code></pre>
+</div>
 
 <p>I think branching and looping constructs also make sense but they might conflict with the intermdiary processing model and request handling performance.</p>
 
@@ -314,8 +318,8 @@ Yesterday, ${substr(acme.name,0.10)} (${toUpper(acme.stock.symbol)}) had a closi
 
   
      
-    	<li><a href="/categories.html#edge-side-includes-ref">
-    		edge-side-includes <span>1</span>
+    	<li><a href="/categories.html#Edge-Side-Includes-ref">
+    		Edge-Side-Includes <span>1</span>
     	</a></li>
     
   
@@ -347,7 +351,7 @@ Yesterday, ${substr(acme.name,0.10)} (${toUpper(acme.stock.symbol)}) had a closi
       </div>
       <hr>
       <footer>
-        <p>&copy; 2016 Jan Algermissen
+        <p>&copy; 2017 Jan Algermissen
           with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
           and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
         </p>

@@ -5,8 +5,8 @@
         <description>Applying the Web To Enterprise IT - Jan Algermissen</description>
         <link>http://algermissen.github.io</link>
         <link>http://algermissen.github.io</link>
-        <lastBuildDate>2016-12-28T21:17:13+01:00</lastBuildDate>
-        <pubDate>2016-12-28T21:17:13+01:00</pubDate>
+        <lastBuildDate>2017-02-16T23:50:09+01:00</lastBuildDate>
+        <pubDate>2017-02-16T23:50:09+01:00</pubDate>
         <ttl>1800</ttl>
 
 
@@ -22,7 +22,7 @@
 
 &lt;p&gt;First, let’s see, how to use jiron to seal and unseal data:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;import net.jalg.jiron.Jiron;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;import net.jalg.jiron.Jiron;
 
 String data = &quot;Some secret stuff we want protected&quot;;
 
@@ -34,14 +34,15 @@ String unsealed = Jiron.unseal(sealed, &quot;sealing-password&quot;,
 					Jiron.DEFAULT_ENCRYPTION_OPTIONS,
 					Jiron.DEFAULT_INTEGRITY_OPTIONS);
 &lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
-&lt;p&gt;The String &lt;code&gt;sealed&lt;/code&gt; is what you can pass around and be sure that nobody can read or modify it, unless in possession of the sealing password.&lt;/p&gt;
+&lt;p&gt;The String &lt;code class=&quot;highlighter-rouge&quot;&gt;sealed&lt;/code&gt; is what you can pass around and be sure that nobody can read or modify it, unless in possession of the sealing password.&lt;/p&gt;
 
 &lt;p&gt;Suppose you have a Web site that employs cookie-based authentication and suppose you have some data you want to store in that cookie directly so you do not have to go to a database shared by all server instances for looking up that data. For example the user’s login, her real name and information when the cookie expires and re-authentication is enforced.&lt;/p&gt;
 
 &lt;p&gt;Initially, a user not in possession of the cookie will be redirected to a login form and the cookie will be issued upon submission of valid credentials. Here is an excerpt of the &lt;a href=&quot;https://github.com/algermissen/iron-cookie/blob/master/src/main/java/net/jalg/ironcookie/LoginResource.java&quot;&gt;form processing JAX-RS resource&lt;/a&gt;:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;String data = login + &quot;|&quot; + expires + &quot;|&quot; + realname;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;String data = login + &quot;|&quot; + expires + &quot;|&quot; + realname;
 String cookieValue = Jiron.seal(data, ApplicationConfig.ENCRYPTION_KEY,
 					Jiron.DEFAULT_ENCRYPTION_OPTIONS,
 					Jiron.DEFAULT_INTEGRITY_OPTIONS);
@@ -49,22 +50,25 @@ String cookieValue = Jiron.seal(data, ApplicationConfig.ENCRYPTION_KEY,
 NewCookie c = new NewCookie(AuthFilter.COOKIE_NAME, cookieValue);
 return Response.seeOther(redirectUri).cookie(c).build();
 &lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;p&gt;In the HTTP response the cookie will look something like (line breaks added for clarity):&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;Set-Cookie:authtoken=Fe26.1**7A6A689DEC9563773B1264CF4CC585CFC9CF84403EE9143650D2EC2EE&amp;lt;br&amp;gt;&amp;lt;/br&amp;gt;24E36A3*k9yW1ZlC5Tr1a5o2Os_QMQ*sxZkQJfHsfyZE_0DI3ugHKdQ3IXwy1jySoz7GrKiTWU*9C58B956A11&amp;lt;br&amp;gt;&amp;lt;/br&amp;gt;81D1F1E3A1A7A1B67D2CF7738B0BFB16C5EB4B381151CAEEC4C6C*3PxSsg5aThLGvU2e8ItXfep-hpMw5x96&amp;lt;br&amp;gt;&amp;lt;/br&amp;gt;L_PbelhnU84;Version=1
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Set-Cookie:authtoken=Fe26.1**7A6A689DEC9563773B1264CF4CC585CFC9CF84403EE9143650D2EC2EE&amp;lt;br&amp;gt;&amp;lt;/br&amp;gt;24E36A3*k9yW1ZlC5Tr1a5o2Os_QMQ*sxZkQJfHsfyZE_0DI3ugHKdQ3IXwy1jySoz7GrKiTWU*9C58B956A11&amp;lt;br&amp;gt;&amp;lt;/br&amp;gt;81D1F1E3A1A7A1B67D2CF7738B0BFB16C5EB4B381151CAEEC4C6C*3PxSsg5aThLGvU2e8ItXfep-hpMw5x96&amp;lt;br&amp;gt;&amp;lt;/br&amp;gt;L_PbelhnU84;Version=1
 &lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;p&gt;To protect &lt;a href=&quot;https://github.com/algermissen/iron-cookie/blob/master/src/main/java/net/jalg/ironcookie/DashboardResource.java&quot;&gt;a resource class&lt;/a&gt; by enforcing cookie auth, we bind a JAX-RS 2.0 filter to that class using a new &lt;a href=&quot;https://github.com/algermissen/iron-cookie/blob/master/src/main/java/net/jalg/ironcookie/TokenAuthProtected.java&quot;&gt;annotation&lt;/a&gt;:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;//...
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;//...
 @TokenAuthProtected
 public String getDashboard(@Context SecurityContext sc) { ... }
 &lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;p&gt;The &lt;a href=&quot;https://github.com/algermissen/iron-cookie/blob/master/src/main/java/net/jalg/ironcookie/AuthFilter.java&quot;&gt;auth enforcing filter class&lt;/a&gt; extracts the cookie, checks expiration time and puts the data contained in the cookie in a place where it can be accessed by the resource class.&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;Cookie cookie = context.getCookies().get(COOKIE_NAME);
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Cookie cookie = context.getCookies().get(COOKIE_NAME);
 // Redirect to form if no cookie
 String data = Jiron.unseal(cookie.getValue(), ApplicationConfig.ENCRYPTION_KEY,
 					Jiron.DEFAULT_ENCRYPTION_OPTIONS,
@@ -82,6 +86,7 @@ if (now &amp;gt; expires) {
 
 context.setSecurityContext(new TokenSecurityContext(username, realname));
 &lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;p&gt;Using the security context and a custom Principal, the resource class is provided access to the user’s login and realname.&lt;/p&gt;
 
@@ -145,65 +150,72 @@ context.setSecurityContext(new TokenSecurityContext(username, realname));
 
 &lt;p&gt;This will unzip to a glassfish3/ directory, so to start the server do&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;glassfish3/glassfish/bin/asadmin start-domain
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;glassfish3/glassfish/bin/asadmin start-domain
 &lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;p&gt;To find the JAX-RS version included in the Glassfish you just downloaded do something like the following:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;jar -xf glassfish3/glassfish/modules/javax.ws.rs-api.jar META-INF/MANIFEST.MF; grep Bundle-Version META-INF/MANIFEST.MF
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;jar -xf glassfish3/glassfish/modules/javax.ws.rs-api.jar META-INF/MANIFEST.MF; grep Bundle-Version META-INF/MANIFEST.MF
 &lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;p&gt;(This will leave a META-INF directory behind you might want to clean up afterwards)&lt;/p&gt;
 
 &lt;p&gt;For the b63 version this yields:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;Bundle-Version: 2.0.0.m12
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Bundle-Version: 2.0.0.m12
 &lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;p&gt;The next step is to create a project to test things out. I am using the following archetype, but any other EE Web profile archetype should work similarly:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;mvn archetype:generate \
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mvn archetype:generate \
   -DarchetypeGroupId=org.codehaus.mojo.archetypes \
   -DarchetypeArtifactId=webapp-javaee6 \
   -DgroupId=org.example \
   -DartifactId=test \
   -DinteractiveMode=false
 &lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;p&gt;Now let’s edit the POM to pull in the JAX-RS 2.0-Version used by the Glassfish. First, add the proper repository.&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt; &amp;lt;repository&amp;gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; &amp;lt;repository&amp;gt;
  &amp;lt;id&amp;gt;snapshot-repository.java.net&amp;lt;/id&amp;gt;
  &amp;lt;name&amp;gt;Java.net Snapshot Repository for Maven&amp;lt;/name&amp;gt;
  &amp;lt;url&amp;gt;https://maven.java.net/content/repositories/snapshots/&amp;lt;/url&amp;gt;
  &amp;lt;layout&amp;gt;default&amp;lt;/layout&amp;gt;
  &amp;lt;/repository&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;p&gt;Then add the dependency to the specific release (note that the version is not literally the same as the bundle version you extracted above):&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;&amp;lt;dependency&amp;gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;lt;dependency&amp;gt;
   &amp;lt;groupId&amp;gt;javax.ws.rs&amp;lt;/groupId&amp;gt;
   &amp;lt;artifactId&amp;gt;javax.ws.rs-api&amp;lt;/artifactId&amp;gt;
   &amp;lt;version&amp;gt;2.0-m12&amp;lt;/version&amp;gt;
   &amp;lt;scope&amp;gt;provided&amp;lt;/scope&amp;gt;
 &amp;lt;/dependency&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;p&gt;&lt;strong&gt;UPDATE&lt;/strong&gt;: It seems you have to make sure you include this dependency &lt;strong&gt;before&lt;/strong&gt; the dependency to the Java EE Web API. Otherwise, maven insists on trying to use the JAX-RS API version of the Java EE Web API.&lt;/p&gt;
 
-&lt;p&gt;You should now be able to &lt;code&gt;mvn package&lt;/code&gt; and deploy to the Glassfish instance any 2.0-m12 based source code.&lt;/p&gt;
+&lt;p&gt;You should now be able to &lt;code class=&quot;highlighter-rouge&quot;&gt;mvn package&lt;/code&gt; and deploy to the Glassfish instance any 2.0-m12 based source code.&lt;/p&gt;
 
 &lt;p&gt;The final step will be to cd into your project folder and set up your IDE project. E.g. with Eclipse run &lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;mvn eclipse:eclipse
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mvn eclipse:eclipse
 &lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;p&gt;and import as existing Maven project into Eclipse.&lt;/p&gt;
 
 &lt;p&gt;Code completion should now suggest you the 2.0-m12 API.&lt;/p&gt;
 
-&lt;p&gt;If you want to have code completion work with the SNAPSHOT, simply change the POM dependency and rerun &lt;code&gt;mvn eclipse:eclipse&lt;/code&gt;. This will likely break when deployed in the container (if you use a SNAPSHOT-only API feature) but still it is nice to play around with the very latest API changes.&lt;/p&gt;
+&lt;p&gt;If you want to have code completion work with the SNAPSHOT, simply change the POM dependency and rerun &lt;code class=&quot;highlighter-rouge&quot;&gt;mvn eclipse:eclipse&lt;/code&gt;. This will likely break when deployed in the container (if you use a SNAPSHOT-only API feature) but still it is nice to play around with the very latest API changes.&lt;/p&gt;
 
 &lt;p&gt;This focusses on JAX-RS 2.0 latest features. Keep in mind that for the rest of Java EE we referenced the EE6 Web API  profile. This is not for testing latest EE7 features in general.&lt;/p&gt;
 
@@ -296,19 +308,20 @@ context.setSecurityContext(new TokenSecurityContext(username, realname));
 
 &lt;p&gt;First I created a project based on the archetype Arun uses:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;mvn archetype:generate \
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mvn archetype:generate \
    -DarchetypeGroupId=org.codehaus.mojo.archetypes \
    -DarchetypeArtifactId=webapp-javaee6 \
    -DgroupId=net.jalg \
    -DartifactId=mvc \
    -DinteractiveMode=false
 &lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;p&gt;and then added the neccessary repository and dependencies the way he describes. Because JAX-RS 2.0 and Jersey currently undergo some sort of last minute changes I have changed the Jersey dependencies to be on 2.0-SNAPSHOT to get the latest developments.&lt;/p&gt;
 
 &lt;p&gt;The templating support I have in mind would let me return any object from a JAX-RS resource method. In addition it would let me annotate the resource method to specify a template to use for constructing the representations. Like so:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;@Path(&quot;user/{userId}/account&quot;)
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;@Path(&quot;user/{userId}/account&quot;)
 public class Facade {
     @PathParam(&quot;userId&quot;) String userId;
  
@@ -321,24 +334,26 @@ public class Facade {
     }
 }
 &lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;p&gt;The problem here is that the JAX-RS runtime will pick the MessageBodyWriter implementation based on the returned type. It will not, magically, invoke some sort of templating engine. So, how can we trick the runtime into choosing a different MessageBodyWriter? And how can we pass to that not only the returned object but also the path of the desired template?&lt;/p&gt;
 
 &lt;p&gt;Here the filter API comes in. We can use the @Template annotation to also act as a binding for a particular filter. This is done with the @NameBinding annotation from the new filter API:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;@NameBinding
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;@NameBinding
 @Target({ ElementType.TYPE, ElementType.METHOD })
 @Retention(value = RetentionPolicy.RUNTIME)
 public @interface Template {
   String value() default &quot;&quot;;
 }
 &lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;p&gt;Now the runtime will invoke all filters annotated with @Template when our getContractDetails() method is called and we can work the magic in a filter.&lt;/p&gt;
 
 &lt;p&gt;What happens in the filter below is that we replace the response entity with a wrapper object that holds the template path and the original response entity. The template path we can extract from the annotation, the original response entity we extract from the response context.&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;@Provider
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;@Provider
 @Template
 public class EntityToModelAndViewWrapper implements ContainerResponseFilter {
  
@@ -359,10 +374,11 @@ public class EntityToModelAndViewWrapper implements ContainerResponseFilter {
     }
 }
 &lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;p&gt;By changing the type of the response entity, we gain control over the MessageBodyWriter selection. And the runtime will now invoke the MessageBodyWriter we have provided for ModelAndView instances:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;@Provider
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;@Provider
 ...
 public class ModelToViewMBR implements MessageBodyWriter&amp;lt;ModelAndView&amp;gt; {
   ...
@@ -378,6 +394,7 @@ public class ModelToViewMBR implements MessageBodyWriter&amp;lt;ModelAndView&amp
     ...
 }
 &lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;p&gt;In the writeTo() method we make the original response entity available to a templating engine under the name ‘entity’ and invoke the merge of template and entity.&lt;/p&gt;
 
@@ -417,7 +434,7 @@ public class ModelToViewMBR implements MessageBodyWriter&amp;lt;ModelAndView&amp
 
 &lt;p&gt;All we need is a filter and an annotation to selectively bind that filter to any resource method of our liking. Here is the annotation which takes a Cache-Control header value as an argument:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;&amp;lt;code&amp;gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;lt;code&amp;gt;
 package net.jalg.ccdecor;
 import java.lang.annotation.*;
 import javax.ws.rs.NameBinding;
@@ -430,12 +447,13 @@ public @interface Cacheable {
 }
 &amp;lt;/code&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;p&gt;The new @NameBinding annotation tells a JAX-RS 2.0 runtime that our annotation should be used to match filters to resource methods.&lt;/p&gt;
 
 &lt;p&gt;Here is the filter:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;&amp;lt;code&amp;gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;lt;code&amp;gt;
 package net.jalg.ccdecor;
 
 import java.io.IOException;
@@ -463,10 +481,11 @@ public class CacheControlDecorator implements ContainerResponseFilter {
 }
 &amp;lt;/code&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;p&gt;Don’t worry too much about that code for a minute but look at how the filter can be bound to a resource method:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;&amp;lt;code&amp;gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;lt;code&amp;gt;
   @GET
   @Cacheable(cc=&quot;public, maxAge=3600&quot;)
   @Produces(MediaType.TEXT_PLAIN)
@@ -475,6 +494,7 @@ public class CacheControlDecorator implements ContainerResponseFilter {
   }
 &amp;lt;/code&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;p&gt;The binding is achieved using our @Cacheable annotation.&lt;/p&gt;
 
@@ -502,7 +522,7 @@ public class CacheControlDecorator implements ContainerResponseFilter {
 
 &lt;p&gt;I figured I had to isolate my class loaders with something like this:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;&amp;lt;code&amp;gt;&amp;lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&amp;gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;lt;code&amp;gt;&amp;lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&amp;gt;
 &amp;lt;jboss-web&amp;gt;
 &amp;lt;class-loading&amp;gt;
       &amp;lt;loader-repository&amp;gt;com.example:archive=myapp-1.war
@@ -511,6 +531,7 @@ public class CacheControlDecorator implements ContainerResponseFilter {
    &amp;lt;/class-loading&amp;gt;
 &amp;lt;/jboss-web&amp;gt;&amp;lt;/code&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;p&gt;The crappy thing about this is that apparently the reason for the non-intuitive default is that versions prior to JBoss 5 exhibit not-isolated class loading. The designers of JBoss 5+ desired to make the old configurations work in the newer JBosses without adjustments. Makes me shiver.&lt;/p&gt;
 
@@ -570,7 +591,7 @@ public class CacheControlDecorator implements ContainerResponseFilter {
 
 &lt;p&gt;While in my scenario the including entity (the article referencing the company information) would likely be HTML I have said above that we need something more non-XML friendly. One way would be to reuse the existing ESI XML-tags but explicitly allowing them in non-XML content:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;GET /article/123
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;GET /article/123
 Host: cms.example.org
 
 200 Ok
@@ -580,10 +601,11 @@ ACME in the News
 
 &amp;lt;esi:include src=&quot;http://cims.example.org/company/acme&quot;&amp;gt;&amp;lt;/esi:include&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;p&gt;(I am deliberately excluding any &lt;a href=&quot;http://www.w3.org/TR/edge-arch&quot;&gt;ESI headers&lt;/a&gt; from all the examples)&lt;/p&gt;
 
-&lt;p&gt;As far as I can tell at the moment, this would work for non-XML and still allow XML-friendly embedding in XML response entities. If &lt;esi:...&gt; is too likely to overlap with actual content more &#39;mangled tags&#39; would need to be used, e.g. (&amp;lt;% ... %&amp;gt;).&lt;/esi:...&gt;&lt;/p&gt;
+&lt;p&gt;As far as I can tell at the moment, this would work for non-XML and still allow XML-friendly embedding in XML response entities. If &lt;esi:...&gt; is too likely to overlap with actual content more 'mangled tags' would need to be used, e.g. (&amp;lt;% ... %&amp;gt;).&lt;/esi:...&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;obsolete-esi-10-functionality&quot;&gt;Obsolete ESI 1.0 Functionality&lt;/h3&gt;
 
@@ -600,13 +622,13 @@ ACME in the News
 &lt;/esi:otherwise&gt;&lt;/esi:when&gt;&lt;/esi:choose&gt;
   &lt;/li&gt;
   &lt;li&gt;
-    &lt;esi:vars&gt;: would likely be changed; I agree with Mark&#39;s suggestions regarding variable handling by the templating language as well as with his ideas on providing better access to the request and response via predefined objects
+    &lt;esi:vars&gt;: would likely be changed; I agree with Mark's suggestions regarding variable handling by the templating language as well as with his ideas on providing better access to the request and response via predefined objects
 
   
 &lt;/esi:vars&gt;
   &lt;/li&gt;
   &lt;li&gt;
-    &lt;esi:inline&gt; when you first look at it, it appears rather weired and [it took me a while to figure out how inline works](http://stackoverflow.com/questions/7555172/edge-side-includes-how-do-esiinline-tags-work). But I think &lt;esi:inline&gt; is pretty useful for emulating batch retrievals. However, what I do not like about it is that it couples the referencing and the referenced systems: they need to agree on where to place the inline elements and that is pure out-of-band information coupling hell. I&#39;d rather like to see the combination of [pipelining](http://www.mnot.net/blog/2011/08/05/pipeline_now) and [caching](http://www.mnot.net/cache_docs/) to handle batch retrieval requirements.
+    &lt;esi:inline&gt; when you first look at it, it appears rather weired and [it took me a while to figure out how inline works](http://stackoverflow.com/questions/7555172/edge-side-includes-how-do-esiinline-tags-work). But I think &lt;esi:inline&gt; is pretty useful for emulating batch retrievals. However, what I do not like about it is that it couples the referencing and the referenced systems: they need to agree on where to place the inline elements and that is pure out-of-band information coupling hell. I'd rather like to see the combination of [pipelining](http://www.mnot.net/blog/2011/08/05/pipeline_now) and [caching](http://www.mnot.net/cache_docs/) to handle batch retrieval requirements.
 
 
 
@@ -621,21 +643,22 @@ ACME in the News
 
 &lt;p&gt;This is also #1 on Mark’s list and he refers to it as the ability “to source variables from a URI”. The basic idea is this: an ESI element (say &lt;esi:load&gt;) tells the ESI processor to initiate a request to a target resource and make the response entity available as a variable. That variable could then be used in expressions to assemble the overall Web page.&lt;/esi:load&gt;&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;GET /article/123
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;GET /article/123
 Host: cms.example.org
 
 200 Ok
 Content-Type: text/html
 
-&amp;lt;html&amp;gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;html&amp;gt;&lt;/span&gt;
 
-&amp;lt;h1&amp;gt;ACME in the News&amp;lt;/h1&amp;gt;
-&amp;lt;p&amp;gt;
-&amp;lt;esi:load var=&quot;acme&quot; href=&quot;http://cims.example.org/company/acme&quot;&amp;gt;&amp;lt;/esi:load&amp;gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;h1&amp;gt;&lt;/span&gt;ACME in the News&lt;span class=&quot;nt&quot;&gt;&amp;lt;/h1&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;p&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;esi:load&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;var=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;acme&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;http://cims.example.org/company/acme&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/esi:load&amp;gt;&lt;/span&gt;
 Yesterday, ${acme.name} (${acme.stock.symbol}) had a closing stock price of ${acme.stock.price}.
-&amp;lt;/p&amp;gt;
-&amp;lt;/html&amp;gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/p&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/html&amp;gt;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;p&gt;However, there are two problems with this.&lt;/p&gt;
 
@@ -645,21 +668,22 @@ Yesterday, ${acme.name} (${acme.stock.symbol}) had a closing stock price of ${ac
 
 &lt;p&gt;A solution to this issue would be to add an &lt;em&gt;accept&lt;/em&gt; attribute to &lt;esi:load&gt; that would directly translate to the Accept header of the load-request.&lt;/esi:load&gt;&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;GET /article/123
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;GET /article/123
 Host: cms.example.org
 
 200 Ok
 Content-Type: text/html
 
-&amp;lt;html&amp;gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;html&amp;gt;&lt;/span&gt;
 
-&amp;lt;h1&amp;gt;ACME in the News&amp;lt;/h1&amp;gt;
-&amp;lt;p&amp;gt;
-&amp;lt;esi:load var=&quot;acme&quot; href=&quot;http://cims.example.org/company/acme&quot; accept=&quot;application/company+json&quot;&amp;gt;&amp;lt;/esi:load&amp;gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;h1&amp;gt;&lt;/span&gt;ACME in the News&lt;span class=&quot;nt&quot;&gt;&amp;lt;/h1&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;p&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;esi:load&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;var=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;acme&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;http://cims.example.org/company/acme&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;accept=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;application/company+json&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/esi:load&amp;gt;&lt;/span&gt;
 Yesterday, ${acme.name} (${acme.stock.symbol}) had a closing stock price of ${acme.stock.price}.
-&amp;lt;/p&amp;gt;
-&amp;lt;/html&amp;gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/p&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/html&amp;gt;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;p&gt;Ah, yes. That immediately looks nice and RESTful.&lt;/p&gt;
 
@@ -687,9 +711,10 @@ Yesterday, ${acme.name} (${acme.stock.symbol}) had a closing stock price of ${ac
 
 &lt;p&gt;This one though needs particular attention. A templating mechanism immediately raises the question of how much functionality one wants to offer. Variable souring and access is an inherent requirement. Mark also mentions string manipulation functions. For example:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;&amp;lt;esi:load var=&quot;acme&quot; href=&quot;http://cims.example.org/company/acme&quot;&amp;gt;&amp;lt;/esi:load&amp;gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;lt;esi:load var=&quot;acme&quot; href=&quot;http://cims.example.org/company/acme&quot;&amp;gt;&amp;lt;/esi:load&amp;gt;
 Yesterday, ${substr(acme.name,0.10)} (${toUpper(acme.stock.symbol)}) had a closing stock price of ${acme.stock.price}.
 &lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;p&gt;I think branching and looping constructs also make sense but they might conflict with the intermdiary processing model and request handling performance.&lt;/p&gt;
 
@@ -793,7 +818,7 @@ Yesterday, ${substr(acme.name,0.10)} (${toUpper(acme.stock.symbol)}) had a closi
 
 &lt;p&gt;Let’s think about the problem from the point of view of someone that needs to conduct a change impact analysis. Suppose there is some REST Web service component C, for example an incident management system, that needs to be changed due to some new business requirement. Also suppose the change applies to the resource implementation that allows for retrieval of incident representations. Specifically, the entity needs to be augmented and changed a little.&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;GET /incidents/554
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;GET /incidents/554
 
 200 Ok
 Content-Type: application/xml
@@ -802,10 +827,11 @@ Content-Type: application/xml
   ... whatever happened to what CI ...
 &amp;lt;/incident&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;p&gt;With the generic media type approach above change impact analysis is quite challenging because it is difficult to figure out, which assumptions the consumers actually make about the entity. Thorough change impact analysis would require the change manager to contact the client owners and investigate their assumptions. Based on that information it is then possible to make changes without breaking existing clients.&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;GET /incidents/554
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;GET /incidents/554
 
 200 Ok
 Content-Type: application/incident
@@ -814,6 +840,7 @@ Content-Type: application/incident
   ... whatever happened to what CI ...
 &amp;lt;/incident&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;p&gt;In contrast, when using a specific media type, there is no need for change impact analysis because the media type itself acts as the contract within which the entity can be changed.&lt;/p&gt;
 
@@ -830,7 +857,7 @@ Content-Type: application/incident
                 <title>Spotted Alternates Header in the Wild</title>
                 <description>&lt;p&gt;Just spotted an &lt;a href=&quot;http://www.ietf.org/rfc/rfc2295.txt&quot;&gt;Alternates header&lt;/a&gt; in the wild:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;$ curl http://www.w3.org -HAccept:text/foo -I
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ curl http://www.w3.org -HAccept:text/foo -I
 
 HTTP/1.1 406 Not Acceptable
 Date: Tue, 31 Aug 2010 22:26:53 GMT
@@ -841,6 +868,7 @@ TCN: list
 Connection: close
 Content-Type: text/html; charset=iso-8859-1
 &lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 </description>
                 <link>http://algermissen.github.io/2010/09/spotted-alternates-header-in-the-wild</link>
@@ -854,7 +882,7 @@ Content-Type: text/html; charset=iso-8859-1
 
 &lt;p&gt;And what is even more interesting is that caches can also cache the response of the PUT.&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;PUT /orders/42
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;PUT /orders/42
 Content-Type: application/order
 [...]
 
@@ -864,6 +892,7 @@ Content-Type: application/order
 ETag: &quot;1&quot;
 [...]
 &lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;p&gt;The Content-Location header is telling the client and intermediary: “This is the entity and entity headers you would receive for a GET to /orders/42”.&lt;/p&gt;
 </description>

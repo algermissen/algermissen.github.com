@@ -16,8 +16,8 @@
     <![endif]-->
 
     <!-- Le styles -->
-    <link href="/assets/themes/twitter/bootstrap/css/bootstrap.2.2.2.min.css" rel="stylesheet">
-    <link href="/assets/themes/twitter/css/style.css?body=1" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes//bootstrap/css/bootstrap.2.2.2.min.css" rel="stylesheet">
+    <link href="/assets/themes//css/style.css?body=1" rel="stylesheet" type="text/css" media="all">
 
     <!-- Le fav and touch icons -->
   <!-- Update these with your own images
@@ -52,7 +52,7 @@
     
       
       	
-      	<li><a href="/archive.html">Archive</a></li>
+      	<li><a href="/archive">Archive</a></li>
       	
       
     
@@ -64,7 +64,7 @@
     
       
       	
-      	<li><a href="/categories.html">Categories</a></li>
+      	<li><a href="/categories">Categories</a></li>
       	
       
     
@@ -76,7 +76,7 @@
     
       
       	
-      	<li><a href="/pages.html">Pages</a></li>
+      	<li><a href="/pages">Pages</a></li>
       	
       
     
@@ -92,7 +92,7 @@
     
       
       	
-      	<li><a href="/tags.html">Tags</a></li>
+      	<li><a href="/tags">Tags</a></li>
       	
       
     
@@ -129,65 +129,72 @@
 
 <p>This will unzip to a glassfish3/ directory, so to start the server do</p>
 
-<pre><code>glassfish3/glassfish/bin/asadmin start-domain
+<div class="highlighter-rouge"><pre class="highlight"><code>glassfish3/glassfish/bin/asadmin start-domain
 </code></pre>
+</div>
 
 <p>To find the JAX-RS version included in the Glassfish you just downloaded do something like the following:</p>
 
-<pre><code>jar -xf glassfish3/glassfish/modules/javax.ws.rs-api.jar META-INF/MANIFEST.MF; grep Bundle-Version META-INF/MANIFEST.MF
+<div class="highlighter-rouge"><pre class="highlight"><code>jar -xf glassfish3/glassfish/modules/javax.ws.rs-api.jar META-INF/MANIFEST.MF; grep Bundle-Version META-INF/MANIFEST.MF
 </code></pre>
+</div>
 
 <p>(This will leave a META-INF directory behind you might want to clean up afterwards)</p>
 
 <p>For the b63 version this yields:</p>
 
-<pre><code>Bundle-Version: 2.0.0.m12
+<div class="highlighter-rouge"><pre class="highlight"><code>Bundle-Version: 2.0.0.m12
 </code></pre>
+</div>
 
 <p>The next step is to create a project to test things out. I am using the following archetype, but any other EE Web profile archetype should work similarly:</p>
 
-<pre><code>mvn archetype:generate \
+<div class="highlighter-rouge"><pre class="highlight"><code>mvn archetype:generate \
   -DarchetypeGroupId=org.codehaus.mojo.archetypes \
   -DarchetypeArtifactId=webapp-javaee6 \
   -DgroupId=org.example \
   -DartifactId=test \
   -DinteractiveMode=false
 </code></pre>
+</div>
 
 <p>Now let’s edit the POM to pull in the JAX-RS 2.0-Version used by the Glassfish. First, add the proper repository.</p>
 
-<pre><code> &lt;repository&gt;
+<div class="highlighter-rouge"><pre class="highlight"><code> &lt;repository&gt;
  &lt;id&gt;snapshot-repository.java.net&lt;/id&gt;
  &lt;name&gt;Java.net Snapshot Repository for Maven&lt;/name&gt;
  &lt;url&gt;https://maven.java.net/content/repositories/snapshots/&lt;/url&gt;
  &lt;layout&gt;default&lt;/layout&gt;
  &lt;/repository&gt;
 </code></pre>
+</div>
 
 <p>Then add the dependency to the specific release (note that the version is not literally the same as the bundle version you extracted above):</p>
 
-<pre><code>&lt;dependency&gt;
+<div class="highlighter-rouge"><pre class="highlight"><code>&lt;dependency&gt;
   &lt;groupId&gt;javax.ws.rs&lt;/groupId&gt;
   &lt;artifactId&gt;javax.ws.rs-api&lt;/artifactId&gt;
   &lt;version&gt;2.0-m12&lt;/version&gt;
   &lt;scope&gt;provided&lt;/scope&gt;
 &lt;/dependency&gt;
 </code></pre>
+</div>
 
 <p><strong>UPDATE</strong>: It seems you have to make sure you include this dependency <strong>before</strong> the dependency to the Java EE Web API. Otherwise, maven insists on trying to use the JAX-RS API version of the Java EE Web API.</p>
 
-<p>You should now be able to <code>mvn package</code> and deploy to the Glassfish instance any 2.0-m12 based source code.</p>
+<p>You should now be able to <code class="highlighter-rouge">mvn package</code> and deploy to the Glassfish instance any 2.0-m12 based source code.</p>
 
 <p>The final step will be to cd into your project folder and set up your IDE project. E.g. with Eclipse run </p>
 
-<pre><code>mvn eclipse:eclipse
+<div class="highlighter-rouge"><pre class="highlight"><code>mvn eclipse:eclipse
 </code></pre>
+</div>
 
 <p>and import as existing Maven project into Eclipse.</p>
 
 <p>Code completion should now suggest you the 2.0-m12 API.</p>
 
-<p>If you want to have code completion work with the SNAPSHOT, simply change the POM dependency and rerun <code>mvn eclipse:eclipse</code>. This will likely break when deployed in the container (if you use a SNAPSHOT-only API feature) but still it is nice to play around with the very latest API changes.</p>
+<p>If you want to have code completion work with the SNAPSHOT, simply change the POM dependency and rerun <code class="highlighter-rouge">mvn eclipse:eclipse</code>. This will likely break when deployed in the container (if you use a SNAPSHOT-only API feature) but still it is nice to play around with the very latest API changes.</p>
 
 <p>This focusses on JAX-RS 2.0 latest features. Keep in mind that for the rest of Java EE we referenced the EE6 Web API  profile. This is not for testing latest EE7 features in general.</p>
 
@@ -205,16 +212,16 @@
 
   
      
-    	<li><a href="/categories.html#glassfish-ref">
-    		glassfish <span>1</span>
+    	<li><a href="/categories.html#Glassfish-ref">
+    		Glassfish <span>1</span>
     	</a></li>
      
-    	<li><a href="/categories.html#javaee6-ref">
-    		javaee6 <span>3</span>
+    	<li><a href="/categories.html#JavaEE6-ref">
+    		JavaEE6 <span>3</span>
     	</a></li>
      
-    	<li><a href="/categories.html#jax-rs 2.0-ref">
-    		jax-rs 2.0 <span>4</span>
+    	<li><a href="/categories.html#JAX-RS 2.0-ref">
+    		JAX-RS 2.0 <span>4</span>
     	</a></li>
     
   
@@ -246,7 +253,7 @@
       </div>
       <hr>
       <footer>
-        <p>&copy; 2016 Jan Algermissen
+        <p>&copy; 2017 Jan Algermissen
           with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
           and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
         </p>

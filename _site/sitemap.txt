@@ -1,13 +1,13 @@
 
-http://algermissen.github.io/about.html
-http://algermissen.github.io/archive.html
+http://algermissen.github.io/about
+http://algermissen.github.io/archive
 http://algermissen.github.io/atom.xml
-http://algermissen.github.io/categories.html
-http://algermissen.github.io/index.html
-http://algermissen.github.io/pages.html
+http://algermissen.github.io/categories
+http://algermissen.github.io/
+http://algermissen.github.io/pages
 http://algermissen.github.io/rss.xml
 http://algermissen.github.io/sitemap.txt
-http://algermissen.github.io/tags.html
+http://algermissen.github.io/tags
 
 http://algermissen.github.io/2013/05/using-iron-to-encapsulate-cookies
 http://algermissen.github.io/2013/05/beyond-oauth

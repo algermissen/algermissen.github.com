@@ -16,8 +16,8 @@
     <![endif]-->
 
     <!-- Le styles -->
-    <link href="/assets/themes/twitter/bootstrap/css/bootstrap.2.2.2.min.css" rel="stylesheet">
-    <link href="/assets/themes/twitter/css/style.css?body=1" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes//bootstrap/css/bootstrap.2.2.2.min.css" rel="stylesheet">
+    <link href="/assets/themes//css/style.css?body=1" rel="stylesheet" type="text/css" media="all">
 
     <!-- Le fav and touch icons -->
   <!-- Update these with your own images
@@ -52,7 +52,7 @@
     
       
       	
-      	<li><a href="/archive.html">Archive</a></li>
+      	<li><a href="/archive">Archive</a></li>
       	
       
     
@@ -64,7 +64,7 @@
     
       
       	
-      	<li><a href="/categories.html">Categories</a></li>
+      	<li><a href="/categories">Categories</a></li>
       	
       
     
@@ -76,7 +76,7 @@
     
       
       	
-      	<li><a href="/pages.html">Pages</a></li>
+      	<li><a href="/pages">Pages</a></li>
       	
       
     
@@ -92,7 +92,7 @@
     
       
       	
-      	<li><a href="/tags.html">Tags</a></li>
+      	<li><a href="/tags">Tags</a></li>
       	
       
     
@@ -143,7 +143,7 @@
 
 <p>All we need is a filter and an annotation to selectively bind that filter to any resource method of our liking. Here is the annotation which takes a Cache-Control header value as an argument:</p>
 
-<pre><code>&lt;code&gt;
+<div class="highlighter-rouge"><pre class="highlight"><code>&lt;code&gt;
 package net.jalg.ccdecor;
 import java.lang.annotation.*;
 import javax.ws.rs.NameBinding;
@@ -156,12 +156,13 @@ public @interface Cacheable {
 }
 &lt;/code&gt;
 </code></pre>
+</div>
 
 <p>The new @NameBinding annotation tells a JAX-RS 2.0 runtime that our annotation should be used to match filters to resource methods.</p>
 
 <p>Here is the filter:</p>
 
-<pre><code>&lt;code&gt;
+<div class="highlighter-rouge"><pre class="highlight"><code>&lt;code&gt;
 package net.jalg.ccdecor;
 
 import java.io.IOException;
@@ -189,10 +190,11 @@ public class CacheControlDecorator implements ContainerResponseFilter {
 }
 &lt;/code&gt;
 </code></pre>
+</div>
 
 <p>Don’t worry too much about that code for a minute but look at how the filter can be bound to a resource method:</p>
 
-<pre><code>&lt;code&gt;
+<div class="highlighter-rouge"><pre class="highlight"><code>&lt;code&gt;
   @GET
   @Cacheable(cc="public, maxAge=3600")
   @Produces(MediaType.TEXT_PLAIN)
@@ -201,6 +203,7 @@ public class CacheControlDecorator implements ContainerResponseFilter {
   }
 &lt;/code&gt;
 </code></pre>
+</div>
 
 <p>The binding is achieved using our @Cacheable annotation.</p>
 
@@ -222,12 +225,12 @@ public class CacheControlDecorator implements ContainerResponseFilter {
 
   
      
-    	<li><a href="/categories.html#jax-rs 2.0-ref">
-    		jax-rs 2.0 <span>4</span>
+    	<li><a href="/categories.html#JAX-RS 2.0-ref">
+    		JAX-RS 2.0 <span>4</span>
     	</a></li>
      
-    	<li><a href="/categories.html#jersey 2-ref">
-    		jersey 2 <span>2</span>
+    	<li><a href="/categories.html#Jersey 2-ref">
+    		Jersey 2 <span>2</span>
     	</a></li>
     
   
@@ -259,7 +262,7 @@ public class CacheControlDecorator implements ContainerResponseFilter {
       </div>
       <hr>
       <footer>
-        <p>&copy; 2016 Jan Algermissen
+        <p>&copy; 2017 Jan Algermissen
           with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
           and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
         </p>

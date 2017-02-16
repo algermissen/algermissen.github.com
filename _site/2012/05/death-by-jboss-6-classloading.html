@@ -16,8 +16,8 @@
     <![endif]-->
 
     <!-- Le styles -->
-    <link href="/assets/themes/twitter/bootstrap/css/bootstrap.2.2.2.min.css" rel="stylesheet">
-    <link href="/assets/themes/twitter/css/style.css?body=1" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes//bootstrap/css/bootstrap.2.2.2.min.css" rel="stylesheet">
+    <link href="/assets/themes//css/style.css?body=1" rel="stylesheet" type="text/css" media="all">
 
     <!-- Le fav and touch icons -->
   <!-- Update these with your own images
@@ -52,7 +52,7 @@
     
       
       	
-      	<li><a href="/archive.html">Archive</a></li>
+      	<li><a href="/archive">Archive</a></li>
       	
       
     
@@ -64,7 +64,7 @@
     
       
       	
-      	<li><a href="/categories.html">Categories</a></li>
+      	<li><a href="/categories">Categories</a></li>
       	
       
     
@@ -76,7 +76,7 @@
     
       
       	
-      	<li><a href="/pages.html">Pages</a></li>
+      	<li><a href="/pages">Pages</a></li>
       	
       
     
@@ -92,7 +92,7 @@
     
       
       	
-      	<li><a href="/tags.html">Tags</a></li>
+      	<li><a href="/tags">Tags</a></li>
       	
       
     
@@ -129,7 +129,7 @@
 
 <p>I figured I had to isolate my class loaders with something like this:</p>
 
-<pre><code>&lt;code&gt;&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+<div class="highlighter-rouge"><pre class="highlight"><code>&lt;code&gt;&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;jboss-web&gt;
 &lt;class-loading&gt;
       &lt;loader-repository&gt;com.example:archive=myapp-1.war
@@ -138,6 +138,7 @@
    &lt;/class-loading&gt;
 &lt;/jboss-web&gt;&lt;/code&gt;
 </code></pre>
+</div>
 
 <p>The crappy thing about this is that apparently the reason for the non-intuitive default is that versions prior to JBoss 5 exhibit not-isolated class loading. The designers of JBoss 5+ desired to make the old configurations work in the newer JBosses without adjustments. Makes me shiver.</p>
 
@@ -161,16 +162,16 @@
 
   
      
-    	<li><a href="/categories.html#java class loading-ref">
-    		java class loading <span>1</span>
+    	<li><a href="/categories.html#Java Class Loading-ref">
+    		Java Class Loading <span>1</span>
     	</a></li>
      
-    	<li><a href="/categories.html#javaee6-ref">
-    		javaee6 <span>3</span>
+    	<li><a href="/categories.html#JavaEE6-ref">
+    		JavaEE6 <span>3</span>
     	</a></li>
      
-    	<li><a href="/categories.html#jboss6-ref">
-    		jboss6 <span>1</span>
+    	<li><a href="/categories.html#JBoss6-ref">
+    		JBoss6 <span>1</span>
     	</a></li>
     
   
@@ -202,7 +203,7 @@
       </div>
       <hr>
       <footer>
-        <p>&copy; 2016 Jan Algermissen
+        <p>&copy; 2017 Jan Algermissen
           with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
           and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
         </p>
