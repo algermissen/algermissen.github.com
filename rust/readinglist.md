@@ -134,6 +134,9 @@ description: "My collection bookmarks on various Rust topics."
 # File Systems etc.
 [TFS File System](https://github.com/redox-os/tfs)
 
+# Cross Compiling
+[https://chr4.org/blog/2017/03/15/cross-compile-and-link-a-static-binary-on-macos-for-linux-with-cargo-and-rust/]
+
 # Lots of Rust Code
 [https://github.com/habnabit?tab=repositories]
 [https://github.com/brendanzab?tab=repositories]
@@ -154,6 +157,8 @@ description: "My collection bookmarks on various Rust topics."
 []()
 []()
 []()
-[]()
-[]()
+
+# Other Resource Lists
+[https://devhub.io/zh/repos/brson-awesome-rust]
+[http://awesomeawesome.party/awesome-rust]
 []()
