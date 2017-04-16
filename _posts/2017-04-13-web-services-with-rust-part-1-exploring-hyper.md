@@ -113,7 +113,12 @@ Now that we have a baseline, let's see what happens if we involve multiple cores
 
 
 
-![Alt text](/assets/img/1-Threaded.jpg)
+----
+![Results 1-threaded](/assets/img/1-Threaded.jpg)
+----
+![Results 2-threaded](/assets/img/2-Threaded.jpg)
+----
+![Results 4-threaded](/assets/img/4-Threaded.jpg)
 
 
 
