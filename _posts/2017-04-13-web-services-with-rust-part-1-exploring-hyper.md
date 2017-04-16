@@ -107,10 +107,13 @@ the 99th percentile latency degrading. modifying the simulated work showed
 corresponding variations in req/s numbers so I am now sure I am not hitting
 any unwanted capacity limits.
 
+Now that we have a baseline, let's see what happens if we involve multiple cores.
+
+### Minimal Multi-Threaded Server (No Shared State, No I/O)
 
 
 
-
+![Alt text](/assets/img/1-Threaded.png])
 
 
 
