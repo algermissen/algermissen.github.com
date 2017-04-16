@@ -113,7 +113,7 @@ Now that we have a baseline, let's see what happens if we involve multiple cores
 
 
 
-![Alt text](/assets/img/1-Threaded.png])
+![Alt text](/assets/img/1-Threaded.jpg)
 
 
 

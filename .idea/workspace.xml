@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="62bdd6a7-56c0-4e1b-ac6d-1debcf303e03" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/img/1-Threaded.png" afterPath="$PROJECT_DIR$/assets/img/1-Threaded.png" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_posts/2017-04-13-web-services-with-rust-part-1-exploring-hyper.md" afterPath="$PROJECT_DIR$/_posts/2017-04-13-web-services-with-rust-part-1-exploring-hyper.md" />
     </list>
     <ignored path="algermissen.github.com.iws" />
@@ -29,8 +29,8 @@
       <file leaf-file-name="2017-04-13-web-services-with-rust-part-1-exploring-hyper.md" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/_posts/2017-04-13-web-services-with-rust-part-1-exploring-hyper.md">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.7545692">
-              <caret line="117" column="0" selection-start-line="117" selection-start-column="0" selection-end-line="117" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.7101828">
+              <caret line="115" column="37" selection-start-line="115" selection-start-column="37" selection-end-line="115" selection-end-column="37" />
               <folding />
             </state>
           </provider>
@@ -275,12 +275,12 @@
       <option name="number" value="Default" />
       <updated>1492112475827</updated>
       <workItem from="1492112477122" duration="10866000" />
-      <workItem from="1492365997055" duration="82000" />
+      <workItem from="1492365997055" duration="204000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="10948000" />
+    <option name="totallyTimeSpent" value="11070000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1422" height="862" extended-state="0" />
@@ -337,8 +337,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/_posts/2017-04-13-web-services-with-rust-part-1-exploring-hyper.md">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.7545692">
-          <caret line="117" column="0" selection-start-line="117" selection-start-column="0" selection-end-line="117" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.7101828">
+          <caret line="115" column="37" selection-start-line="115" selection-start-column="37" selection-end-line="115" selection-end-column="37" />
           <folding />
         </state>
       </provider>
