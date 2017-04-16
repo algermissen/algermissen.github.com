@@ -28,8 +28,8 @@
       <file leaf-file-name="2017-04-13-web-services-with-rust-part-1-exploring-hyper.md" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/_posts/2017-04-13-web-services-with-rust-part-1-exploring-hyper.md">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="4.5274153">
-              <caret line="204" column="10" selection-start-line="204" selection-start-column="10" selection-end-line="204" selection-end-column="10" />
+            <state vertical-scroll-proportion="0.3772846">
+              <caret line="173" column="34" selection-start-line="173" selection-start-column="34" selection-end-line="173" selection-end-column="34" />
               <folding />
             </state>
           </provider>
@@ -274,12 +274,12 @@
       <option name="number" value="Default" />
       <updated>1492112475827</updated>
       <workItem from="1492112477122" duration="10866000" />
-      <workItem from="1492365997055" duration="3960000" />
+      <workItem from="1492365997055" duration="4079000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="14826000" />
+    <option name="totallyTimeSpent" value="14945000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1422" height="862" extended-state="0" />
@@ -336,8 +336,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/_posts/2017-04-13-web-services-with-rust-part-1-exploring-hyper.md">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="4.5274153">
-          <caret line="204" column="10" selection-start-line="204" selection-start-column="10" selection-end-line="204" selection-end-column="10" />
+        <state vertical-scroll-proportion="0.3772846">
+          <caret line="173" column="34" selection-start-line="173" selection-start-column="34" selection-end-line="173" selection-end-column="34" />
           <folding />
         </state>
       </provider>

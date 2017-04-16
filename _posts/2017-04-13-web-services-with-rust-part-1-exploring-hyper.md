@@ -171,7 +171,7 @@ Here is the interesting part of the code:
 Check out the [full source code](https://github.com/algermissen/web-rust/blob/b1c179f54ec194192b4d858f5c7de0906e55231d/src/bin/minimal_multi_threaded.rs).
 
 This version (using two threads) should give us roughly twice the throughput - let's run
-the same test setup meanwhile and take a look at the graph from the single-threaded setup.
+the same test setup and meanwhile take a look at the graph from the single-threaded setup.
 It nicely shows how at 6k req/s the latencies start to increase, thereby capping the
 throughput at these 6k.
 
