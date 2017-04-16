@@ -36,7 +36,7 @@ In this series of blog postings we'll explore how to build Web services with
 hyper, focusing primarily on non functional aspects such as using thread pools with
 hyper, shared state,
 
-# Minimal, Single-Threaded Server (No Shared State, No I/O)
+### Minimal, Single-Threaded Server (No Shared State, No I/O)
 
 The most simple server to run based on hyper is a single-threaded server that
 does not involve shared state or blocking calls. We'll just use the
