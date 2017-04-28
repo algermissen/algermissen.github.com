@@ -73,57 +73,5 @@ being served.
 ### Test Case:
 
 
-
-
- I think we
-should have scenarios for
-
-* very few clients
-* medium number of clients (e.g. the above 500) that attempt maximum number of requests
-* very many clients that do few requests (the true Web scenario)
-
-With 10 or 100 clients the limiting factor is the sizing of the load test generators. We'll
-get back to this scenario after upgrading the load test generator in another posting.
-
-The 500 clients scenario we have already covered, so let us go with the very many clients
-variant next.
-
-For this we alter the StormForger test case to start many more clients that all do some
-work and then stop.
-
-    definition.setTarget("147.75.101.27:8080");
-
-    definition.setArrivalPhases([
-      { duration: 1 * 5, rate: 100, },
-      { duration: 1 * 20, rate: 200, },
-      { duration: 1 * 20, rate: 400, },
-      { duration: 1 * 20, rate: 600, },
-      { duration: 1 * 20, rate: 800, },
-      { duration: 1 * 20, rate: 1000, },
-      { duration: 1 * 20, rate: 1200, },
-    ]);
-
-    definition.setTestOptions({
-      cluster: { sizing: "small", },
-    });
-
-    definition.session("VeryManyClients", function(context) {
-      context.times(8, function(context){
-        context.get("/data", { tag: "root" });
-        context.wait(0.1, { random: true });
-      });
-    });
-
-This gives us gradually increasing number of arriving clients, each calling the
-static resource eight times, waiting a random number of milliseconds up to 100ms
-between calls.
-
-When running this with a single thread version of the server, we see the 99th
-latency percentile to increase at about 4000 req/s and 1000 parallel clients.
-
-![Results Many Clients - 1 Thread](/assets/img/ManyClients_1Thread.jpg)
-
-Let's verify we get twice the throughput with 2 threads.
-
-![Results Many Clients - 2 Thread](/assets/img/ManyClients_2Thread.jpg)
+TBD...
 
