@@ -3,9 +3,11 @@ layout: post
 title: "Web Services with Rust Part 1bis: Baseline Revisited"
 description: ""
 category: "rust"
-tags: ["rustweb"]
+tags: ["rust-web"]
 ---
 {% include JB/setup %}
+
+[All Web-Rust postings](http://www.jalg.net/tags.html#rust-web-ref)
 
 In the last posting I started exploring implementing Web services in Rust, using
 hyper with some minimal single- and multi threaded servers.

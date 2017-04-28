@@ -7,6 +7,8 @@ tags: ["rust-web"]
 ---
 {% include JB/setup %}
 
+[All Web-Rust postings](http://www.jalg.net/tags.html#rust-web-ref)
+
 A while ago I have turned my head towards [Rust](http://rustlang.org) for
 developing Web Services. Rust's design in my opinion hits a sweet spot between
 ease of development and runtime efficiency, especially doing away with a
