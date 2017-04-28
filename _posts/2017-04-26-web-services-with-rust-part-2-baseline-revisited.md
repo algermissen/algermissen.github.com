@@ -3,7 +3,7 @@ layout: post
 title: "Web Services with Rust Part 1bis: Baseline Revisited"
 description: ""
 category: "rust"
-tags: []
+tags: ["rustweb"]
 ---
 {% include JB/setup %}
 

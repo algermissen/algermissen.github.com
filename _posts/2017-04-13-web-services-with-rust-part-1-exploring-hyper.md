@@ -3,7 +3,7 @@ layout: post
 title: "Web Services with Rust Part 1: Exploring Hyper"
 description: ""
 category: "rust"
-tags: []
+tags: ["rust-web"]
 ---
 {% include JB/setup %}
 
@@ -192,17 +192,17 @@ until about 20k req/s.
 ![Results 4-threaded](/assets/img/4-Threaded.jpg)
 
 Yes, the 99th percentile rises somewhere around 15k, but for this initial
- verification that what I am doing makes some sort of sense the result is
- sufficient.
+verification that what I am doing makes some sort of sense the result is
+sufficient.
 
- As a side note: 20k req/s at $ 0.05/h for the server gives roughly
- 72 million req/h at 5 cents...
+As a side note: 20k req/s at $ 0.05/h for the server gives roughly
+72 million req/h at 5 cents...
 
- So much for getting out feet wet with Rust, hyper and Tokio and for establishing
- a baseline for comparing future variations. Next up I'll look into a variant
- running on a Tokio-managed thread pool and how to share state across
- request handling threads (for example for rate limiting, metrics collection,
- logging).
+So much for getting out feet wet with Rust, hyper and Tokio and for establishing
+a baseline for comparing future variations. Next up I'll look into a variant
+running on a Tokio-managed thread pool and how to share state across
+request handling threads (for example for rate limiting, metrics collection,
+logging).
 
 
 
