@@ -26,16 +26,12 @@ establishing a baseline. We can leverage the
 [configuration options of StormForger](https://docs.stormforger.com/reference/)
 to extend the test scenarios.
 
-----
-
-A note on [StormForger](https://stormforger.com/): I have worked with them in
+*A note on [StormForger](https://stormforger.com/): I have worked with them in
 a previous client project where they provided their platform and traffic modeling
 and result analysis support. We very much benefited from their deep understanding of
 load testing issues and their traffic shaping DSL makes creating test scenarios a
 breeze. Naturally, I picked them for this exploration and since they graciously
-fuel my tests here, I am more than happy to give credit :-)
-
-----
+fuel my tests here, I am more than happy to give credit :-)*
 
 ### Instrumenting the Server
 
