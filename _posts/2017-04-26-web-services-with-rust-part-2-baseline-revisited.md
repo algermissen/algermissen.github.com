@@ -26,12 +26,14 @@ establishing a baseline. We can leverage the
 [configuration options of StormForger](https://docs.stormforger.com/reference/)
 to extend the test scenarios.
 
+----
 A note on [StormForger](https://stormforger.com/): I have worked with them in
 a previous client project where they provided their platform and traffic modeling
 and result analysis support. We very much benefited from their deep understanding of
 load testing issues and their traffic shaping DSL makes creating test scenarios a
 breeze. Naturally, I picked them for this exploration and since they graciously
 fuel my tests here, I am more than happy to give credit :-)
+----
 
 ### Instrumenting the Server
 
@@ -46,10 +48,11 @@ already exists (apparently developed and used by the [TiKV Team](https://github.
 I'hve used this to implement an [instrumented minimal hyper server](https://github.com/algermissen/web-rust/blob/master/src/bin/testserver.rs)
 
 One [gauge](https://prometheus.io/docs/concepts/metric_types/#gauge)
-[metric keeps track of the number of connected clients](https://github.com/algermissen/web-rust/blob/51019037c4b6478e953e51a1c016a5dd7ada2b1a/src/bin/testserver.rs#L93)
+metric [keeps track of the number of connected clients](https://github.com/algermissen/web-rust/blob/51019037c4b6478e953e51a1c016a5dd7ada2b1a/src/bin/testserver.rs#L93)
 and a [histogram](https://prometheus.io/docs/concepts/metric_types/#histogram) is
 used to [measure the individual requests](https://github.com/algermissen/web-rust/blob/51019037c4b6478e953e51a1c016a5dd7ada2b1a/src/bin/testserver.rs#L119).
 
+So, let's see what the instruments report when we throw load at the server.
 
 ### Test Case: Many-Clients-One-Request
 
@@ -57,6 +60,8 @@ This test case focuses on maximizing the number of clients while having each
 client just send a single request. My goal is to use this to get as many
 clients as possible connected in parallel while minimizing the time they spend
 being served.
+
+The StormForger test case setup:
 
     definition.setTarget("xxx:8080");
 
@@ -78,7 +83,6 @@ being served.
     definition.session("ManyClientsOneRequest", function(context) {
       context.get("/data", { tag: "root" });
     });
-
 
 
 ### Test Case:
