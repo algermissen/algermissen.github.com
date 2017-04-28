@@ -37,8 +37,19 @@ fuel my tests here, I am more than happy to give credit :-)
 
 While StormForger is providing excellent reports on the test runs, I still want
 to measure directly in the server to get a better picture of what is happening
-and to verify the assumptions I make about the Rust and [Tokio](http://tokio.io)
+and to verify the assumptions I make about the Rust and [Tokio](https://tokio.rs/)
 ecosystems.
+
+Recently [Prometheus](https://prometheus.io) has become my application metrics
+system of choice and since a [Prometheus client for Rust](https://github.com/pingcap/rust-prometheus)
+already exists (apparently developed and used by the [TiKV Team](https://github.com/pingcap/tikv))
+I'hve used this to implement an [instrumented minimal hyper server](https://github.com/algermissen/web-rust/blob/master/src/bin/testserver.rs)
+
+One [gauge](https://prometheus.io/docs/concepts/metric_types/#gauge)
+[metric keeps track of the number of connected clients](https://github.com/algermissen/web-rust/blob/51019037c4b6478e953e51a1c016a5dd7ada2b1a/src/bin/testserver.rs#L93)
+and a [histogram](https://prometheus.io/docs/concepts/metric_types/#histogram) is
+used to [measure the individual requests](https://github.com/algermissen/web-rust/blob/51019037c4b6478e953e51a1c016a5dd7ada2b1a/src/bin/testserver.rs#L119).
+
 
 ### Test Case: Many-Clients-One-Request
 
