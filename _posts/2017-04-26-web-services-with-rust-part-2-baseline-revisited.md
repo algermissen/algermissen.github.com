@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Web Services with Rust Part 1bis: Baseline Revisited"
+title: "Web Services with Rust Part 2: Baseline Revisited"
 description: ""
 category: "rust"
 tags: ["rust-web"]
