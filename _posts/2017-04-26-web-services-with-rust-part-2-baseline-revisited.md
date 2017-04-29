@@ -43,7 +43,7 @@ ecosystems.
 Recently [Prometheus](https://prometheus.io) has become my application metrics
 system of choice and since a [Prometheus client for Rust](https://github.com/pingcap/rust-prometheus)
 already exists (apparently developed and used by the [TiKV Team](https://github.com/pingcap/tikv))
-I'hve used this to implement an [instrumented minimal hyper server](https://github.com/algermissen/web-rust/blob/master/src/bin/testserver.rs)
+I'have used this to implement an [instrumented minimal hyper server](https://github.com/algermissen/web-rust/blob/master/src/bin/testserver.rs)
 
 One [gauge](https://prometheus.io/docs/concepts/metric_types/#gauge)
 metric [keeps track of the number of connected clients](https://github.com/algermissen/web-rust/blob/51019037c4b6478e953e51a1c016a5dd7ada2b1a/src/bin/testserver.rs#L93)
@@ -64,14 +64,21 @@ The StormForger test case setup:
     definition.setTarget("xxx:8080");
 
     definition.setArrivalPhases([
-      { duration: 30, rate: 20},
-      { duration: 30, rate: 40},
-      { duration: 30, rate: 60},
-      { duration: 30, rate: 120},
-      { duration: 30, rate: 240},
-      { duration: 30, rate: 480},
-      { duration: 30, rate: 960},
-      { duration: 30, rate: 1920},
+      { duration: 20, rate: 120},
+      { duration: 20, rate: 160},
+      { duration: 20, rate: 180},
+      { duration: 20, rate: 200},
+      { duration: 20, rate: 220},
+      { duration: 20, rate: 230},
+      { duration: 20, rate: 240},
+      { duration: 20, rate: 250},
+      { duration: 20, rate: 260},
+      { duration: 20, rate: 270},
+      { duration: 20, rate: 280},
+      { duration: 20, rate: 290},
+      { duration: 20, rate: 300},
+      { duration: 20, rate: 310},
+      { duration: 20, rate: 320},
     ]);
 
     definition.setTestOptions({
@@ -81,6 +88,16 @@ The StormForger test case setup:
     definition.session("ManyClientsOneRequest", function(context) {
       context.get("/data", { tag: "root" });
     });
+
+This test runs for 5 minutes and gradually increases the rate of arriving clients from 120/s to 320/s,
+each doing a single request.
+
+When running this against a single threaded version of our test server, we
+
+![Test 1 - Client Side Graph](/assets/img/web-rust/test1/test1_sf_graph.jpg)
+
+![Test 1 - Server Side Graph](/assets/img/web-rust/test1/test1_gf_graph.jpg)
+
 
 
 ### Test Case:
