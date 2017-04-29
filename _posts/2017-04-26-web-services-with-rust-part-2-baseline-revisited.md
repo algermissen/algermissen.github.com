@@ -10,7 +10,7 @@ tags: ["rust-web"]
 [All Web-Rust postings](http://www.jalg.net/tags.html#rust-web-ref)
 
 In the last posting I started exploring implementing Web services in Rust, using
-hyper with some minimal single- and multi threaded servers.
+hyper with some minimal single- and multi-threaded servers.
 
 If you have been paying attention to the test setup description there (as I should have
 done) you will have noticed that the load test configuration is limiting the number
@@ -43,7 +43,7 @@ ecosystems.
 Recently [Prometheus](https://prometheus.io) has become my application metrics
 system of choice and since a [Prometheus client for Rust](https://github.com/pingcap/rust-prometheus)
 already exists (apparently developed and used by the [TiKV Team](https://github.com/pingcap/tikv))
-I'have used this to implement an [instrumented minimal hyper server](https://github.com/algermissen/web-rust/blob/master/src/bin/testserver.rs)
+I have used this to implement an [instrumented minimal hyper server](https://github.com/algermissen/web-rust/blob/master/src/bin/testserver.rs)
 
 One [gauge](https://prometheus.io/docs/concepts/metric_types/#gauge)
 metric [keeps track of the number of connected clients](https://github.com/algermissen/web-rust/blob/51019037c4b6478e953e51a1c016a5dd7ada2b1a/src/bin/testserver.rs#L93)
