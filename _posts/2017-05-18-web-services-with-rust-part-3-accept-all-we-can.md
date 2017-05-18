@@ -9,7 +9,8 @@ tags: ["rust-web"]
 
 [All Web-Rust postings](http://www.jalg.net/tags.html#rust-web-ref)
 
-In the last posting we added metrics to our very basic test Web service. This
+In the last posting we added metrics to our very basic test Web service. 
+Initially this third
 part was supposed to be about adding logging to the server, comparing the
 performance impact of mutex based- and, especially,
 [lock free data structures](https://github.com/crossbeam-rs/crossbeam).
@@ -38,12 +39,12 @@ connection for every request.
       });
     });
 
-I added some further metrics to being able to compare the number of
+I added some further metrics in order to compare the number of
 accepted and the number of done connections.
 
 As before, the server was able to handle up to 250 requests per second,
-being bound by the roughly 4ms of CPU bound time per requests. Still,
-the number of accepted requests did correlate to the number of 
+being bound by the roughly 4ms of CPU bound time per request. Still,
+the number of accepted requests did correlate with the number of 
 handled requests, showing that the server indeed did not simply pull in all
 accepted requests from the listening socket.
 
@@ -53,8 +54,9 @@ connections of the listeing socket might actually yield this behavior, so
 next up was having the CPU-bound work been done on a different thread.
 
 The great thing about the [Tokio ecosystem](https://github.com/tokio-rs)
-is that it comes with all the [tools that make working with threads and
-asynchronous work](https://github.com/alexcrichton/futures-rs/tree/master/src/sync)
+is that it comes with [all the tools](https://github.com/alexcrichton/futures-rs/tree/master/src/sync)
+that make working with threads and
+asynchronous work
 a breeze. 
 
 In order to send work off to a different thread that thread needs to run its
@@ -79,8 +81,8 @@ a new thread along with the actual server startup.
         serve(&remote, &addr, &protocol);
     });
 
-The request handler then creates a one time channel and spawns a task on the
-remote handle that performs the CPU-bound work and sends the result through
+The request handler then creates a one-time channel and spawns a task on the
+remote handle. This taskperforms the CPU-bound work and sends the result through
 the channel to complete the response.
 
     let f = match (req.method(), req.path()) {
@@ -105,10 +107,11 @@ until the 99th percentile of response latency starts to increase. At this point
 we now indeed see the server taking more accepted connections of the
 listen queue than it can complete.
 
-Though the server is now running on two threads instead of one the performance
-gain seen suggests that for intense CPU bound work it makes sense to run it
+Though the server is now running on two threads instead of one, the performance
+gain seen suggests that intense CPU bound work should be run
 on a different thread than more IO bound tasks. 
 
+See the [test server source code](https://github.com/algermissen/web-rust/blob/fbfff59148e9c606a4420d263e43261b553fae81/src/bin/testserver.rs).
 
 
 
