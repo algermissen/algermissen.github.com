@@ -102,7 +102,7 @@ the channel to complete the response.
       }
     }
 
-With this modification, the server can now do roughly 1300 requests per seconds
+With this modification, the server can now do roughly 1300 requests per second
 until the 99th percentile of response latency starts to increase. At this point
 we now indeed see the server taking more accepted connections of the
 listen queue than it can complete.
