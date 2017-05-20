@@ -16,6 +16,9 @@ description: "My collection bookmarks on various Rust topics."
 [http://seanmonstar.com/]
 [https://github.com/Boscop]
 [https://github.com/carllerche]
+[https://github.com/tailhook]
+[https://github.com/durch?tab=repositories]
+
 
 
 
@@ -23,10 +26,18 @@ description: "My collection bookmarks on various Rust topics."
 [Learning Rust With Entirely Too Many Linked Lists](http://cglab.ca/~abeinges/blah/too-many-lists/book/)
 * Rather detailed treatment of Rust basics.
 [https://medium.com/@ericdreichert/what-one-must-understand-to-be-productive-with-rust-e9e472116728]
+[http://esr.ibiblio.org/?p=7294]
+[https://searchcode.com/file/116449050/src/libstd/sync/future.rs]
+[https://www.youtube.com/watch?v=C6dNx9pY7p8]
+
 
 ### Tokio
 [Tokio Docs](https://tokio.rs/)
 [Multi Threading in Tokio](https://users.rust-lang.org/t/when-using-a-tokio-futures-backed-webserver-how-to-manage-threads/10064)
+[http://hermanradtke.com/2017/03/03/future-mpsc-queue-with-tokio.html]
+[https://users.rust-lang.org/t/futures-and-async-design/7552]
+[https://github.com/tailhook/tk-listen]
+
 
 
 ### Hyper and Projects building on tokio or hyper
@@ -46,6 +57,14 @@ description: "My collection bookmarks on various Rust topics."
  
 ### Concurrency
 [Ycombinator thread on concurrency in Rust](https://news.ycombinator.com/item?id=11369170)
+[https://internals.rust-lang.org/t/crossbeam-request-for-help/4933/16]
+[https://users.rust-lang.org/t/coroutines-and-rust/9058]
+https://github.com/ticki/baguette
+https://github.com/khizmax/libcds
+https://github.com/johshoff/concurrent_queue
+https://github.com/stjepang/coco
+
+
 
 ### Cassandra Driver
 [https://github.com/nhellwig/tokio-cassandra]
@@ -69,6 +88,8 @@ description: "My collection bookmarks on various Rust topics."
 
 [JWT Impl](https://github.com/brendanzab?tab=repositories)
 
+### Web Related Projects
+[Sozu Proxy Server](https://github.com/sozu-proxy/sozu)
 
 ### Database Projects
 [Mentat](https://github.com/mozilla/mentat)
@@ -85,6 +106,12 @@ description: "My collection bookmarks on various Rust topics."
 ### Actor Systems
 [Kabuki](https://github.com/carllerche/kabuki)
 [Kabuki Fork with extensions](https://github.com/habnabit/kabuki)
+http://stackoverflow.com/questions/27657970/how-to-implement-actor-model-without-akka
+https://github.com/plokhotnyuk/actors/blob/41eea0277530f86e4f9557b451c7e34345557ce3/src/test/scala/com/github/gist/viktorklang/Actor.scala
+http://cs.nyu.edu/~lerner/spring12/Preso01-Actors.pdf
+http://berb.github.io/diploma-thesis/original/054_actors.html
+https://gist.github.com/viktorklang/2362563
+https://github.com/plokhotnyuk/actors/blob/master/src/test/scala/com/github/gist/viktorklang/Actor.scala
 
 ### Telemetry and Log Shipping
 [Cernan](https://github.com/postmates/cernan)
@@ -134,3 +161,14 @@ description: "My collection bookmarks on various Rust topics."
 [https://devhub.io/zh/repos/brson-awesome-rust]
 [http://awesomeawesome.party/awesome-rust]
 []()
+
+https://gist.github.com/oakes/4af1023b6c5162c6f8f0
+https://twitter.com/QEDunham
+http://hermanradtke.com/2016/05/23/connecting-webservice-database-rust.html
+
+
+https://github.com/rust-lang-nursery/log/pull/12
+https://github.com/rust-lang-nursery/log/issues/3
+https://github.com/rust-lang-nursery/log/issues/81
+
+

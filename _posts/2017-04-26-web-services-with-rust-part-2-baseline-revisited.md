@@ -43,12 +43,12 @@ ecosystems.
 Recently [Prometheus](https://prometheus.io) has become my application metrics
 system of choice and since a [Prometheus client for Rust](https://github.com/pingcap/rust-prometheus)
 already exists (apparently developed and used by the [TiKV Team](https://github.com/pingcap/tikv))
-I have used this to implement an [instrumented minimal hyper server](https://github.com/algermissen/web-rust/blob/master/src/bin/testserver.rs)
+I have used this to implement an [instrumented minimal hyper server](https://github.com/algermissen/web-rust/blob/master/src/bin/ts2.rs).
 
 One [gauge](https://prometheus.io/docs/concepts/metric_types/#gauge)
-metric [keeps track of the number of connected clients](https://github.com/algermissen/web-rust/blob/51019037c4b6478e953e51a1c016a5dd7ada2b1a/src/bin/testserver.rs#L93)
+metric [keeps track of the number of connected clients](https://github.com/algermissen/web-rust/blob/master/src/bin/ts2.rs#L57)
 and a [histogram](https://prometheus.io/docs/concepts/metric_types/#histogram) is
-used to [measure the individual requests](https://github.com/algermissen/web-rust/blob/51019037c4b6478e953e51a1c016a5dd7ada2b1a/src/bin/testserver.rs#L119).
+used to [measure the individual requests](https://github.com/algermissen/web-rust/blob/master/src/bin/ts2.rs#L73).
 
 So, let's see what the instruments report when we throw load at the server.
 
@@ -122,7 +122,7 @@ the listen queue.
 
 ![Test 1 - Server Side Graph](/assets/img/web-rust/test1/test1_gf_conn.jpg)
 
-The server is using a [listen queue size of 128](https://github.com/algermissen/web-rust/blob/51019037c4b6478e953e51a1c016a5dd7ada2b1a/src/bin/testserver.rs#L90)
+The server is using a [listen queue size of 128](https://github.com/algermissen/web-rust/blob/master/src/bin/ts2.rs#L112)
 and that corresponds very much to the number of current requests in the graph. This leaves me a bit
 puzzled, because I would have thought that, given the asynchronous nature of Tokio, the
 server would just grab all the requests it can get of the queue, leading to an increasing number of

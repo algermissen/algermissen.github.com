@@ -111,7 +111,7 @@ Though the server is now running on two threads instead of one, the performance
 gain seen suggests that intense CPU bound work should be run
 on a different thread than more IO bound tasks. 
 
-See the [test server source code](https://github.com/algermissen/web-rust/blob/fbfff59148e9c606a4420d263e43261b553fae81/src/bin/testserver.rs).
+See the [test server source code](https://github.com/algermissen/web-rust/blob/master/src/bin/ts3.rs).
 
 
 
