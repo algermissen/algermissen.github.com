@@ -9,7 +9,7 @@ tags: ["rust-web"]
 
 Fortunate are those that are chosen to ride down the happy path...
 
-This is, however, for the warriors with n00b-level Rust knowledge, armed with razor sharp, but early-stage tools,
+This is, however, for the warriors like me, with n00b-level Rust knowledge, armed with razor sharp, but early-stage tools,
 brave enough to enter the evil land of the enterprise. (Honestly, it also did not help that I had passed on
 reading up on TLS and certificates in depth all those years :-/ )
 
