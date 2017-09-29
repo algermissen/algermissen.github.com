@@ -108,7 +108,7 @@ as I could possibly think of to make sense.
 Eventually yielding
 
 
-    openssl x509 -in server.crt -outform der -out server.der -inform DER
+    openssl x509 -in server.crt -outform der -out server.der
 
 
 I am skipping all the detours I took do to late night errors,
