@@ -50,7 +50,7 @@ exception and proceed (because it is after all just an evaluation I am
 doing) I cannot really remember having seen anything like that in the docs
 so far. Hmmm....
 
-Searches and chat questions (thanks [Sean](https://twitter.com/seanmonstar) eventually
+Searches and chat questions (thanks [Sean](https://twitter.com/seanmonstar)) eventually
 produced [this](https://github.com/sfackler/rust-native-tls/issues/13) 
 which made its way into the crate in a
 [nicely explicit way](https://twitter.com/algermissen/status/913438875250458624)
@@ -59,20 +59,20 @@ While the former does not really do the trick, the later got me all excited - so
 simple.
 
 
-> Build a Certificate from the DER-encoded self signed cert and pass it to
-> TlsConnectorBuilder::add_root_certificate.
+> "Build a Certificate from the DER-encoded self signed cert and pass it to
+> TlsConnectorBuilder::add_root_certificate."
 
 
 But...
 
 
-# How do I get the certificate?
-# WTF does "Build a Certificate from the DER-encoded self signed cert" mean? DER?
-# Haven't seen a `TlsConnectorBuilder` yet.
-# Will that really be it?
+- How do I get the certificate?
+- WTF does "Build a Certificate from the DER-encoded self signed cert" mean? DER?
+- Haven't seen a `TlsConnectorBuilder` yet.
+- Will that really be it?
 
 
-Regarding 1.: what my browser can do, I can also do, I figure; Google turns up
+Ehat my browser can do, I can also do, I figure; Google turns up
 
 
     openssl s_client -showcerts -connect example.org:443 > server.crt
