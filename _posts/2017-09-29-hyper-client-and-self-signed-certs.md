@@ -67,12 +67,12 @@ But...
 
 
 - How do I get the certificate?
-- WTF does "Build a Certificate from the DER-encoded self signed cert" mean? DER?
+- WTF does "Build a Certificate from the DER-encoded self signed cert" mean?
 - Haven't seen a `TlsConnectorBuilder` yet.
 - Will that really be it?
 
 
-Ehat my browser can do, I can also do, I figure; Google turns up
+What my browser can do, I can also do, I figure; Google turns up
 
 
     openssl s_client -showcerts -connect example.org:443 > server.crt
@@ -103,7 +103,9 @@ Where I dug up the code for that I cannot remember, but it goes like this:
 Victory? - You guessed it: not yet. Why is that method called
 from_der() and my file is a crt? This can't end well. At this
 point I honestly just shoved as many things into the search box
-as I could possibly think of to make sense. Yielding
+as I could possibly think of to make sense. 
+
+Eventually yielding
 
 
     openssl x509 -in server.crt -outform der -out server.der -inform DER
