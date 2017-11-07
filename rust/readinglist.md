@@ -13,8 +13,8 @@ description: "My collection bookmarks on various Rust topics."
 * [Rust Gitter Channels](https://medium.freecodecamp.com/best-gitter-channels-on-rust-ad8f5f73b5a2)
 
 ### Rust Programmers
-* [http://seanmonstar.com/]
-* [https://github.com/Boscop]
+* http://seanmonstar.com/
+* (https://github.com/Boscop)
 * [https://github.com/carllerche]
 * [https://github.com/tailhook]
 * [https://github.com/durch?tab=repositories]
