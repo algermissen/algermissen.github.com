@@ -24,6 +24,7 @@ Fortunately [the docs are ready at hand](https://hyper.rs/guides/client/configur
  and victory just another copy/paste away...
 
 
+
     extern crate hyper;
     extern crate hyper_tls;
     extern crate tokio_core;
@@ -41,6 +42,7 @@ Fortunately [the docs are ready at hand](https://hyper.rs/guides/client/configur
     let req = client.get("https://hyper.rs".parse()?);
     let res = core.run(req)?;
     assert!(res.status().is_success());
+
 
 
 But then, while the compiler runs it dawns on me: the evil cert master of

@@ -5,8 +5,6 @@ description: ""
 category: "rust"
 tags: ["rust-web"]
 ---
-{% include JB/setup %}
-
 [All Web-Rust postings](http://www.jalg.net/tags.html#rust-web-ref)
 
 A while ago I have turned my head towards [Rust](http://rustlang.org) for
@@ -75,6 +73,7 @@ server to the limit in a controlled way.
 The [work simulation](https://github.com/algermissen/web-rust/blob/ecc430d558aa60dcf2fd2d7ee89f73b7395e5e9d/src/bin/minimal_single_threaded.rs#L26)
 looks like this
 
+{% highlight rust linenos %}
     fn cpu_intensive_work() -> String {
         let mut y = "X".to_string();
         for x in 0..100 {
@@ -88,6 +87,7 @@ looks like this
         let j = serde_json::to_string(&address).unwrap();
         return j;
     }
+{% endhighlight %}
 
 The server code I compiled as a statically linked executable for Linux (resulting
 in 4.5 MB).
