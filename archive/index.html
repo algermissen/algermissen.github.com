@@ -1,0 +1,27 @@
+---
+layout: default
+title: Archive
+permalink: /archive/
+---
+
+<div class='full'> 
+  <div class='row'>
+    <div class='medium-6 columns'>
+        <h2>All Postings</h2>
+
+   {% for post in site.posts %}
+       {% assign currentDate = post.date | date: "%Y" %}
+       {% if currentDate != myDate %}
+           {% unless forloop.first %}</ul>{% endunless %}
+           <h3>{{ currentDate }}</h3>
+           <ul>
+           {% assign myDate = currentDate %}
+       {% endif %}
+       <li><a href="{{ post.url }}"><span>{{ post.date | date: "%B %-d, %Y" }}</span> - {{ post.title }}</a></li>
+       {% if forloop.last %}</ul>{% endif %}
+   {% endfor %}
+      <div class='spacing'></div>
+
+     </div>
+  </div>
+</div>
