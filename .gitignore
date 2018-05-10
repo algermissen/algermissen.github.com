@@ -1,4 +1,5 @@
 docs/*
+docs
 Thumbs.db
 .DS_Store
 *.iml
