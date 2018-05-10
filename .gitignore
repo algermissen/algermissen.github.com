@@ -1,0 +1,11 @@
+docs/*
+docs
+Thumbs.db
+.DS_Store
+*.iml
+
+!.gitkeep
+
+.rbenv-version
+.rvmrc
+.sass-cache
