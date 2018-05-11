@@ -24,9 +24,6 @@
 #      path: portfolio.html
 #    - name: Portfolio item
 #      path: portfolio-item.html
-- name: Contact
-  path: "#contact"
-  section_id: contact
 - name: Blog
   path: blog/
   section_id: blog
