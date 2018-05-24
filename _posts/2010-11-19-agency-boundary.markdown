@@ -7,6 +7,14 @@ slug: agency-boundary
 title: Agency Boundary
 wordpress_id: 19
 ---
+---
+layout: post
+title: "Web Services with Rust Part 1: Exploring Hyper"
+description: ""
+category: "rust"
+tags: ["rust-web"]
+---
+{% include JB/setup %}
 
 A central aspect of the problem space that REST is designed for is that the communicating components are typically not owned by a common authority and that therefore change must be enabled to happen without coordinating the change between the authorities. For example, for Amazon it is simply impossible to ask any of its customers whether such and such a change 'would be ok'.
 

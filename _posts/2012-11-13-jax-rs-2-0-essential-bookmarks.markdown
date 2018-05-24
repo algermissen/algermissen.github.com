@@ -7,6 +7,14 @@ slug: jax-rs-2-0-essential-bookmarks
 title: JAX-RS 2.0 Essential Bookmarks
 wordpress_id: 218
 ---
+---
+layout: post
+title: "Web Services with Rust Part 1: Exploring Hyper"
+description: ""
+category: "rust"
+tags: ["rust-web"]
+---
+{% include JB/setup %}
 
 In my [JAX-RS 2.0 talk](http://www.slideshare.net/algermissen/jaxrs-20-new-features) at DEVOXX 2012 I promised to write down the useful links to play around with 2.0. Here they come:
 

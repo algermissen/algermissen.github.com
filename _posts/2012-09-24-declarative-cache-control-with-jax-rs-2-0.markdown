@@ -10,6 +10,14 @@ categories:
 - JAX-RS 2.0
 - Jersey 2
 ---
+---
+layout: post
+title: "Web Services with Rust Part 1: Exploring Hyper"
+description: ""
+category: "rust"
+tags: ["rust-web"]
+---
+{% include JB/setup %}
 
 **UPDATE**: The Maven/IDE setup below turned out not to work properly in all cases. Try [this](http://jalg.net/2012/11/getting-started-playing-around-with-jax-rs-2-0-in-an-ee-container/) for better results.
 

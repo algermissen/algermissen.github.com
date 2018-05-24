@@ -11,6 +11,14 @@ categories:
 - JavaEE6
 - JBoss6
 ---
+---
+layout: post
+title: "Web Services with Rust Part 1: Exploring Hyper"
+description: ""
+category: "rust"
+tags: ["rust-web"]
+---
+{% include JB/setup %}
 
 During the last week I have spent hour after hour to debug some strange behavior shown by some of my JAX-RS provider classes in two JavaEE6 projects. When I deployed the WARs of the two projects suddenly in one of the projects all providers from both projects where available and in the other none, ... zero, zip.
 

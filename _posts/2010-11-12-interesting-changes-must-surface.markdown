@@ -7,6 +7,14 @@ slug: interesting-changes-must-surface
 title: Interesting Changes *Must* Surface
 wordpress_id: 176
 ---
+---
+layout: post
+title: "Web Services with Rust Part 1: Exploring Hyper"
+description: ""
+category: "rust"
+tags: ["rust-web"]
+---
+{% include JB/setup %}
 
 The human brain is truly strange. It happens surprisingly often that you are (well, at least I am) so tied-up in a false assumption that the ability to understand something new is seriously limited.
 

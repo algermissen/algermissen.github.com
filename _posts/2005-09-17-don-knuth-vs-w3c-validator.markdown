@@ -7,6 +7,14 @@ slug: don-knuth-vs-w3c-validator
 title: Don Knuth vs. W3C Validator
 wordpress_id: 166
 ---
+---
+layout: post
+title: "Web Services with Rust Part 1: Exploring Hyper"
+description: ""
+category: "rust"
+tags: ["rust-web"]
+---
+{% include JB/setup %}
 
 A [must read](http://lists.w3.org/Archives/Public/www-validator/2005Sep/0052.html) on the effects of change:
 

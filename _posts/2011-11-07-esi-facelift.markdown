@@ -9,6 +9,14 @@ wordpress_id: 6
 categories:
 - Edge-Side-Includes
 ---
+---
+layout: post
+title: "Web Services with Rust Part 1: Exploring Hyper"
+description: ""
+category: "rust"
+tags: ["rust-web"]
+---
+{% include JB/setup %}
 
 Recently [Mark](http://www.mnot.net) [described](http://www.mnot.net/blog/2011/10/21/why_esi_is_still_important_and_how_to_make_it_better) why [Edge-Side-Includes](http://en.wikipedia.org/wiki/Edge_Side_Includes) are still a relevant technology and presented some ideas regarding an overhaul of [ESI 1.0](http://www.w3.org/TR/esi-lang).
 

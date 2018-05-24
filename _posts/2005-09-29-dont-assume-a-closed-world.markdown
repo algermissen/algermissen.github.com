@@ -7,6 +7,14 @@ slug: dont-assume-a-closed-world
 title: Don't Assume a Closed World
 wordpress_id: 162
 ---
+---
+layout: post
+title: "Web Services with Rust Part 1: Exploring Hyper"
+description: ""
+category: "rust"
+tags: ["rust-web"]
+---
+{% include JB/setup %}
 
 While digging around for description logics (as with OWL DL) vs. deductive databases (as with Datalog) material I found this lucid explanation of the [Closed World Assumption](http://web.archive.org/web/20070607164326/http://esw.w3.org/topic/ClosedWorldAssumptions):
 

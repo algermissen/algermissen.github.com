@@ -6,8 +6,8 @@
 </description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 24 May 2018 08:31:14 +0200</pubDate>
-    <lastBuildDate>Thu, 24 May 2018 08:31:14 +0200</lastBuildDate>
+    <pubDate>Thu, 24 May 2018 11:45:09 +0200</pubDate>
+    <lastBuildDate>Thu, 24 May 2018 11:45:09 +0200</lastBuildDate>
     <generator>Jekyll v3.7.3</generator>
     
       <item>
@@ -413,7 +413,8 @@ directly impact the capacity limit of a server.&lt;/p&gt;
     
       <item>
         <title>Web Services with Rust Part 1: Exploring Hyper</title>
-        <description>&lt;p&gt;&lt;a href=&quot;http://www.jalg.net/tags.html#rust-web-ref&quot;&gt;All Web-Rust postings&lt;/a&gt;&lt;/p&gt;
+        <description>
+&lt;p&gt;&lt;a href=&quot;http://www.jalg.net/tags.html#rust-web-ref&quot;&gt;All Web-Rust postings&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;A while ago I have turned my head towards &lt;a href=&quot;http://rustlang.org&quot;&gt;Rust&lt;/a&gt; for
 developing Web Services. Rust’s design in my opinion hits a sweet spot between
@@ -503,10 +504,10 @@ looks like this&lt;/p&gt;
             &lt;span class=&quot;n&quot;&gt;street&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;10 Downing Street&quot;&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;.to_owned&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
             &lt;span class=&quot;n&quot;&gt;city&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;.to_owned&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
         &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
-
+    
         &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;j&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;serde_json&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;to_string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;address&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;.unwrap&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
         &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;The server code I compiled as a statically linked executable for Linux (resulting
 in 4.5 MB).&lt;/p&gt;
@@ -594,7 +595,7 @@ the same test setup and meanwhile take a look at the graph from the single-threa
 It nicely shows how at 6k req/s the latencies start to increase, thereby capping the
 throughput at these 6k.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/img/1-Threaded.jpg&quot; alt=&quot;Results 1-threaded&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/images/blog/1-Threaded.jpg&quot; alt=&quot;Results 1-threaded&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;There, the result came back from the 2-threaded setup and (relief :-) just what we
 expected: the server is now giving us about 11k req/s and I indeed saw exactly two
@@ -636,117 +637,6 @@ logging).&lt;/p&gt;
       </item>
     
       <item>
-        <title>Make some sketches</title>
-        <description>&lt;p&gt;Et sed ut quo maiores praesentium consequatur ipsum fuga aliquid corporis vel. exercitationem saepe vel aut consectetur vitae sed. necessitatibus est voluptatem nihil officiis nam debitis et perferendis exercitationem animi qui impedit modi recusandae. sapiente molestiae excepturi maxime. eum sequi nisi et itaque sunt nesciunt nulla vel sit ratione animi&lt;/p&gt;
-
-&lt;p&gt;Deleniti laboriosam soluta animi non corrupti. labore est quasi omnis ducimus. facere pariatur molestiae eum vel dignissimos debitis quam et id&lt;/p&gt;
-
-&lt;p&gt;Esse labore voluptate &lt;a href=&quot;#&quot;&gt;nam dolorum veniam&lt;/a&gt; numquam et reiciendis qui itaque voluptas odit dicta et. est ullam et omnis repellat qui aliquam delectus quod aperiam quam tenetur odit illo voluptatem. optio tenetur occaecati autem vel occaecati voluptas iste sunt libero quo est ex eum. aut molestiae ea est inventore aut quia ab voluptatem hic iste&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;“Provident nihil sint ducimus quasi dignissimos vero esse quisquam Asperiores beatae facere eos corrupti ut autem natus quis cumque dolor.”&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h4 id=&quot;this-is-a-sub-heading&quot;&gt;This is a sub-heading&lt;/h4&gt;
-
-&lt;p&gt;Aut ea rem repudiandae tempore perferendis. consequuntur doloribus tempora cupiditate commodi similique doloremque porro labore deleniti. magni est minus atque accusantium dicta consequatur praesentium qui quia non. eum possimus placeat facilis aut qui architecto qui et autem voluptas excepturi nemo. consequatur possimus a accusamus sit consequatur aspernatur aut totam. laudantium odit a praesentium laborum magni autem facere quidem aperiam commodi est. dolore debitis doloremque ea impedit&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Tempora commodi quia deserunt porro excepturi&lt;/li&gt;
-  &lt;li&gt;Placeat in quae tempore pariatur sit aut qui nemo&lt;/li&gt;
-  &lt;li&gt;Rem quod sequi nobis possimus sequi dolorem est ab&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h5 id=&quot;this-is-a-small-title&quot;&gt;This is a small title&lt;/h5&gt;
-
-&lt;p&gt;Dolorem laudantium possimus esse tenetur voluptates nam. corrupti pariatur commodi est omnis excepturi dignissimos. commodi qui cum tempora ipsa porro quasi quis labore ea cum quod sapiente debitis asperiores. ut qui est ipsa enim numquam odit mollitia. velit earum unde qui animi quod earum repellendus facere aperiam nemo. ipsa praesentium aut quam aperiam qui voluptate&lt;/p&gt;
-</description>
-        <pubDate>Tue, 14 Apr 2015 12:58:12 +0200</pubDate>
-        <link>/2015/04/make-some-sketches</link>
-        <guid isPermaLink="true">/2015/04/make-some-sketches</guid>
-        
-        
-        <category>Logo</category>
-        
-        <category>Development</category>
-        
-      </item>
-    
-      <item>
-        <title>A cup of coffee for you</title>
-        <description>&lt;p&gt;Et sed ut quo maiores praesentium consequatur ipsum fuga aliquid corporis vel. exercitationem saepe vel aut consectetur vitae sed. necessitatibus est voluptatem nihil officiis nam debitis et perferendis exercitationem animi qui impedit modi recusandae. sapiente molestiae excepturi maxime. eum sequi nisi et itaque sunt nesciunt nulla vel sit ratione animi&lt;/p&gt;
-
-&lt;p&gt;Deleniti laboriosam soluta animi non corrupti. labore est quasi omnis ducimus. facere pariatur molestiae eum vel dignissimos debitis quam et id&lt;/p&gt;
-
-&lt;p&gt;Esse labore voluptate &lt;a href=&quot;#&quot;&gt;nam dolorum veniam&lt;/a&gt; numquam et reiciendis qui itaque voluptas odit dicta et. est ullam et omnis repellat qui aliquam delectus quod aperiam quam tenetur odit illo voluptatem. optio tenetur occaecati autem vel occaecati voluptas iste sunt libero quo est ex eum. aut molestiae ea est inventore aut quia ab voluptatem hic iste&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;“Provident nihil sint ducimus quasi dignissimos vero esse quisquam Asperiores beatae facere eos corrupti ut autem natus quis cumque dolor.”&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h4 id=&quot;this-is-a-sub-heading&quot;&gt;This is a sub-heading&lt;/h4&gt;
-
-&lt;p&gt;Aut ea rem repudiandae tempore perferendis. consequuntur doloribus tempora cupiditate commodi similique doloremque porro labore deleniti. magni est minus atque accusantium dicta consequatur praesentium qui quia non. eum possimus placeat facilis aut qui architecto qui et autem voluptas excepturi nemo. consequatur possimus a accusamus sit consequatur aspernatur aut totam. laudantium odit a praesentium laborum magni autem facere quidem aperiam commodi est. dolore debitis doloremque ea impedit&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Tempora commodi quia deserunt porro excepturi&lt;/li&gt;
-  &lt;li&gt;Placeat in quae tempore pariatur sit aut qui nemo&lt;/li&gt;
-  &lt;li&gt;Rem quod sequi nobis possimus sequi dolorem est ab&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h5 id=&quot;this-is-a-small-title&quot;&gt;This is a small title&lt;/h5&gt;
-
-&lt;p&gt;Dolorem laudantium possimus esse tenetur voluptates nam. corrupti pariatur commodi est omnis excepturi dignissimos. commodi qui cum tempora ipsa porro quasi quis labore ea cum quod sapiente debitis asperiores. ut qui est ipsa enim numquam odit mollitia. velit earum unde qui animi quod earum repellendus facere aperiam nemo. ipsa praesentium aut quam aperiam qui voluptate&lt;/p&gt;
-</description>
-        <pubDate>Tue, 14 Apr 2015 12:57:12 +0200</pubDate>
-        <link>/2015/04/a-cup-of-coffee-for-you</link>
-        <guid isPermaLink="true">/2015/04/a-cup-of-coffee-for-you</guid>
-        
-        
-        <category>Design</category>
-        
-        <category>Bussiness</category>
-        
-      </item>
-    
-      <item>
-        <title>Look what we have done</title>
-        <description>&lt;p&gt;Et sed ut quo maiores praesentium consequatur ipsum fuga aliquid corporis vel. exercitationem saepe vel aut consectetur vitae sed. necessitatibus est voluptatem nihil officiis nam debitis et perferendis exercitationem animi qui impedit modi recusandae. sapiente molestiae excepturi maxime. eum sequi nisi et itaque sunt nesciunt nulla vel sit ratione animi&lt;/p&gt;
-
-&lt;p&gt;Deleniti laboriosam soluta animi non corrupti. labore est quasi omnis ducimus. facere pariatur molestiae eum vel dignissimos debitis quam et id&lt;/p&gt;
-
-&lt;p&gt;Esse labore voluptate &lt;a href=&quot;#&quot;&gt;nam dolorum veniam&lt;/a&gt; numquam et reiciendis qui itaque voluptas odit dicta et. est ullam et omnis repellat qui aliquam delectus quod aperiam quam tenetur odit illo voluptatem. optio tenetur occaecati autem vel occaecati voluptas iste sunt libero quo est ex eum. aut molestiae ea est inventore aut quia ab voluptatem hic iste&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;“Provident nihil sint ducimus quasi dignissimos vero esse quisquam Asperiores beatae facere eos corrupti ut autem natus quis cumque dolor.”&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h4 id=&quot;this-is-a-sub-heading&quot;&gt;This is a sub-heading&lt;/h4&gt;
-
-&lt;p&gt;Aut ea rem repudiandae tempore perferendis. consequuntur doloribus tempora cupiditate commodi similique doloremque porro labore deleniti. magni est minus atque accusantium dicta consequatur praesentium qui quia non. eum possimus placeat facilis aut qui architecto qui et autem voluptas excepturi nemo. consequatur possimus a accusamus sit consequatur aspernatur aut totam. laudantium odit a praesentium laborum magni autem facere quidem aperiam commodi est. dolore debitis doloremque ea impedit&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Tempora commodi quia deserunt porro excepturi&lt;/li&gt;
-  &lt;li&gt;Placeat in quae tempore pariatur sit aut qui nemo&lt;/li&gt;
-  &lt;li&gt;Rem quod sequi nobis possimus sequi dolorem est ab&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h5 id=&quot;this-is-a-small-title&quot;&gt;This is a small title&lt;/h5&gt;
-
-&lt;p&gt;Dolorem laudantium possimus esse tenetur voluptates nam. corrupti pariatur commodi est omnis excepturi dignissimos. commodi qui cum tempora ipsa porro quasi quis labore ea cum quod sapiente debitis asperiores. ut qui est ipsa enim numquam odit mollitia. velit earum unde qui animi quod earum repellendus facere aperiam nemo. ipsa praesentium aut quam aperiam qui voluptate&lt;/p&gt;
-</description>
-        <pubDate>Tue, 14 Apr 2015 12:52:12 +0200</pubDate>
-        <link>/2015/04/look-what-we-have-done</link>
-        <guid isPermaLink="true">/2015/04/look-what-we-have-done</guid>
-        
-        
-        <category>Design</category>
-        
-        <category>Development</category>
-        
-      </item>
-    
-      <item>
         <title>Welcome to Jekyll!</title>
         <description>&lt;p&gt;You’ll find this post in your &lt;code class=&quot;highlighter-rouge&quot;&gt;_posts&lt;/code&gt; directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run &lt;code class=&quot;highlighter-rouge&quot;&gt;jekyll serve&lt;/code&gt;, which launches a web server and auto-regenerates your site when a file is updated.&lt;/p&gt;
 
@@ -778,7 +668,15 @@ logging).&lt;/p&gt;
     
       <item>
         <title>Using iron to Encapsulate Cookies</title>
-        <description>&lt;p&gt;&lt;a href=&quot;http://hueniverse.com&quot;&gt;Eran Hammer&lt;/a&gt; has recently created &lt;a href=&quot;https://github.com/hueniverse/iron&quot;&gt;iron&lt;/a&gt;, a cryptographic procedure and tool to seal arbitrary data in a way so that it cannot be read and also cannot be changed without being noticed.&lt;/p&gt;
+        <description>&lt;hr /&gt;
+&lt;p&gt;layout: post
+title: “Web Services with Rust Part 1: Exploring Hyper”
+description: “”
+category: “rust”
+tags: [“rust-web”]
+—&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://hueniverse.com&quot;&gt;Eran Hammer&lt;/a&gt; has recently created &lt;a href=&quot;https://github.com/hueniverse/iron&quot;&gt;iron&lt;/a&gt;, a cryptographic procedure and tool to seal arbitrary data in a way so that it cannot be read and also cannot be changed without being noticed.&lt;/p&gt;
 
 &lt;p&gt;Besides its intended use in combination with &lt;a href=&quot;https://github.com/hueniverse/oz&quot;&gt;Oz&lt;/a&gt; it can also be used in other scenarios. One of them being encapsulated HTTP cookies. While it is in no way a new thing to pass state to Web clients in encrypted form so they cannot read it or tamper with it, doing it right is relatively hard. Hence, it is great to now have a quasi-standard and sound &lt;a href=&quot;https://github.com/hueniverse/iron#introduction&quot;&gt;definition&lt;/a&gt;.&lt;/p&gt;
 
@@ -869,7 +767,15 @@ context.setSecurityContext(new TokenSecurityContext(username, realname));
     
       <item>
         <title>Beyond OAuth</title>
-        <description>&lt;p&gt;&lt;a href=&quot;http://hueniverse.com&quot;&gt;Eran Hammer&lt;/a&gt;’s &lt;a href=&quot;http://hueniverse.com/2012/07/oauth-2-0-and-the-road-to-hell/&quot;&gt;noisy departure&lt;/a&gt; from &lt;a href=&quot;http://tools.ietf.org/html/rfc6749&quot;&gt;OAuth 2&lt;/a&gt; woke me up to finally engage in that HTTP security investigation that had been buried in my todo list for years. Thanks a bunch for that, Eran!&lt;/p&gt;
+        <description>&lt;hr /&gt;
+&lt;p&gt;layout: post
+title: “Web Services with Rust Part 1: Exploring Hyper”
+description: “”
+category: “rust”
+tags: [“rust-web”]
+—&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://hueniverse.com&quot;&gt;Eran Hammer&lt;/a&gt;’s &lt;a href=&quot;http://hueniverse.com/2012/07/oauth-2-0-and-the-road-to-hell/&quot;&gt;noisy departure&lt;/a&gt; from &lt;a href=&quot;http://tools.ietf.org/html/rfc6749&quot;&gt;OAuth 2&lt;/a&gt; woke me up to finally engage in that HTTP security investigation that had been buried in my todo list for years. Thanks a bunch for that, Eran!&lt;/p&gt;
 
 &lt;p&gt;Starting from close-to-zero security knowledge it took some time to understand the &lt;a href=&quot;http://hueniverse.com/2010/09/oauth-bearer-tokens-are-a-terrible-idea/&quot;&gt;points&lt;/a&gt; &lt;a href=&quot;http://www.ietf.org/mail-archive/web/oauth/current/msg00507.html&quot;&gt;he&lt;/a&gt; &lt;a href=&quot;http://hueniverse.com/2010/09/oauth-2-0-without-signatures-is-bad-for-the-web/&quot;&gt;is&lt;/a&gt; &lt;a href=&quot;http://hueniverse.com/2010/09/more-oauth-nonsense/&quot;&gt;making&lt;/a&gt; but finally it all came together: Yep - sadly he’s spot on with his &lt;a href=&quot;http://hueniverse.com/2012/11/fuckoauth-realtimeconf/&quot;&gt;criticism&lt;/a&gt;. If in doubt, look at the &lt;a href=&quot;http://tools.ietf.org/html/rfc6819&quot;&gt;OAuth 2.0 Threat Model&lt;/a&gt; or the &lt;a href=&quot;https://datatracker.ietf.org/doc/search/?name=oauth&amp;amp;activeDrafts=on&quot;&gt;bloating OAuth related I-Ds&lt;/a&gt;.&lt;/p&gt;
 
@@ -910,6 +816,306 @@ context.setSecurityContext(new TokenSecurityContext(username, realname));
         <category>OAuth</category>
         
         <category>Oz</category>
+        
+      </item>
+    
+      <item>
+        <title>Getting Started Playing Around with JAX-RS 2.0 in an EE Container</title>
+        <description>&lt;hr /&gt;
+&lt;p&gt;layout: post
+title: “Web Services with Rust Part 1: Exploring Hyper”
+description: “”
+category: “rust”
+tags: [“rust-web”]
+—&lt;/p&gt;
+
+&lt;p&gt;Trying out the latest JAX-RS API advancements in an EE container is a bit of a pain because pulling in the latest JAX-RS 2.0 libraries into a Java EE environment creates conflicts with the EE-shipped JAX-RS version. Ah yes, and of course you want your IDE to pick up the correct libs for code completion.&lt;/p&gt;
+
+&lt;p&gt;After trying and tweaking a bit the most workable solution for me was to download the latest Glassfish 4 build. It uses a Jersey version that is usually only a couple of days behind the JAX-RS API Snapshot.&lt;/p&gt;
+
+&lt;p&gt;Here is what I do:&lt;/p&gt;
+
+&lt;p&gt;First, go to the &lt;a href=&quot;http://dlc.sun.com.edgesuite.net/glassfish/4.0/promoted/&quot;&gt;lastest Glassfish builds&lt;/a&gt; and download the file named glassfish-4.0-bxx.zip with xx having the highest number (as of Nov 19th this is &lt;a href=&quot;http://dlc.sun.com.edgesuite.net/glassfish/4.0/promoted/glassfish-4.0-b63.zip&quot;&gt;glassfish-4.0-b63.zip&lt;/a&gt;).&lt;/p&gt;
+
+&lt;p&gt;This will unzip to a glassfish3/ directory, so to start the server do&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;glassfish3/glassfish/bin/asadmin start-domain
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;To find the JAX-RS version included in the Glassfish you just downloaded do something like the following:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;jar -xf glassfish3/glassfish/modules/javax.ws.rs-api.jar META-INF/MANIFEST.MF; grep Bundle-Version META-INF/MANIFEST.MF
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;(This will leave a META-INF directory behind you might want to clean up afterwards)&lt;/p&gt;
+
+&lt;p&gt;For the b63 version this yields:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Bundle-Version: 2.0.0.m12
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The next step is to create a project to test things out. I am using the following archetype, but any other EE Web profile archetype should work similarly:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mvn archetype:generate \
+  -DarchetypeGroupId=org.codehaus.mojo.archetypes \
+  -DarchetypeArtifactId=webapp-javaee6 \
+  -DgroupId=org.example \
+  -DartifactId=test \
+  -DinteractiveMode=false
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now let’s edit the POM to pull in the JAX-RS 2.0-Version used by the Glassfish. First, add the proper repository.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; &amp;lt;repository&amp;gt;
+ &amp;lt;id&amp;gt;snapshot-repository.java.net&amp;lt;/id&amp;gt;
+ &amp;lt;name&amp;gt;Java.net Snapshot Repository for Maven&amp;lt;/name&amp;gt;
+ &amp;lt;url&amp;gt;https://maven.java.net/content/repositories/snapshots/&amp;lt;/url&amp;gt;
+ &amp;lt;layout&amp;gt;default&amp;lt;/layout&amp;gt;
+ &amp;lt;/repository&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Then add the dependency to the specific release (note that the version is not literally the same as the bundle version you extracted above):&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;lt;dependency&amp;gt;
+  &amp;lt;groupId&amp;gt;javax.ws.rs&amp;lt;/groupId&amp;gt;
+  &amp;lt;artifactId&amp;gt;javax.ws.rs-api&amp;lt;/artifactId&amp;gt;
+  &amp;lt;version&amp;gt;2.0-m12&amp;lt;/version&amp;gt;
+  &amp;lt;scope&amp;gt;provided&amp;lt;/scope&amp;gt;
+&amp;lt;/dependency&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;UPDATE&lt;/strong&gt;: It seems you have to make sure you include this dependency &lt;strong&gt;before&lt;/strong&gt; the dependency to the Java EE Web API. Otherwise, maven insists on trying to use the JAX-RS API version of the Java EE Web API.&lt;/p&gt;
+
+&lt;p&gt;You should now be able to &lt;code class=&quot;highlighter-rouge&quot;&gt;mvn package&lt;/code&gt; and deploy to the Glassfish instance any 2.0-m12 based source code.&lt;/p&gt;
+
+&lt;p&gt;The final step will be to cd into your project folder and set up your IDE project. E.g. with Eclipse run&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mvn eclipse:eclipse
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;and import as existing Maven project into Eclipse.&lt;/p&gt;
+
+&lt;p&gt;Code completion should now suggest you the 2.0-m12 API.&lt;/p&gt;
+
+&lt;p&gt;If you want to have code completion work with the SNAPSHOT, simply change the POM dependency and rerun &lt;code class=&quot;highlighter-rouge&quot;&gt;mvn eclipse:eclipse&lt;/code&gt;. This will likely break when deployed in the container (if you use a SNAPSHOT-only API feature) but still it is nice to play around with the very latest API changes.&lt;/p&gt;
+
+&lt;p&gt;This focusses on JAX-RS 2.0 latest features. Keep in mind that for the rest of Java EE we referenced the EE6 Web API  profile. This is not for testing latest EE7 features in general.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;UPDATE&lt;/strong&gt;: You can find the releases, including the apidoc jars &lt;a href=&quot;http://repo1.maven.org/maven2/javax/ws/rs/javax.ws.rs-api/&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+</description>
+        <pubDate>Tue, 20 Nov 2012 00:41:24 +0100</pubDate>
+        <link>/2012/11/getting-started-playing-around-with-jax-rs-2-0-in-an-ee-container</link>
+        <guid isPermaLink="true">/2012/11/getting-started-playing-around-with-jax-rs-2-0-in-an-ee-container</guid>
+        
+        
+        <category>Glassfish</category>
+        
+        <category>JavaEE6</category>
+        
+        <category>JAX-RS 2.0</category>
+        
+      </item>
+    
+      <item>
+        <title>JAX-RS 2.0 Essential Bookmarks</title>
+        <description>&lt;hr /&gt;
+&lt;p&gt;layout: post
+title: “Web Services with Rust Part 1: Exploring Hyper”
+description: “”
+category: “rust”
+tags: [“rust-web”]
+—&lt;/p&gt;
+
+&lt;p&gt;In my &lt;a href=&quot;http://www.slideshare.net/algermissen/jaxrs-20-new-features&quot;&gt;JAX-RS 2.0 talk&lt;/a&gt; at DEVOXX 2012 I promised to write down the useful links to play around with 2.0. Here they come:&lt;/p&gt;
+
+&lt;h3 id=&quot;jax-rs-20&quot;&gt;JAX-RS 2.0&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;http://www.jcp.org/en/jsr/detail?id=339`&quot;&gt;JSR339 Homepage&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;http://jax-rs-spec.java.net/nonav/2.0-SNAPSHOT/apidocs/&quot;&gt;SNAPSHOT API docs&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;http://java.net/jira/browse/JAX_RS_SPEC&quot;&gt;JAX-RS 2.0 Specification JIRA&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;http://java.net/projects/jax-rs-spec/sources/git/show&quot;&gt;Spec and API latest sources&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;jersey--glassfish&quot;&gt;Jersey + glassfish&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;http://jersey.java.net/nonav/apidocs/snapshot/jersey/&quot;&gt;Jersey 2.0 API docs&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;http://jersey.java.net/nonav/documentation/snapshot/index.html&quot;&gt;Jersey 2.0 Snapshot User Guide&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;http://java.net/jira/browse/JERSEY/&quot;&gt;Jersey JIRA&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;http://dlc.sun.com.edgesuite.net/glassfish/4.0/promoted/&quot;&gt;Glassfish latest builds&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;resteasy&quot;&gt;RESTEasy&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://issues.jboss.org/browse/RESTEASY&quot;&gt;RESTEasy JIRA&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;blogs&quot;&gt;Blogs&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;http://marek.potociar.net&quot;&gt;Marek’s Blog&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;http://bill.burkecentral.com/category/jax-rs/&quot;&gt;Bill’s JAX-RS blogs&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+</description>
+        <pubDate>Tue, 13 Nov 2012 18:10:29 +0100</pubDate>
+        <link>/2012/11/jax-rs-2-0-essential-bookmarks</link>
+        <guid isPermaLink="true">/2012/11/jax-rs-2-0-essential-bookmarks</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>JAX-RS 2.0 MVC</title>
+        <description>&lt;hr /&gt;
+&lt;p&gt;layout: post
+title: “Web Services with Rust Part 1: Exploring Hyper”
+description: “”
+category: “rust”
+tags: [“rust-web”]
+—&lt;/p&gt;
+
+&lt;p&gt;It is not unusual for services that expose a technical REST API to also need human-targeted UI for configuration, status checks or reporting.&lt;/p&gt;
+
+&lt;p&gt;What I have seen a couple of times is that developers naturally use some form of REST framework (for example JAX-RS) for the technical API but then make use of yet another API technology (for example Spring or JSF) for the human-targeted UI.&lt;/p&gt;
+
+&lt;p&gt;This not only increases the technology mix (something I personally strive to avoid as much as possible), but it also introduces a distinction between technical and human API that should not be made in my opinion. From an API point of view an HTTP interface that serves HTML and AJAX-targeted JSON is as much a REST-API as is one that serves XML or ‘technical’ JSON.&lt;/p&gt;
+
+&lt;p&gt;Instead, you should treat both as aspects of one and the same API. For one you will likely find resources in both API-’parts’ that serve representations of the same concepts (for example calendar events, shopping carts or contract information). Such repesentations of should be produced by one and the same resource. This reduces the amount of code and will help you, for example, to apply corresponding cacheability properties to both representations.&lt;/p&gt;
+
+&lt;p&gt;In addition, it will encourage you to treat the human-targeted API-parts with the same care as the technical ones. For example, you should allow introspection into them using some form of home document. Above all, you’ll never know in which ways clients re-use those HTML pages or snippets you serve.&lt;/p&gt;
+
+&lt;p&gt;Having said that, what might – besides just habits – be the reason that developers do not think ‘REST-API’ when they think ‘GUI’? Is it because many REST frameworks out there have very poor support for serving document-oriented representations such as HTML pages?&lt;/p&gt;
+
+&lt;p&gt;While some JAX-RS implementations have proprietary support for templating, the new JAX-RS 2.0 filter API lets you roll your own with a couple of lines of code.&lt;/p&gt;
+
+&lt;p&gt;Instead of the ‘Web-container-only’-setup I used in the last blog I would like full Java EE6 support this time. Fortunately, Arun Gupta has provided an example of how get JAX-RS 2.0 to work in a Java EE 6 container.&lt;/p&gt;
+
+&lt;p&gt;First I created a project based on the archetype Arun uses:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mvn archetype:generate \
+   -DarchetypeGroupId=org.codehaus.mojo.archetypes \
+   -DarchetypeArtifactId=webapp-javaee6 \
+   -DgroupId=net.jalg \
+   -DartifactId=mvc \
+   -DinteractiveMode=false
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;and then added the neccessary repository and dependencies the way he describes. Because JAX-RS 2.0 and Jersey currently undergo some sort of last minute changes I have changed the Jersey dependencies to be on 2.0-SNAPSHOT to get the latest developments.&lt;/p&gt;
+
+&lt;p&gt;The templating support I have in mind would let me return any object from a JAX-RS resource method. In addition it would let me annotate the resource method to specify a template to use for constructing the representations. Like so:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;@Path(&quot;user/{userId}/account&quot;)
+public class Facade {
+    @PathParam(&quot;userId&quot;) String userId;
+ 
+    @GET
+    @Produces(&quot;text/html&quot;)
+    @Path(&quot;contract-details&quot;)
+    @Template(&quot;templates/contract.vm&quot;)
+    public Contract getContractDetails() {
+        return new Contract(&quot;123456&quot;, userId, &quot;new&quot;);
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The problem here is that the JAX-RS runtime will pick the MessageBodyWriter implementation based on the returned type. It will not, magically, invoke some sort of templating engine. So, how can we trick the runtime into choosing a different MessageBodyWriter? And how can we pass to that not only the returned object but also the path of the desired template?&lt;/p&gt;
+
+&lt;p&gt;Here the filter API comes in. We can use the @Template annotation to also act as a binding for a particular filter. This is done with the @NameBinding annotation from the new filter API:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;@NameBinding
+@Target({ ElementType.TYPE, ElementType.METHOD })
+@Retention(value = RetentionPolicy.RUNTIME)
+public @interface Template {
+  String value() default &quot;&quot;;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now the runtime will invoke all filters annotated with @Template when our getContractDetails() method is called and we can work the magic in a filter.&lt;/p&gt;
+
+&lt;p&gt;What happens in the filter below is that we replace the response entity with a wrapper object that holds the template path and the original response entity. The template path we can extract from the annotation, the original response entity we extract from the response context.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;@Provider
+@Template
+public class EntityToModelAndViewWrapper implements ContainerResponseFilter {
+ 
+    @Override
+    public void filter(ContainerRequestContext requestContext,
+      ContainerResponseContext responseContext) throws IOException {
+ 
+        for (Annotation a : responseContext.getEntityAnnotations()) {
+            if (a.annotationType() == Template.class) {
+                String templatePath = ((Template) a).value();
+                ModelAndView mav = new ModelAndView(responseContext.getEntity(),templatePath);
+                responseContext.setEntity(mav,
+                   responseContext.getEntityAnnotations(),
+                responseContext.getMediaType());
+                break;
+            }
+        }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;By changing the type of the response entity, we gain control over the MessageBodyWriter selection. And the runtime will now invoke the MessageBodyWriter we have provided for ModelAndView instances:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;@Provider
+...
+public class ModelToViewMBR implements MessageBodyWriter&amp;lt;ModelAndView&amp;gt; {
+  ...
+    @Override
+    void writeTo(ModelAndView mav, Class&amp;lt;?&amp;gt; arg1, Type arg2,
+            Annotation[] arg3, MediaType arg4,
+            MultivaluedMap&amp;lt;String, Object&amp;gt; arg5, OutputStream output)
+            throws IOException, WebApplicationException {
+        Map&amp;lt;String, Object&amp;gt; map = new HashMap&amp;lt;String,Object&amp;gt;();
+        map.put(&quot;entity&quot;, mav.getModel());
+        engine.merge(mav.getView(),output,map);
+    }
+    ...
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;In the writeTo() method we make the original response entity available to a templating engine under the name ‘entity’ and invoke the merge of template and entity.&lt;/p&gt;
+
+&lt;p&gt;The engine member is an instance of a template engine wrapper. You can see the details in the TemplateEngine class in the example source code.&lt;/p&gt;
+
+&lt;p&gt;In addition to the response entity it should not be too hard to make available to the template engine all the managed beans of the container runtime’s current session (the request). That way one would have the full power of EJB 3.1 and CDI at one’s disposal.&lt;/p&gt;
+
+</description>
+        <pubDate>Mon, 08 Oct 2012 23:01:32 +0200</pubDate>
+        <link>/2012/10/jax-rs-2-0-mvc</link>
+        <guid isPermaLink="true">/2012/10/jax-rs-2-0-mvc</guid>
+        
+        
+        <category>JavaEE6</category>
+        
+        <category>JAX-RS 2.0</category>
+        
+        <category>Jersey 2</category>
         
       </item>
     

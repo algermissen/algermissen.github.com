@@ -5,6 +5,7 @@ description: ""
 category: "rust"
 tags: ["rust-web"]
 ---
+{% include JB/setup %}
 [All Web-Rust postings](http://www.jalg.net/tags.html#rust-web-ref)
 
 A while ago I have turned my head towards [Rust](http://rustlang.org) for
@@ -83,11 +84,13 @@ looks like this
             street: "10 Downing Street".to_owned(),
             city: y.to_owned(),
         };
-
+    
         let j = serde_json::to_string(&address).unwrap();
         return j;
-    }
+}
 {% endhighlight %}
+
+
 
 The server code I compiled as a statically linked executable for Linux (resulting
 in 4.5 MB).
@@ -177,7 +180,7 @@ the same test setup and meanwhile take a look at the graph from the single-threa
 It nicely shows how at 6k req/s the latencies start to increase, thereby capping the
 throughput at these 6k.
 
-![Results 1-threaded](/assets/img/1-Threaded.jpg)
+![Results 1-threaded](/images/blog/1-Threaded.jpg)
 
 There, the result came back from the 2-threaded setup and (relief :-) just what we
 expected: the server is now giving us about 11k req/s and I indeed saw exactly two

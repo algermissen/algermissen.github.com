@@ -7,6 +7,14 @@ slug: pretending-that-the-network-isnt-there
 title: Pretending that the network isn't there....
 wordpress_id: 170
 ---
+---
+layout: post
+title: "Web Services with Rust Part 1: Exploring Hyper"
+description: ""
+category: "rust"
+tags: ["rust-web"]
+---
+{% include JB/setup %}
 
 Another very nice posting about REST: [REST WARS](http://web.archive.org/web/20040625132010/http://www.dehora.net/journal/archives/000360.html) by Bill de hÓra.
 

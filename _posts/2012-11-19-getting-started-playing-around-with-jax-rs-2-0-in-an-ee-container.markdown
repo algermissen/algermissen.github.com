@@ -11,6 +11,14 @@ categories:
 - JavaEE6
 - JAX-RS 2.0
 ---
+---
+layout: post
+title: "Web Services with Rust Part 1: Exploring Hyper"
+description: ""
+category: "rust"
+tags: ["rust-web"]
+---
+{% include JB/setup %}
 
 Trying out the latest JAX-RS API advancements in an EE container is a bit of a pain because pulling in the latest JAX-RS 2.0 libraries into a Java EE environment creates conflicts with the EE-shipped JAX-RS version. Ah yes, and of course you want your IDE to pick up the correct libs for code completion.
 

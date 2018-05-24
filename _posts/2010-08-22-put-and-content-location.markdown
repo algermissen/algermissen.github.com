@@ -9,6 +9,14 @@ wordpress_id: 159
 categories:
 - HTTP Tips
 ---
+---
+layout: post
+title: "Web Services with Rust Part 1: Exploring Hyper"
+description: ""
+category: "rust"
+tags: ["rust-web"]
+---
+{% include JB/setup %}
 
 I noticed some days ago that I totally missed the use of the Content-Location header in responses to PUT requests. Used in this scenario, the client does not need an additional GET to obtain a representation of the resource after the PUT.
 

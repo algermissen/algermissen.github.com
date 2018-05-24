@@ -9,6 +9,14 @@ wordpress_id: 22
 categories:
 - Bookmarks
 ---
+---
+layout: post
+title: "Web Services with Rust Part 1: Exploring Hyper"
+description: ""
+category: "rust"
+tags: ["rust-web"]
+---
+{% include JB/setup %}
 
 A key design aspect that made the very success of the World Wide Web possible was the removal of the referential integrity constraint from the hypermedia paradigm. In a system of the scale of the Web the problem of ensuring that no hyperlink would ever be broken cannot be solved and the only way to make the system work was to relax the constraint.
 

@@ -7,6 +7,15 @@ slug: is-fowler-a-restafarian
 title: Is Fowler a RESTafarian?
 wordpress_id: 174
 ---
+---
+layout: post
+title: "Web Services with Rust Part 1: Exploring Hyper"
+description: ""
+category: "rust"
+tags: ["rust-web"]
+---
+{% include JB/setup %}
+
 
 While giving parts of Martin Fowler's [Patterns of Enterprise Application Architecture](http://martinfowler.com/books/eaa.html) another close read, I came accross this subtle sentence (from Service Layer Pattern; p. 135/136):
 

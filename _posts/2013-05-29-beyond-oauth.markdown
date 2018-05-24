@@ -11,6 +11,14 @@ categories:
 - OAuth
 - Oz
 ---
+---
+layout: post
+title: "Web Services with Rust Part 1: Exploring Hyper"
+description: ""
+category: "rust"
+tags: ["rust-web"]
+---
+{% include JB/setup %}
 
 [Eran Hammer](http://hueniverse.com)'s [noisy departure](http://hueniverse.com/2012/07/oauth-2-0-and-the-road-to-hell/) from [OAuth 2](http://tools.ietf.org/html/rfc6749) woke me up to finally engage in that HTTP security investigation that had been buried in my todo list for years. Thanks a bunch for that, Eran!
 

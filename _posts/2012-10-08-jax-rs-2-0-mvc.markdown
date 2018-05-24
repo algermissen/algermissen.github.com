@@ -11,7 +11,14 @@ categories:
 - JAX-RS 2.0
 - Jersey 2
 ---
-
+---
+layout: post
+title: "Web Services with Rust Part 1: Exploring Hyper"
+description: ""
+category: "rust"
+tags: ["rust-web"]
+---
+{% include JB/setup %}
 
 It is not unusual for services that expose a technical REST API to also need human-targeted UI for configuration, status checks or reporting.
 

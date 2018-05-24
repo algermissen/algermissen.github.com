@@ -10,6 +10,14 @@ categories:
 - HTTP Auth
 - JAX-RS 2.0
 ---
+---
+layout: post
+title: "Web Services with Rust Part 1: Exploring Hyper"
+description: ""
+category: "rust"
+tags: ["rust-web"]
+---
+{% include JB/setup %}
 
 [Eran Hammer](http://hueniverse.com) has recently created [iron](https://github.com/hueniverse/iron), a cryptographic procedure and tool to seal arbitrary data in a way so that it cannot be read and also cannot be changed without being noticed.
 

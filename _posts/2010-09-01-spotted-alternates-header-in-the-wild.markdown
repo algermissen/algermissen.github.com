@@ -10,6 +10,14 @@ categories:
 - HTTP Tips
 - Hypermedia
 ---
+---
+layout: post
+title: "Web Services with Rust Part 1: Exploring Hyper"
+description: ""
+category: "rust"
+tags: ["rust-web"]
+---
+{% include JB/setup %}
 
 Just spotted an [Alternates header](http://www.ietf.org/rfc/rfc2295.txt) in the wild:
 

@@ -7,6 +7,14 @@ slug: the-fallacy-of-business-objects
 title: The Fallacy of Business Objects
 wordpress_id: 168
 ---
+---
+layout: post
+title: "Web Services with Rust Part 1: Exploring Hyper"
+description: ""
+category: "rust"
+tags: ["rust-web"]
+---
+{% include JB/setup %}
 
 ...is [yet another great article](http://www.propylon.com/news/ctoarticles/040330_business_objects.html) by Sean Mc Grath.
 
