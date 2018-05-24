@@ -1,18 +1,6 @@
 ---
-author: algermissen
-comments: false
-date: 2005-09-17 09:16:19+00:00
 layout: post
-slug: don-knuth-vs-w3c-validator
 title: Don Knuth vs. W3C Validator
-wordpress_id: 166
----
----
-layout: post
-title: "Web Services with Rust Part 1: Exploring Hyper"
-description: ""
-category: "rust"
-tags: ["rust-web"]
 ---
 {% include JB/setup %}
 

@@ -1,21 +1,6 @@
 ---
-author: algermissen
-comments: false
-date: 2013-05-29 21:57:30+00:00
 layout: post
-slug: using-iron-to-encapsulate-cookies
 title: Using iron to Encapsulate Cookies
-wordpress_id: 313
-categories:
-- HTTP Auth
-- JAX-RS 2.0
----
----
-layout: post
-title: "Web Services with Rust Part 1: Exploring Hyper"
-description: ""
-category: "rust"
-tags: ["rust-web"]
 ---
 {% include JB/setup %}
 

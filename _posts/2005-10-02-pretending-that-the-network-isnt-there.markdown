@@ -1,18 +1,6 @@
 ---
-author: algermissen
-comments: false
-date: 2005-10-02 09:27:37+00:00
 layout: post
-slug: pretending-that-the-network-isnt-there
 title: Pretending that the network isn't there....
-wordpress_id: 170
----
----
-layout: post
-title: "Web Services with Rust Part 1: Exploring Hyper"
-description: ""
-category: "rust"
-tags: ["rust-web"]
 ---
 {% include JB/setup %}
 

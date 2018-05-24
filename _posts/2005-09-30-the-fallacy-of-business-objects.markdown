@@ -1,18 +1,6 @@
 ---
-author: algermissen
-comments: false
-date: 2005-09-30 09:24:15+00:00
 layout: post
-slug: the-fallacy-of-business-objects
 title: The Fallacy of Business Objects
-wordpress_id: 168
----
----
-layout: post
-title: "Web Services with Rust Part 1: Exploring Hyper"
-description: ""
-category: "rust"
-tags: ["rust-web"]
 ---
 {% include JB/setup %}
 

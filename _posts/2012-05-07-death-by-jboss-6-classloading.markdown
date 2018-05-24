@@ -1,22 +1,6 @@
 ---
-author: algermissen
-comments: false
-date: 2012-05-07 22:19:13+00:00
 layout: post
-slug: death-by-jboss-6-classloading
 title: Death by JBoss 6 Classloading
-wordpress_id: 91
-categories:
-- Java Class Loading
-- JavaEE6
-- JBoss6
----
----
-layout: post
-title: "Web Services with Rust Part 1: Exploring Hyper"
-description: ""
-category: "rust"
-tags: ["rust-web"]
 ---
 {% include JB/setup %}
 

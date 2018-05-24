@@ -1,21 +1,6 @@
 ---
-author: algermissen
-comments: false
-date: 2012-09-24 21:06:20+00:00
 layout: post
-slug: declarative-cache-control-with-jax-rs-2-0
 title: Declarative Cache Control with JAX-RS 2.0
-wordpress_id: 130
-categories:
-- JAX-RS 2.0
-- Jersey 2
----
----
-layout: post
-title: "Web Services with Rust Part 1: Exploring Hyper"
-description: ""
-category: "rust"
-tags: ["rust-web"]
 ---
 {% include JB/setup %}
 

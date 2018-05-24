@@ -1,9 +1,6 @@
 ---
 layout: post
-#date: 2003-04-05 11:40:34+00:00
 title: Building Web Services
-#slug: building-web-services
-description: ""
 ---
 {% include JB/setup %}
 

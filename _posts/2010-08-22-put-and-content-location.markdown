@@ -1,20 +1,6 @@
 ---
-author: algermissen
-comments: false
-date: 2010-08-22 22:54:07+00:00
 layout: post
-slug: put-and-content-location
 title: PUT and Content-Location
-wordpress_id: 159
-categories:
-- HTTP Tips
----
----
-layout: post
-title: "Web Services with Rust Part 1: Exploring Hyper"
-description: ""
-category: "rust"
-tags: ["rust-web"]
 ---
 {% include JB/setup %}
 

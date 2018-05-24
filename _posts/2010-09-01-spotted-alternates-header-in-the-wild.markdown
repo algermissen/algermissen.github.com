@@ -1,21 +1,6 @@
 ---
-author: algermissen
-comments: false
-date: 2010-09-01 08:00:17+00:00
 layout: post
-slug: spotted-alternates-header-in-the-wild
 title: Spotted Alternates Header in the Wild
-wordpress_id: 181
-categories:
-- HTTP Tips
-- Hypermedia
----
----
-layout: post
-title: "Web Services with Rust Part 1: Exploring Hyper"
-description: ""
-category: "rust"
-tags: ["rust-web"]
 ---
 {% include JB/setup %}
 

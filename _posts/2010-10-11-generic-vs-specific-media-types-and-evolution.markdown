@@ -1,18 +1,6 @@
 ---
-author: algermissen
-comments: false
-date: 2010-10-11 22:59:54+00:00
 layout: post
-slug: generic-vs-specific-media-types-and-evolution
 title: Generic vs. Specific Media Types and Evolution
-wordpress_id: 178
----
----
-layout: post
-title: "Web Services with Rust Part 1: Exploring Hyper"
-description: ""
-category: "rust"
-tags: ["rust-web"]
 ---
 {% include JB/setup %}
 

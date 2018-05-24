@@ -1,18 +1,6 @@
 ---
-author: algermissen
-comments: false
-date: 2010-11-12 23:56:56+00:00
 layout: post
-slug: interesting-changes-must-surface
 title: Interesting Changes *Must* Surface
-wordpress_id: 176
----
----
-layout: post
-title: "Web Services with Rust Part 1: Exploring Hyper"
-description: ""
-category: "rust"
-tags: ["rust-web"]
 ---
 {% include JB/setup %}
 

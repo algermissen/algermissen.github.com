@@ -1,18 +1,6 @@
 ---
-author: algermissen
-comments: false
-date: 2005-09-29 23:11:09+00:00
 layout: post
-slug: dont-assume-a-closed-world
 title: Don't Assume a Closed World
-wordpress_id: 162
----
----
-layout: post
-title: "Web Services with Rust Part 1: Exploring Hyper"
-description: ""
-category: "rust"
-tags: ["rust-web"]
 ---
 {% include JB/setup %}
 

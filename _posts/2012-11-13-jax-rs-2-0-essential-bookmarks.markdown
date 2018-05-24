@@ -1,18 +1,6 @@
 ---
-author: algermissen
-comments: false
-date: 2012-11-13 17:10:29+00:00
 layout: post
-slug: jax-rs-2-0-essential-bookmarks
 title: JAX-RS 2.0 Essential Bookmarks
-wordpress_id: 218
----
----
-layout: post
-title: "Web Services with Rust Part 1: Exploring Hyper"
-description: ""
-category: "rust"
-tags: ["rust-web"]
 ---
 {% include JB/setup %}
 

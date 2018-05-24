@@ -1,20 +1,6 @@
 ---
-author: algermissen
-comments: false
-date: 2011-11-07 16:25:16+00:00
 layout: post
-slug: esi-facelift
 title: ESI Facelift
-wordpress_id: 6
-categories:
-- Edge-Side-Includes
----
----
-layout: post
-title: "Web Services with Rust Part 1: Exploring Hyper"
-description: ""
-category: "rust"
-tags: ["rust-web"]
 ---
 {% include JB/setup %}
 

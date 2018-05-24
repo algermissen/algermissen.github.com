@@ -1,22 +1,6 @@
 ---
-author: algermissen
-comments: false
-date: 2013-05-29 19:54:10+00:00
 layout: post
-slug: beyond-oauth
 title: Beyond OAuth
-wordpress_id: 274
-categories:
-- HTTP Auth
-- OAuth
-- Oz
----
----
-layout: post
-title: "Web Services with Rust Part 1: Exploring Hyper"
-description: ""
-category: "rust"
-tags: ["rust-web"]
 ---
 {% include JB/setup %}
 

@@ -1,22 +1,6 @@
 ---
-author: algermissen
-comments: false
-date: 2012-11-19 23:41:24+00:00
 layout: post
-slug: getting-started-playing-around-with-jax-rs-2-0-in-an-ee-container
 title: Getting Started Playing Around with JAX-RS 2.0 in an EE Container
-wordpress_id: 227
-categories:
-- Glassfish
-- JavaEE6
-- JAX-RS 2.0
----
----
-layout: post
-title: "Web Services with Rust Part 1: Exploring Hyper"
-description: ""
-category: "rust"
-tags: ["rust-web"]
 ---
 {% include JB/setup %}
 

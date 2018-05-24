@@ -1,18 +1,6 @@
 ---
-author: algermissen
-comments: false
-date: 2010-11-19 10:36:12+00:00
 layout: post
-slug: agency-boundary
 title: Agency Boundary
-wordpress_id: 19
----
----
-layout: post
-title: "Web Services with Rust Part 1: Exploring Hyper"
-description: ""
-category: "rust"
-tags: ["rust-web"]
 ---
 {% include JB/setup %}
 
