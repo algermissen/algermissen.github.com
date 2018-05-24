@@ -7,12 +7,15 @@
 - name: Solutions Engineering
   path: "#solutions-engineering"
   section_id: services
-- name: Cloud Consulting
-  path: "#consulting"
-  section_id: consulting
+- name: Cloud
+  path: "#cloud"
+  section_id: cloud
 - name: Site Reliability Engineering
   path: "#sre"
   section_id: sre
+- name: Development
+  path: "#dev"
+  section_id: dev
 #- name: Software Architecture
 #  path: "#software-architecture"
 #  section_id: software-architecture
