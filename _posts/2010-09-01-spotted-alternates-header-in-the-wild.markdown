@@ -5,9 +5,6 @@ title: Spotted Alternates Header in the Wild
 {% include JB/setup %}
 
 Just spotted an [Alternates header](http://www.ietf.org/rfc/rfc2295.txt) in the wild:
-
-
-    
     
     $ curl http://www.w3.org -HAccept:text/foo -I
     

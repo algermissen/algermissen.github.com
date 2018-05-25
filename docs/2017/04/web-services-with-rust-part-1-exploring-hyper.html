@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <title>Web Services with Rust Part 1: Exploring Hyper</title>
-  <meta name="description" content="All Web-Rust postings">
+  <meta name="description" content="">
   <link rel="shortcut icon" href="/favicon.ico">
   <link rel="stylesheet" href="/css/foundation.css">
   <link rel="stylesheet" href="/css/style.css">
@@ -141,8 +141,6 @@
         </p>
         <h3>Web Services with Rust Part 1: Exploring Hyper</h3>
         
-<p><a href="http://www.jalg.net/tags.html#rust-web-ref">All Web-Rust postings</a></p>
-
 <p>A while ago I have turned my head towards <a href="http://rustlang.org">Rust</a> for
 developing Web Services. Rust’s design in my opinion hits a sweet spot between
 ease of development and runtime efficiency, especially doing away with a
@@ -328,7 +326,7 @@ throughput at these 6k.</p>
 expected: the server is now giving us about 11k req/s and I indeed saw exactly two
 CPUs being saturated. Nice!</p>
 
-<p><img src="/assets/img/2-Threaded.jpg" alt="Results 2-threaded" /></p>
+<p><img src="/images/blog/2-Threaded.jpg" alt="Results 2-threaded" /></p>
 
 <p>Next up is a 4-threaded version (on the 4 core machine) - will we be able to double
 again?</p>
@@ -336,7 +334,7 @@ again?</p>
 <p>Yes, I am seeing the 4 cores being saturated and the latencies remain pretty ok
 until about 20k req/s.</p>
 
-<p><img src="/assets/img/4-Threaded.jpg" alt="Results 4-threaded" /></p>
+<p><img src="/images/blog/4-Threaded.jpg" alt="Results 4-threaded" /></p>
 
 <p>Yes, the 99th percentile rises somewhere around 15k, but for this initial
 verification that what I am doing makes some sort of sense the result is

@@ -27,9 +27,6 @@ Making JAX-RS responses cacheable isn't exactly elegant in 1.1. If you want cach
 What, if we instead could annotate a resource method to decorate the response with a Cache-Control header? Turns out, that this is straight forward in JAX-RS 2.0 thanks to the new Filter API.
 
 All we need is a filter and an annotation to selectively bind that filter to any resource method of our liking. Here is the annotation which takes a Cache-Control header value as an argument:
-
-
-    
     
     <code>
     package net.jalg.ccdecor;
@@ -43,16 +40,10 @@ All we need is a filter and an annotation to selectively bind that filter to any
       String cc() default "public, must-revalidate"; 
     }
     </code>
-    
-
-
 
 The new @NameBinding annotation tells a JAX-RS 2.0 runtime that our annotation should be used to match filters to resource methods.
 
 Here is the filter:
-
-
-    
     
     <code>
     package net.jalg.ccdecor;
@@ -81,13 +72,8 @@ Here is the filter:
       }
     }
     </code>
-    
-
-
 
 Don't worry too much about that code for a minute but look at how the filter can be bound to a resource method:
-
-    
     
     <code>
       @GET
@@ -97,9 +83,6 @@ Don't worry too much about that code for a minute but look at how the filter can
         return "Got it!";
       }
     </code>
-    
-
-
 
 The binding is achieved using our @Cacheable annotation.
 

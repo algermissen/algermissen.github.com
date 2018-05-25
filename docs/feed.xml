@@ -6,8 +6,8 @@
 </description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Fri, 25 May 2018 00:10:46 +0200</pubDate>
-    <lastBuildDate>Fri, 25 May 2018 00:10:46 +0200</lastBuildDate>
+    <pubDate>Fri, 25 May 2018 08:13:11 +0200</pubDate>
+    <lastBuildDate>Fri, 25 May 2018 08:13:11 +0200</lastBuildDate>
     <generator>Jekyll v3.7.3</generator>
     
       <item>
@@ -137,8 +137,6 @@ of the language Rust as such.&lt;/p&gt;
       <item>
         <title>Web Services with Rust Part 3: Accept All We Can</title>
         <description>
-&lt;p&gt;&lt;a href=&quot;http://www.jalg.net/tags.html#rust-web-ref&quot;&gt;All Web-Rust postings&lt;/a&gt;&lt;/p&gt;
-
 &lt;p&gt;In the last posting we added metrics to our very basic test Web service. 
 Initially this third
 part was supposed to be about adding logging to the server, comparing the
@@ -260,8 +258,6 @@ on a different thread than more IO bound tasks.&lt;/p&gt;
       <item>
         <title>Web Services with Rust Part 2: Baseline Revisited</title>
         <description>
-&lt;p&gt;&lt;a href=&quot;http://www.jalg.net/tags.html#rust-web-ref&quot;&gt;All Web-Rust postings&lt;/a&gt;&lt;/p&gt;
-
 &lt;p&gt;In the last posting I started exploring implementing Web services in Rust, using
 hyper with some minimal single- and multi-threaded servers.&lt;/p&gt;
 
@@ -357,24 +353,24 @@ definition.session(&quot;ManyClientsOneRequest&quot;, function(context) {
 latencies start to degrade at about 200 req/s. This is the maximum throughput of the
 server, requests start to pile up and are completed down the line with very high latencies.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/img/web-rust/test1/test1_sf_graph.jpg&quot; alt=&quot;Test 1 - Client Side Graph&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/images/blog/web-rust/test1/test1_sf_graph.jpg&quot; alt=&quot;Test 1 - Client Side Graph&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;While a capacity of 200 req/s seems surprisingly low for our server, a look at the internal
 latency metrics for the CPU intensive work the server is doing provides an explanation.
 Each work operation takes around 4ms and this plus network stack operations is roughly
 what fits 200 times into a second.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/img/web-rust/test1/test1_gf_latencies.jpg&quot; alt=&quot;Test 1 - Server Side Graph&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/images/blog/web-rust/test1/test1_gf_latencies.jpg&quot; alt=&quot;Test 1 - Server Side Graph&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;The next graph shows the rate of internally completed requests, which roughly corresponds
 to the request rate measured on the client side.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/img/web-rust/test1/test1_gf_reqs.jpg&quot; alt=&quot;Test 1 - Server Side Graph&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/images/blog/web-rust/test1/test1_gf_reqs.jpg&quot; alt=&quot;Test 1 - Server Side Graph&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Out of curiosity I also took the count and rate of connections the server has taken from
 the listen queue.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/img/web-rust/test1/test1_gf_conn.jpg&quot; alt=&quot;Test 1 - Server Side Graph&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/images/blog/web-rust/test1/test1_gf_conn.jpg&quot; alt=&quot;Test 1 - Server Side Graph&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;The server is using a &lt;a href=&quot;https://github.com/algermissen/web-rust/blob/master/src/bin/ts2.rs#L112&quot;&gt;listen queue size of 128&lt;/a&gt;
 and that corresponds very much to the number of current requests in the graph. This leaves me a bit
@@ -414,8 +410,6 @@ directly impact the capacity limit of a server.&lt;/p&gt;
       <item>
         <title>Web Services with Rust Part 1: Exploring Hyper</title>
         <description>
-&lt;p&gt;&lt;a href=&quot;http://www.jalg.net/tags.html#rust-web-ref&quot;&gt;All Web-Rust postings&lt;/a&gt;&lt;/p&gt;
-
 &lt;p&gt;A while ago I have turned my head towards &lt;a href=&quot;http://rustlang.org&quot;&gt;Rust&lt;/a&gt; for
 developing Web Services. Rust’s design in my opinion hits a sweet spot between
 ease of development and runtime efficiency, especially doing away with a
@@ -601,7 +595,7 @@ throughput at these 6k.&lt;/p&gt;
 expected: the server is now giving us about 11k req/s and I indeed saw exactly two
 CPUs being saturated. Nice!&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/img/2-Threaded.jpg&quot; alt=&quot;Results 2-threaded&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/images/blog/2-Threaded.jpg&quot; alt=&quot;Results 2-threaded&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Next up is a 4-threaded version (on the 4 core machine) - will we be able to double
 again?&lt;/p&gt;
@@ -609,7 +603,7 @@ again?&lt;/p&gt;
 &lt;p&gt;Yes, I am seeing the 4 cores being saturated and the latencies remain pretty ok
 until about 20k req/s.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/img/4-Threaded.jpg&quot; alt=&quot;Results 4-threaded&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/images/blog/4-Threaded.jpg&quot; alt=&quot;Results 4-threaded&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Yes, the 99th percentile rises somewhere around 15k, but for this initial
 verification that what I am doing makes some sort of sense the result is
@@ -858,35 +852,19 @@ context.setSecurityContext(new TokenSecurityContext(username, realname));
 &lt;h3 id=&quot;jax-rs-20&quot;&gt;JAX-RS 2.0&lt;/h3&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;a href=&quot;http://www.jcp.org/en/jsr/detail?id=339`&quot;&gt;JSR339 Homepage&lt;/a&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;a href=&quot;http://jax-rs-spec.java.net/nonav/2.0-SNAPSHOT/apidocs/&quot;&gt;SNAPSHOT API docs&lt;/a&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;a href=&quot;http://java.net/jira/browse/JAX_RS_SPEC&quot;&gt;JAX-RS 2.0 Specification JIRA&lt;/a&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;a href=&quot;http://java.net/projects/jax-rs-spec/sources/git/show&quot;&gt;Spec and API latest sources&lt;/a&gt;&lt;/p&gt;
-  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://www.jcp.org/en/jsr/detail?id=339`&quot;&gt;JSR339 Homepage&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://jax-rs-spec.java.net/nonav/2.0-SNAPSHOT/apidocs/&quot;&gt;SNAPSHOT API docs&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://java.net/jira/browse/JAX_RS_SPEC&quot;&gt;JAX-RS 2.0 Specification JIRA&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://java.net/projects/jax-rs-spec/sources/git/show&quot;&gt;Spec and API latest sources&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h3 id=&quot;jersey--glassfish&quot;&gt;Jersey + glassfish&lt;/h3&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;a href=&quot;http://jersey.java.net/nonav/apidocs/snapshot/jersey/&quot;&gt;Jersey 2.0 API docs&lt;/a&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;a href=&quot;http://jersey.java.net/nonav/documentation/snapshot/index.html&quot;&gt;Jersey 2.0 Snapshot User Guide&lt;/a&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;a href=&quot;http://java.net/jira/browse/JERSEY/&quot;&gt;Jersey JIRA&lt;/a&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;a href=&quot;http://dlc.sun.com.edgesuite.net/glassfish/4.0/promoted/&quot;&gt;Glassfish latest builds&lt;/a&gt;&lt;/p&gt;
-  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://jersey.java.net/nonav/apidocs/snapshot/jersey/&quot;&gt;Jersey 2.0 API docs&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://jersey.java.net/nonav/documentation/snapshot/index.html&quot;&gt;Jersey 2.0 Snapshot User Guide&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://java.net/jira/browse/JERSEY/&quot;&gt;Jersey JIRA&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://dlc.sun.com.edgesuite.net/glassfish/4.0/promoted/&quot;&gt;Glassfish latest builds&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h3 id=&quot;resteasy&quot;&gt;RESTEasy&lt;/h3&gt;
@@ -898,12 +876,8 @@ context.setSecurityContext(new TokenSecurityContext(username, realname));
 &lt;h3 id=&quot;blogs&quot;&gt;Blogs&lt;/h3&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;a href=&quot;http://marek.potociar.net&quot;&gt;Marek’s Blog&lt;/a&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;a href=&quot;http://bill.burkecentral.com/category/jax-rs/&quot;&gt;Bill’s JAX-RS blogs&lt;/a&gt;&lt;/p&gt;
-  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://marek.potociar.net&quot;&gt;Marek’s Blog&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://bill.burkecentral.com/category/jax-rs/&quot;&gt;Bill’s JAX-RS blogs&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 </description>

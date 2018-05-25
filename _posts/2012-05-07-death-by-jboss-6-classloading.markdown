@@ -13,9 +13,6 @@ Yes, I know now, that I should have thought about the interference between the t
 When it finally dawned on me that I fell victim to some default configuration in JBoss that (at least to me) is totally counter intuitive the search went reasonably well. (Though documentation at jboss.org is still way to hard to find for my taste)
 
 I figured I had to isolate my class loaders with something like this:
-
-
-    
     
     <code><?xml version="1.0" encoding="UTF-8"?>
     <jboss-web>
@@ -25,9 +22,6 @@ I figured I had to isolate my class loaders with something like this:
           </loader-repository>
        </class-loading>
     </jboss-web></code>
-    
-
-
 
 The crappy thing about this is that apparently the reason for the non-intuitive default is that versions prior to JBoss 5 exhibit not-isolated class loading. The designers of JBoss 5+ desired to make the old configurations work in the newer JBosses without adjustments. Makes me shiver.
 

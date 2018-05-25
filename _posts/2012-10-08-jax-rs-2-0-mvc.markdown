@@ -106,4 +106,3 @@ The engine member is an instance of a template engine wrapper. You can see the d
 
 In addition to the response entity it should not be too hard to make available to the template engine all the managed beans of the container runtime’s current session (the request). That way one would have the full power of EJB 3.1 and CDI at one’s disposal.
 
-

@@ -7,8 +7,6 @@ tags: ["rust-web"]
 ---
 {% include JB/setup %}
 
-[All Web-Rust postings](http://www.jalg.net/tags.html#rust-web-ref)
-
 In the last posting we added metrics to our very basic test Web service. 
 Initially this third
 part was supposed to be about adding logging to the server, comparing the
@@ -63,7 +61,6 @@ In order to send work off to a different thread that thread needs to run its
 own Tokio Core. Since we cannot send a Core to another thread we create the
 Core on the main thread, create a remote handle to it and send that to
 a new thread along with the actual server startup.
-
        
     fn start_server(n: usize, addr: &'static str) {
     

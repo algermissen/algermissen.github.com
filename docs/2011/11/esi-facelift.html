@@ -201,25 +201,17 @@ ACME in the News
 <p>There are a number of more or less sophisticated features in ESI 1.0 that are seldom used and in addition are not implemented by many products. Among these are</p>
 
 <ul>
-  <li>
-    <p>The alt-attribute on <esi:inline></esi:inline></p>
-  </li>
+  <li>The alt-attribute on <esi:inline></esi:inline></li>
   <li>
     <esi:choose>,<esi:when>,<esi:otherwise>: it is likely that this branching construct can be replaced with functionality that will be in the templating language anyway (as Mark suggests in his posting, showing a dynamicly assembled include target URI: <esi:include src="/{user_prefs.top_left_module}" />)
-
-  
 </esi:otherwise></esi:when></esi:choose>
   </li>
   <li>
     <esi:vars>: would likely be changed; I agree with Mark's suggestions regarding variable handling by the templating language as well as with his ideas on providing better access to the request and response via predefined objects
-
-  
 </esi:vars>
   </li>
   <li>
     <esi:inline> when you first look at it, it appears rather weired and [it took me a while to figure out how inline works](http://stackoverflow.com/questions/7555172/edge-side-includes-how-do-esiinline-tags-work). But I think <esi:inline> is pretty useful for emulating batch retrievals. However, what I do not like about it is that it couples the referencing and the referenced systems: they need to agree on where to place the inline elements and that is pure out-of-band information coupling hell. I'd rather like to see the combination of [pipelining](http://www.mnot.net/blog/2011/08/05/pipeline_now) and [caching](http://www.mnot.net/cache_docs/) to handle batch retrieval requirements.
-
-
 
 </esi:inline></esi:inline>
   </li>

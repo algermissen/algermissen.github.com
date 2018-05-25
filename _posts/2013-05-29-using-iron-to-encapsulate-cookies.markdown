@@ -14,9 +14,6 @@ Besides its intended use in combination with [Oz](https://github.com/hueniverse/
 To bring iron into the Java world, I have created [jiron](https://github.com/algermissen/jiron) and an [example project](https://github.com/algermissen/iron-cookie) to illustrate how to use iron for HTTP cookie authentication with encapsulated tokens.
 
 First, let's see, how to use jiron to seal and unseal data:
-
-
-    
     
     import net.jalg.jiron.Jiron;
     
@@ -29,18 +26,12 @@ First, let's see, how to use jiron to seal and unseal data:
     String unsealed = Jiron.unseal(sealed, "sealing-password",
     					Jiron.DEFAULT_ENCRYPTION_OPTIONS,
     					Jiron.DEFAULT_INTEGRITY_OPTIONS);
-    
-
-
 
 The String `sealed` is what you can pass around and be sure that nobody can read or modify it, unless in possession of the sealing password.
 
 Suppose you have a Web site that employs cookie-based authentication and suppose you have some data you want to store in that cookie directly so you do not have to go to a database shared by all server instances for looking up that data. For example the user's login, her real name and information when the cookie expires and re-authentication is enforced.
 
 Initially, a user not in possession of the cookie will be redirected to a login form and the cookie will be issued upon submission of valid credentials. Here is an excerpt of the [form processing JAX-RS resource](https://github.com/algermissen/iron-cookie/blob/master/src/main/java/net/jalg/ironcookie/LoginResource.java):
-
-
-    
     
     String data = login + "|" + expires + "|" + realname;
     String cookieValue = Jiron.seal(data, ApplicationConfig.ENCRYPTION_KEY,
@@ -49,37 +40,19 @@ Initially, a user not in possession of the cookie will be redirected to a login 
     
     NewCookie c = new NewCookie(AuthFilter.COOKIE_NAME, cookieValue);
     return Response.seeOther(redirectUri).cookie(c).build();
-    
-
-
 
 In the HTTP response the cookie will look something like (line breaks added for clarity):
-
-
-    
     
     Set-Cookie:authtoken=Fe26.1**7A6A689DEC9563773B1264CF4CC585CFC9CF84403EE9143650D2EC2EE<br></br>24E36A3*k9yW1ZlC5Tr1a5o2Os_QMQ*sxZkQJfHsfyZE_0DI3ugHKdQ3IXwy1jySoz7GrKiTWU*9C58B956A11<br></br>81D1F1E3A1A7A1B67D2CF7738B0BFB16C5EB4B381151CAEEC4C6C*3PxSsg5aThLGvU2e8ItXfep-hpMw5x96<br></br>L_PbelhnU84;Version=1
     
-
-
-
 To protect [a resource class](https://github.com/algermissen/iron-cookie/blob/master/src/main/java/net/jalg/ironcookie/DashboardResource.java) by enforcing cookie auth, we bind a JAX-RS 2.0 filter to that class using a new [annotation](https://github.com/algermissen/iron-cookie/blob/master/src/main/java/net/jalg/ironcookie/TokenAuthProtected.java):
-
-
-    
     
     //...
     @TokenAuthProtected
     public String getDashboard(@Context SecurityContext sc) { ... }
-    
-
-
 
 The [auth enforcing filter class](https://github.com/algermissen/iron-cookie/blob/master/src/main/java/net/jalg/ironcookie/AuthFilter.java) extracts the cookie, checks expiration time and puts the data contained in the cookie in a place where it can be accessed by the resource class.
 
-
-    
-    
     Cookie cookie = context.getCookies().get(COOKIE_NAME);
     // Redirect to form if no cookie
     String data = Jiron.unseal(cookie.getValue(), ApplicationConfig.ENCRYPTION_KEY,
@@ -97,9 +70,6 @@ The [auth enforcing filter class](https://github.com/algermissen/iron-cookie/blo
     }
     
     context.setSecurityContext(new TokenSecurityContext(username, realname));
-    
-
-
 
 Using the security context and a custom Principal, the resource class is provided access to the user's login and realname.
 

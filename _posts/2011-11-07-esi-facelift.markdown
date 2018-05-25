@@ -10,45 +10,25 @@ Coincidentally, I ran into an interesting use case for ESI at about the same tim
 
 Before I go into the details of what I would like to see in ESI 2.0 (yes, the major version number change indicates incompatibility) here are the aspects that need to be considered during the design process:
 
-
-
 ### Language Syntax
-
-
 
 ESI 1.0 is an XML language. While this was the obvious choice ten years ago when XML was the proverbial hammer to every nail times have changed. To be a good citizen, ESI 2.0 would need to be friendly to non-XML formats such as JSON and [certain](http://www.ietf.org/rfc/rfc2445.txt) [plain text](ttp://www.ietf.org/rfc/rfc2426.txt) [species](http://www.w3.org/TeamSubmission/turtle/), too.
 
 This isn't too much of a change, given that none of the ESI implementations I have looked at actually parse ESI tags as XML. Which makes sense, because the surrounding (X)HTML is almost guaranteed to choke an XML parser anyhow.
 
-
-
 ### Functionality
-
-
 
 This aspect covers two issues, really: what new functionality should ESI 2.0 support and which of the older features can be dropped? Mark mentions (among others) templating capabilities for the latter and <esi:inline> and the _alt_-attribute for the former.
 
-
-
 ### Cacheability
-
-
 
 Given that the major advantage of integrating services at the edge is leveraging the existing caching architecture the design process of ESI 2.0 requires a close eye on how well the language features can benefit from caching. 
 
-
-
 ### Implementability
-
-
 
 Whatever the result of an ESI 2.0 design effort, its implementation must be possible using the given architectures of the common open source and non-open source caching products. For example, ESI 2.0 features must not get in the way of an asynchronous request processing model.
 
-
-
 ### An ESI 2.0 Use Case
-
-
 
 Yesterday I [described](http://jalg.net/2011/11/cool-uris-and-integration/) an integration scenario where articles in a content management system (CMS) reference (via URIs) company information maintained in another system (CIMS). The articles are published as Web pages and somewhere in the Web page delivery process the company information references are resolved and the returned information is included in the delivered page. The purpose of this setup is twofold: On the one hand the intention is to deliver up to date company information (maybe the stock price is included). On the other hand a clear separation of concerns is achieved, facilitating independent operation and evolution of the two systems.
 
@@ -60,16 +40,9 @@ Regarding the discussion about the pros and cons of doing the templating on the 
 
 Having said all that, let me now talk about what I would like to see in ESI 2.0.
 
-
-
 ### Language Syntax
 
-
-
 While in my scenario the including entity (the article referencing the company information) would likely be HTML I have said above that we need something more non-XML friendly. One way would be to reuse the existing ESI XML-tags but explicitly allowing them in non-XML content:
-
-
-    
     
     GET /article/123
     Host: cms.example.org
@@ -81,53 +54,26 @@ While in my scenario the including entity (the article referencing the company i
     
     <esi:include src="http://cims.example.org/company/acme"></esi:include>
     
-    
-
-
 (I am deliberately excluding any [ESI headers](http://www.w3.org/TR/edge-arch) from all the examples)
-
 
 As far as I can tell at the moment, this would work for non-XML and still allow XML-friendly embedding in XML response entities. If <esi:...> is too likely to overlap with actual content more 'mangled tags' would need to be used, e.g. (<% ... %>).
 
-
-
 ### Obsolete ESI 1.0 Functionality
 
-
-
 There are a number of more or less sophisticated features in ESI 1.0 that are seldom used and in addition are not implemented by many products. Among these are 
-
-
-
-
   
   * The alt-attribute on <esi:inline>
-
-  
   * <esi:choose>,<esi:when>,<esi:otherwise>: it is likely that this branching construct can be replaced with functionality that will be in the templating language anyway (as Mark suggests in his posting, showing a dynamicly assembled include target URI: <esi:include src="/{user_prefs.top_left_module}"/>)
-
-  
   * <esi:vars>: would likely be changed; I agree with Mark's suggestions regarding variable handling by the templating language as well as with his ideas on providing better access to the request and response via predefined objects
-
-  
   * <esi:inline> when you first look at it, it appears rather weired and [it took me a while to figure out how inline works](http://stackoverflow.com/questions/7555172/edge-side-includes-how-do-esiinline-tags-work). But I think <esi:inline> is pretty useful for emulating batch retrievals. However, what I do not like about it is that it couples the referencing and the referenced systems: they need to agree on where to place the inline elements and that is pure out-of-band information coupling hell. I'd rather like to see the combination of [pipelining](http://www.mnot.net/blog/2011/08/05/pipeline_now) and [caching](http://www.mnot.net/cache_docs/) to handle batch retrieval requirements.
-
-
 
 Besides the above, the list of features to drop should of course be driven by what people actually implemented and use today.
 
 But it is time now to turn to the most interesting aspect of all this: new functionality.
 
-
-
 ### Edge-Side-Templating
 
-
-
 This is also #1 on Mark's list and he refers to it as the ability "to source variables from a URI". The basic idea is this: an ESI element (say <esi:load>) tells the ESI processor to initiate a request to a target resource and make the response entity available as a variable. That variable could then be used in expressions to assemble the overall Web page.
-
-
-    
     
     GET /article/123
     Host: cms.example.org
@@ -143,9 +89,6 @@ This is also #1 on Mark's list and he refers to it as the ability "to source var
     Yesterday, ${acme.name} (${acme.stock.symbol}) had a closing stock price of ${acme.stock.price}.
     </p>
     </html>
-    
-
-
 
 However, there are two problems with this.
 
@@ -154,9 +97,6 @@ The first problem is that there is code in the ESI processor that needs to parse
 The second problem is that the code that uses the variable makes assumptions about its structure - apparently based on out-of-band knowledge. This makes my REST alarm bells go off immediately!
 
 A solution to this issue would be to add an _accept_ attribute to <esi:load> that would directly translate to the Accept header of the load-request.
-
-
-    
     
     GET /article/123
     Host: cms.example.org
@@ -172,9 +112,6 @@ A solution to this issue would be to add an _accept_ attribute to <esi:load> tha
     Yesterday, ${acme.name} (${acme.stock.symbol}) had a closing stock price of ${acme.stock.price}.
     </p>
     </html>
-    
-
-
 
 Ah, yes. That immediately looks nice and RESTful.
 
@@ -184,11 +121,7 @@ It will be a real challenge to pick those features that add real value and maint
 
 Regarding problem #1 above this might be one of the rare true use cases for the +json and [+xml](http://tools.ietf.org/html/rfc3023#appendix-A) media type suffixes because they provide an elegant way for the ESI processor to pick parsers based on the Content-Type header without entity introspection.
 
-
-
 ### Request- and Response Objects
-
-
 
 Mark proposes the addition of prepopulated request- and response objects to obtain request information and set response parameters. I agree that this would be extremely useful (and be far more consistent compared to the current ESI variable set).
 
@@ -196,33 +129,18 @@ However, the same warning applies here: This can end up pretty quickly in a mean
 
 After all, we want to improve ESI, not put a Java EE container into an HTTP cache...
 
-
-
 ### Timeout and Error Handling
-
-
 
 This is also from Mark's list and pretty important. I wonder whether the cache itself would be allowed to override an timeout attribute on <esi:load> or <esi:include>.
 
 I'll skip error handling for now - the post has grown far too long already.
 
-
-
 ### Templating Language Functionality
 
-
-
 This one though needs particular attention. A templating mechanism immediately raises the question of how much functionality one wants to offer. Variable souring and access is an inherent requirement. Mark also mentions string manipulation functions. For example:
-
-
-    
-    
     
     <esi:load var="acme" href="http://cims.example.org/company/acme"></esi:load>
     Yesterday, ${substr(acme.name,0.10)} (${toUpper(acme.stock.symbol)}) had a closing stock price of ${acme.stock.price}.
-    
-
-
 
 I think branching and looping constructs also make sense but they might conflict with the intermdiary processing model and request handling performance.
 
@@ -238,22 +156,9 @@ That is my take on ESI 2.0 so far.
 
 I would be happy to hear who else is interested in pursuing this further.
 
-
-
 ### UPDATE
-
-
 
 Here is a list of issues that come to my mind as I play around with reworking ESI:
 
-
-
-
-
   * When ESI elements are not defined to be XML anymore, should the ESI processor apply any encoding found in the XML preamble or should it in any case only apply the one found in the HTTP headers?
-
-
-
-
-
 

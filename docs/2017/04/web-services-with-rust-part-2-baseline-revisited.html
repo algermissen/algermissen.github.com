@@ -141,8 +141,6 @@
         </p>
         <h3>Web Services with Rust Part 2: Baseline Revisited</h3>
         
-<p><a href="http://www.jalg.net/tags.html#rust-web-ref">All Web-Rust postings</a></p>
-
 <p>In the last posting I started exploring implementing Web services in Rust, using
 hyper with some minimal single- and multi-threaded servers.</p>
 
@@ -238,24 +236,24 @@ definition.session("ManyClientsOneRequest", function(context) {
 latencies start to degrade at about 200 req/s. This is the maximum throughput of the
 server, requests start to pile up and are completed down the line with very high latencies.</p>
 
-<p><img src="/assets/img/web-rust/test1/test1_sf_graph.jpg" alt="Test 1 - Client Side Graph" /></p>
+<p><img src="/images/blog/web-rust/test1/test1_sf_graph.jpg" alt="Test 1 - Client Side Graph" /></p>
 
 <p>While a capacity of 200 req/s seems surprisingly low for our server, a look at the internal
 latency metrics for the CPU intensive work the server is doing provides an explanation.
 Each work operation takes around 4ms and this plus network stack operations is roughly
 what fits 200 times into a second.</p>
 
-<p><img src="/assets/img/web-rust/test1/test1_gf_latencies.jpg" alt="Test 1 - Server Side Graph" /></p>
+<p><img src="/images/blog/web-rust/test1/test1_gf_latencies.jpg" alt="Test 1 - Server Side Graph" /></p>
 
 <p>The next graph shows the rate of internally completed requests, which roughly corresponds
 to the request rate measured on the client side.</p>
 
-<p><img src="/assets/img/web-rust/test1/test1_gf_reqs.jpg" alt="Test 1 - Server Side Graph" /></p>
+<p><img src="/images/blog/web-rust/test1/test1_gf_reqs.jpg" alt="Test 1 - Server Side Graph" /></p>
 
 <p>Out of curiosity I also took the count and rate of connections the server has taken from
 the listen queue.</p>
 
-<p><img src="/assets/img/web-rust/test1/test1_gf_conn.jpg" alt="Test 1 - Server Side Graph" /></p>
+<p><img src="/images/blog/web-rust/test1/test1_gf_conn.jpg" alt="Test 1 - Server Side Graph" /></p>
 
 <p>The server is using a <a href="https://github.com/algermissen/web-rust/blob/master/src/bin/ts2.rs#L112">listen queue size of 128</a>
 and that corresponds very much to the number of current requests in the graph. This leaves me a bit

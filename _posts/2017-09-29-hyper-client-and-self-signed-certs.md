@@ -23,8 +23,6 @@ be decoupled from SSL dependencies completely. So, how to go about that TLS prot
 Fortunately [the docs are ready at hand](https://hyper.rs/guides/client/configuration/)
  and victory just another copy/paste away...
 
-
-
     extern crate hyper;
     extern crate hyper_tls;
     extern crate tokio_core;
@@ -42,8 +40,6 @@ Fortunately [the docs are ready at hand](https://hyper.rs/guides/client/configur
     let req = client.get("https://hyper.rs".parse()?);
     let res = core.run(req)?;
     assert!(res.status().is_success());
-
-
 
 But then, while the compiler runs it dawns on me: the evil cert master of
 this enterprise is into the self-signing witch craft (to save money or for
@@ -64,9 +60,7 @@ simple.
 > "Build a Certificate from the DER-encoded self signed cert and pass it to
 > TlsConnectorBuilder::add_root_certificate."
 
-
 But...
-
 
 - How do I get the certificate?
 - WTF does "Build a Certificate from the DER-encoded self signed cert" mean?
@@ -76,9 +70,7 @@ But...
 
 What my browser can do, I can also do, I figure; Google turns up
 
-
     openssl s_client -showcerts -connect example.org:443 > server.crt
-
 
 Great - let's stick that into that method mentioned above and get this over with.
 Where I dug up the code for that I cannot remember, but it goes like this:
@@ -109,9 +101,7 @@ as I could possibly think of to make sense.
 
 Eventually yielding
 
-
     openssl x509 -in server.crt -outform der -out server.der
-
 
 I am skipping all the detours I took do to late night errors,
 byte array mistakes, wrong assumptions about company root cert

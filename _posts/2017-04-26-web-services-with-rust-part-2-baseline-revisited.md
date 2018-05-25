@@ -7,8 +7,6 @@ tags: ["rust-web"]
 ---
 {% include JB/setup %}
 
-[All Web-Rust postings](http://www.jalg.net/tags.html#rust-web-ref)
-
 In the last posting I started exploring implementing Web services in Rust, using
 hyper with some minimal single- and multi-threaded servers.
 
@@ -103,24 +101,24 @@ When running this against a single threaded version of our test server, the resp
 latencies start to degrade at about 200 req/s. This is the maximum throughput of the
 server, requests start to pile up and are completed down the line with very high latencies.
 
-![Test 1 - Client Side Graph](/assets/img/web-rust/test1/test1_sf_graph.jpg)
+![Test 1 - Client Side Graph](/images/blog/web-rust/test1/test1_sf_graph.jpg)
 
 While a capacity of 200 req/s seems surprisingly low for our server, a look at the internal
 latency metrics for the CPU intensive work the server is doing provides an explanation.
 Each work operation takes around 4ms and this plus network stack operations is roughly
 what fits 200 times into a second.
 
-![Test 1 - Server Side Graph](/assets/img/web-rust/test1/test1_gf_latencies.jpg)
+![Test 1 - Server Side Graph](/images/blog/web-rust/test1/test1_gf_latencies.jpg)
 
 The next graph shows the rate of internally completed requests, which roughly corresponds
 to the request rate measured on the client side.
 
-![Test 1 - Server Side Graph](/assets/img/web-rust/test1/test1_gf_reqs.jpg)
+![Test 1 - Server Side Graph](/images/blog/web-rust/test1/test1_gf_reqs.jpg)
 
 Out of curiosity I also took the count and rate of connections the server has taken from
 the listen queue.
 
-![Test 1 - Server Side Graph](/assets/img/web-rust/test1/test1_gf_conn.jpg)
+![Test 1 - Server Side Graph](/images/blog/web-rust/test1/test1_gf_conn.jpg)
 
 The server is using a [listen queue size of 128](https://github.com/algermissen/web-rust/blob/master/src/bin/ts2.rs#L112)
 and that corresponds very much to the number of current requests in the graph. This leaves me a bit

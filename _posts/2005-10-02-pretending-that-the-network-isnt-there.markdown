@@ -8,8 +8,6 @@ Another very nice posting about REST: [REST WARS](http://web.archive.org/web/200
 
 I especially like:
 
-
-
 > The problem is that we don't, generally speaking, do it right - we keep trying to treat web apps like desktop apps and keep trying to pretend the network is not there.
 
 

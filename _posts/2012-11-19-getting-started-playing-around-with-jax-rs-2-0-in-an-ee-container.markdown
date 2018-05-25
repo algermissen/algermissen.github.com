@@ -13,40 +13,20 @@ Here is what I do:
 First, go to the [lastest Glassfish builds](http://dlc.sun.com.edgesuite.net/glassfish/4.0/promoted/) and download the file named glassfish-4.0-bxx.zip with xx having the highest number (as of Nov 19th this is [glassfish-4.0-b63.zip](http://dlc.sun.com.edgesuite.net/glassfish/4.0/promoted/glassfish-4.0-b63.zip)).
 
 This will unzip to a glassfish3/ directory, so to start the server do
-
-
-    
     
     glassfish3/glassfish/bin/asadmin start-domain
-    
-
-
 
 To find the JAX-RS version included in the Glassfish you just downloaded do something like the following:
-
-
-    
     
     jar -xf glassfish3/glassfish/modules/javax.ws.rs-api.jar META-INF/MANIFEST.MF; grep Bundle-Version META-INF/MANIFEST.MF
-    
-
 
 (This will leave a META-INF directory behind you might want to clean up afterwards)
 
 For the b63 version this yields:
-
-    
     
     Bundle-Version: 2.0.0.m12
-    
-
-
 
 The next step is to create a project to test things out. I am using the following archetype, but any other EE Web profile archetype should work similarly:
-
-
-
-    
     
     mvn archetype:generate \
       -DarchetypeGroupId=org.codehaus.mojo.archetypes \
@@ -54,16 +34,8 @@ The next step is to create a project to test things out. I am using the followin
       -DgroupId=org.example \
       -DartifactId=test \
       -DinteractiveMode=false
-    
-    
-
-
 
 Now let's edit the POM to pull in the JAX-RS 2.0-Version used by the Glassfish. First, add the proper repository.
-
-
-
-    
     
      <repository>
      <id>snapshot-repository.java.net</id>
@@ -71,14 +43,8 @@ Now let's edit the POM to pull in the JAX-RS 2.0-Version used by the Glassfish. 
      <url>https://maven.java.net/content/repositories/snapshots/</url>
      <layout>default</layout>
      </repository>
-    
-
-
 
 Then add the dependency to the specific release (note that the version is not literally the same as the bundle version you extracted above):
-
-
-    
     
     <dependency>
       <groupId>javax.ws.rs</groupId>
@@ -86,21 +52,14 @@ Then add the dependency to the specific release (note that the version is not li
       <version>2.0-m12</version>
       <scope>provided</scope>
     </dependency>
-    
-
-
 
 **UPDATE**: It seems you have to make sure you include this dependency **before** the dependency to the Java EE Web API. Otherwise, maven insists on trying to use the JAX-RS API version of the Java EE Web API.
 
 You should now be able to `mvn package` and deploy to the Glassfish instance any 2.0-m12 based source code.
 
 The final step will be to cd into your project folder and set up your IDE project. E.g. with Eclipse run 
-
-    
     
     mvn eclipse:eclipse
-    
-
 
 and import as existing Maven project into Eclipse.
 

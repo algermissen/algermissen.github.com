@@ -6,7 +6,6 @@ category: "rust"
 tags: ["rust-web"]
 ---
 {% include JB/setup %}
-[All Web-Rust postings](http://www.jalg.net/tags.html#rust-web-ref)
 
 A while ago I have turned my head towards [Rust](http://rustlang.org) for
 developing Web Services. Rust's design in my opinion hits a sweet spot between
@@ -186,7 +185,7 @@ There, the result came back from the 2-threaded setup and (relief :-) just what 
 expected: the server is now giving us about 11k req/s and I indeed saw exactly two
 CPUs being saturated. Nice!
 
-![Results 2-threaded](/assets/img/2-Threaded.jpg)
+![Results 2-threaded](/images/blog/2-Threaded.jpg)
 
 Next up is a 4-threaded version (on the 4 core machine) - will we be able to double
 again?
@@ -194,7 +193,7 @@ again?
 Yes, I am seeing the 4 cores being saturated and the latencies remain pretty ok
 until about 20k req/s.
 
-![Results 4-threaded](/assets/img/4-Threaded.jpg)
+![Results 4-threaded](/images/blog/4-Threaded.jpg)
 
 Yes, the 99th percentile rises somewhere around 15k, but for this initial
 verification that what I am doing makes some sort of sense the result is
@@ -208,25 +207,4 @@ a baseline for comparing future variations. Next up I'll look into a variant
 running on a Tokio-managed thread pool and how to share state across
 request handling threads (for example for rate limiting, metrics collection,
 logging).
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
