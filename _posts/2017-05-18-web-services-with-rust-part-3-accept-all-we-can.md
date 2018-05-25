@@ -4,6 +4,7 @@ title: "Web Services with Rust Part 3: Accept All We Can"
 description: ""
 category: "rust"
 tags: ["rust-web"]
+excerpt: In the last posting we added metrics to our very basic test Web service. Initially this third part was supposed to be about adding logging to the server, comparing the performance impact of mutex based- and, especially, [lock free data structures](https://github.com/crossbeam-rs/crossbeam).
 ---
 {% include JB/setup %}
 

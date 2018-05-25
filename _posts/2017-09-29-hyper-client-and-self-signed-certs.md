@@ -4,6 +4,7 @@ title: "hyper client and self-signed certs"
 description: ""
 category: ""
 tags: ["rust-web"]
+excerpt: Fortunate are those that are chosen to ride down the happy path...
 ---
 {% include JB/setup %}
 
