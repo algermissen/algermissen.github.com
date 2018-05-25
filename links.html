@@ -1,0 +1,290 @@
+---
+layout: default
+section_id: home
+
+https://groups.yahoo.com/neo/groups/rest-discuss/info
+
+http://www.xent.com/pipermail/fork/2001-September/004712.html
+props
+
+http://roy.gbiv.com/untangled/2008/paper-tigers-and-hidden-dragons
+
+http://www.markbaker.ca/blog/
+
+
+https://www.youtube.com/watch?v=_rKDPXVQe5w
+Roy interview
+
+
+https://www.slideshare.net/algermissen/understanding-the-role-of-media-types-in-restful-applications
+
+
+
+links:
+- href:
+  title:
+  desc: >
+  xxx
+- href:
+  title:
+  desc: >
+  xxx
+- href:
+  title:
+  desc: >
+  xxx
+- href:
+  title:
+  desc: >
+  xxx
+- href:
+  title:
+  desc: >
+  xxx
+- href:
+  title:
+  desc: >
+  xxx
+- href:
+  title:
+  desc: >
+  xxx
+- href:
+  title:
+  desc: >
+  xxx
+- href:
+  title:
+  desc: >
+  xxx
+- href:
+  title:
+  desc: >
+  xxx
+- href:
+  title:
+  desc: >
+  xxx
+- href:
+  title:
+  desc: >
+  xxx
+
+
+
+---
+
+<!-- ================================================================== -->
+<!--
+<div id="solutions-engineering" class='full parallax' style='background-image: url(images/img1.jpg); color: #fff;'>
+-->
+<div class='full parallax bg' style='color: #fff;'>
+  <div class='row'>
+    <div class='large-12 columns'>
+      {% include section-header.html title="Solutions Engineering" tagline="Competing in Disruptive Digital Markets" color="#fff" class="big" %}
+    </div>
+  </div>
+  <div class='four spacing'></div>
+  <!--
+  -->
+</div>
+<!--
+<p><a id="solutions-engineering" class="anchorhome"></a></p>
+-->
+<div class='full'>
+  <div class='row'>
+    <div class='large-12 columns'>
+      <!--
+      <div class="mod modSectionHeader ">
+        <div class="special-title centered-text">
+          <h2 style="color: ;">Solutions Engineering</h2>
+        </div>
+      </div>
+      <div class='spacing'></div>
+      -->
+      <p>
+      Fast experimentation and short time to market are the essence of successful digital market leadership.
+      Customer's immersion in technology opens up opportunities for creation of preveiously unknown experiences.
+      <p>
+      However, the required high level of agility puts pressure on software quality, often leading to a drop in productivity after early praise.
+      </p>
+      <p>
+      <i>Solutions Engineering</i> is an approach towards shaping an engineering culture for digital product
+      development. It helps you to maintain the ability to experiment and innovate at manageable risk.
+      </p>
+      <!--
+      <div class='two spacing'></div>
+      -->
+    </div>
+  </div>
+</div>
+<div class="four spacing"></div>
+<!--
+-->
+
+<div class="row">
+  <div class="medium-3 large-3 columns">
+    {% include icon-text.html title='Clear Responsibility Model' desc='Mapping the target system to a general model of services and dependencies is the basis for applying the engineering framework and creates clarity in heterogeneaous systems.' icon_class='fa fa-exclamation' delay='0' shape_class='icon-text-circle' %}
+  </div>
+  <div class="medium-3 large-3 columns">
+    {% include icon-text.html title='Objective and Indicator Driven' desc='Objectives and quantitative indicators are applied to all aspects of the digital product lifecycle. This enables the formulation of measurable goals and indicator tracking that serve as a clear driver for decision making across the complete product lifecycle. Ad-hoc- and gut-feeling decisions are removed.' icon_class='fa fa-bar-chart' delay='200' shape_class='icon-text-circle' %}
+  </div>
+  <div class="medium-3 large-3 columns">
+    {% include icon-text.html title='Cost Management' desc='The application of objectives and indicators requires capacity planning from the beginning. This avoids problem driven, last-resort over-provisioning and helps to optimize infrastructure cost.' icon_class='fa fa-money' delay='400' shape_class='icon-text-circle' %}
+  </div>
+  <div class="medium-3 large-3 columns">
+    {% include icon-text.html title='Migration Strategy' desc='The general model in combination with defining target system chracteristics with quantitative indicators help with status-quo assessment and definition and tracking of transition roadmaps.' icon_class='fa fa-code-fork' delay='600' shape_class='icon-text-circle' %}
+  </div>
+</div>
+
+<div class="spacing"></div>
+
+<!-- ================================================================== -->
+<p><a id="cloud" class="anchorhome"></a></p>
+<div class='full'>
+  <div class='row'>
+    <div class='large-12 columns'>
+      {% include section-header.html title="Cloud Consulting" %}
+      <div class='spacing'></div>
+      <p>
+      Moving a portion or the complete IT to the Cloud has become imperative for many
+      organisations. We help clients to define their cloud strategy and migration roadmap.
+      We aid in provider selection and guidance which cloud level to target (IaaS vs PaaS)
+      </p>
+      <div class='three spacing'></div>
+    </div>
+  </div>
+  <div class='row'>
+    <div class='medium-6 columns'>
+      <img class="fadeinleft" alt="" src="images/dc.jpg" />
+      <div class='three spacing'></div>
+    </div>
+    <div class='medium-6 columns'>
+      {% for service in page.cloud_services %}
+        <div class='fadein mod modIconText' data-delay='{{ 300 | times:forloop.index0 }}'>
+          <div class='icon-text-simple'>
+            <i class='fa fa-{{service.icon}}'></i>
+            <h3>{{service.title}}</h3>
+            <p>{{service.desc}}</p>
+          </div>
+          <div class='two spacing'></div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+  <div class='spacing'></div>
+</div>
+
+<!-- ================================================================== -->
+
+<p><a id="sre" class="anchorhome"></a></p>
+<div class='full'>
+  <div class='row'>
+    <div class='large-12 columns'>
+      <div class="mod modSectionHeader ">
+        <div class="special-title centered-text">
+          <h2 style="color: ;">Site Reliability Engineering</h2>
+        </div>
+      </div>
+      <div class='spacing'></div>
+      <p>
+      Site Reliability Engineering has proven to be a successful solution to the tension between an agile focus on
+      feature delivery and constantly maintaning software product quality to efficiently operate the product within
+      the desired service level boundaries.
+      </p>
+      <!--
+      <div class='two spacing'></div>
+      -->
+
+    </div>
+  </div>
+</div>
+
+<div class='full'>
+  <div class='row'>
+    {% for service in page.sre_services %}
+      <div class='small-6 medium-3 large-3 columns'>
+        <div class='mod modTeamMember'>
+          <div class='member'>
+            <img class="avatar" alt="" src="{{ service.image }}" />
+            <div class='overlay'>
+              <div class='intro'>
+                <h3>{{service.title}}</h3>
+                <!--
+                <p>xxxxx</p>
+                <ul class='socials'>
+                  {% for social in member.socials %}
+                    <li>
+                      <a href='{{social.link}}'>
+                        <i class='fa fa-{{social.icon}}'></i>
+                      </a>
+                    </li>
+                  {% endfor %}
+                </ul>
+                -->
+              </div>
+            </div>
+          </div>
+          <p class='centered-text'>{{service.desc}}</p>
+          <div class='two spacing'></div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- ================================================================== -->
+
+<p><a id="dev" class="anchorhome"></a></p>
+<!--
+<div class='full parallax' style='background-image: url(images/img1.jpg); color: #fff;'>
+-->
+<div class='full parallax bg' style='color: #fff;'>
+  <div class='row'>
+    <div class='large-12 columns'>
+      {% include section-header.html title="Portfolio" tagline="Technologies and Topics We Like to Use" color="#fff" class="big" %}
+    </div>
+  </div>
+  <div class='four spacing'></div>
+</div>
+
+
+<div class='full'>
+  <div class='row'>
+    <div class='medium-6 columns'>
+      {% for service in page.services_left %}
+        <div class='fadein mod modIconText' data-delay='{{ 300 | times:forloop.index0 }}'>
+          <div class='icon-text-simple'>
+              {% if service.icon %}
+                 <i class='fa fa-{{service.icon}}'></i>
+              {% else %}
+                <img src="{{service.logo}}"/>
+              {% endif %}
+            <h3>{{service.title}}</h3>
+            <p>{{service.desc}}</p>
+          </div>
+          <div class='two spacing'></div>
+        </div>
+      {% endfor %}
+    </div>
+    <div class='medium-6 columns'>
+      {% for service in page.services_right %}
+        <div class='fadein mod modIconText' data-delay='{{ 300 | times:forloop.index0 }}'>
+          <div class='icon-text-simple'>
+              {% if service.icon %}
+                 <i class='fa fa-{{service.icon}}'></i>
+              {% else %}
+                <img src="{{service.logo}}"/>
+              {% endif %}
+            <h3>{{service.title}}</h3>
+            <p>{{service.desc}}</p>
+          </div>
+          <div class='two spacing'></div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+  <div class='spacing'></div>
+</div>
+
+
