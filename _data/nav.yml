@@ -5,8 +5,8 @@
 #  path: sokr.html
 #  section_id: sokr
 - name: Solutions Engineering
-  path: "#solutions-engineering"
-  section_id: services
+  path: "#soleng"
+  section_id: soleng
 - name: Cloud
   path: "#cloud"
   section_id: cloud
