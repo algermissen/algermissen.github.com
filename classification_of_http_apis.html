@@ -1,7 +1,9 @@
-<html>
+<!DOCTYPE HTML>
+<html lang="en">
 <head>
+  <meta charset="utf-8"/>
   <title>Classification of HTTP APIs</title>
-  <style type="text/css"/>
+  <style type="text/css">
     html { font-size: 12pt;}
     p { width: 800pt; }
     ol { width: 800pt; }
@@ -79,7 +81,7 @@ Helping to understand these trade-offs is the goal of the following table.
   <td class="head"></td>
 </tr>
 <tr>
-  <td class="name"><a name="ws-star" href=#ws-star">WS-*</a></td>
+  <td class="name"><a name="ws-star" href="#ws-star">WS-*</a></td>
   <td class="">WS-* Web Services (SOAP)</td>
   <td class="">IDL (WSDL) describes interface, HTTP treated as transport.</td>
   <td class="fail">No - only service endpoint is identified by URI. No resources exposed.</td>
@@ -187,7 +189,7 @@ based on forms (form semantics known from media type specifications).
   <td class="ok-center">Ok</td>
   <td class="ok-center">Ok</td>
   <td class=""><ul>
-    <li><a href=http://tools.ietf.org/html/rfc5023"">Atom Publishing Protocol (RFC 5023)</a></li>
+    <li><a href="http://tools.ietf.org/html/rfc5023">Atom Publishing Protocol (RFC 5023)</a></li>
     <li><a href="http://www.opensearch.org">OpenSearch</a>
     <ul>
     <li><a href="http://search.infoweb.net/opensearchdescription.xml">Infoweb.net</a></li>
@@ -224,7 +226,7 @@ as opposed to saying: "Responses look like this XML or like that XML.
 <p>
 The architectural constraints that constitute the REST style induce certain desired system properties
 into a conforming architecture. When any of these constraints are (accidentally or deliberately) removed
-in a given system, that system will not have the same system properties as a RESTful system. 
+in a given system, that system will not have the same system properties as a RESTful system.
 </p>
 <p>
 In order to understand the effect of removing a certain interface constraint the following table provides
@@ -260,7 +262,7 @@ into an overall context of start up-, maintenance- and evolution cost.
   <td class="head">Evolution Cost</td>
 </tr>
 <tr>
-  <td class="name"><a name="ws-star-effect" href=#ws-star-effect">WS-*</a></td>
+  <td class="name"><a name="ws-star-effect" href="#ws-star-effect">WS-*</a></td>
   <td class="fail">No explicit focus on coarse grained (document oriented) messages,
 accidental design towards fine grained- or control messages can degrade network
 performance.
@@ -288,7 +290,7 @@ learning about vendor differences, learning of development tools,
 designing application specific failure model and caching.
 Finding knowledgeable staff.
  </td>
-  <td class="">Complexity increases maintenance cost, 
+  <td class="">Complexity increases maintenance cost,
 high up-to-speed effort for new staff
 </td>
   <td class="">High evolution cost due to tight coupling,
@@ -346,7 +348,7 @@ approach in general).Possibility of erraneous design equivalent to HTTP-based Ty
 or extend media type. HTTP mechanics are leveraged, no need for
 design of operations, failure model or caching.</td>
   <td class="">Medium due to possibly decreased simplicity (possible high
-degree of variation of message formats). Up-to-speed effort reasonable but 
+degree of variation of message formats). Up-to-speed effort reasonable but
 depending on degree of message format variation. Easy to find knowledgeable staff.</td>
   <td class="">High evolution cost due to tight coupling. Server owners need to consider clients
 when upgrading.</td>
@@ -395,7 +397,7 @@ highest client side effort (burdon of loose coupling is placed
 on client side programming model)
 </td>
   <td class="">Low due to simplicity, easy to find knowledgeable staff.
-(While it is considerable effort to design a proper media type, 
+(While it is considerable effort to design a proper media type,
 understanding it has a low entry barrier)
 </td>
   <td class="">REST optimizes for evolvability. Server owners need not consider
@@ -416,7 +418,7 @@ The lack of best practices makes <i>RPC URI-Tunneling</i>
 considerably worse. Basically, a designer/developer can
 just go off and go wild.</li>
 <li>The start-up cost of <i>HTTP-based Type I</i> APIs is actually smaller than the one of <i>RPC URI-Tunneling</i>, mostly
-because the former leverages HTTP mechanisms (methods, failure model, caching). 
+because the former leverages HTTP mechanisms (methods, failure model, caching).
 There is no justification whatsoever to apply <i>RPC URI-Tunneling</i> - always at least use <i>HTTP-based Type I</i>.
 </li>
 <li>Depending on the degree to which existing media types apply to the
@@ -472,9 +474,8 @@ Darrel Miller
 </p>
 
 <p>
-&copy; 2010 <a href="/en/">NORD Software Consulting</a>, Terms of Use: <a href="http://creativecommons.org/licenses/by-nc/3.0/">Creative Commons License<a/>
+&copy; 2010 <a href="/en/">NORD Software Consulting</a>, Terms of Use: <a href="http://creativecommons.org/licenses/by-nc/3.0/">Creative Commons License</a>
 </p>
-</body>
 <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
 document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
@@ -485,4 +486,5 @@ var pageTracker = _gat._getTracker("UA-11032912-1");
 pageTracker._trackPageview();
 } catch(err) {}</script>
 
+</body>
 </html>
