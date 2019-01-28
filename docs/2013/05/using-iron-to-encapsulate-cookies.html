@@ -151,7 +151,7 @@
 
 <p>First, let’s see, how to use jiron to seal and unseal data:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import net.jalg.jiron.Jiron;
+<div class="highlighter-rouge"><pre class="highlight"><code>import net.jalg.jiron.Jiron;
 
 String data = "Some secret stuff we want protected";
 
@@ -162,7 +162,8 @@ String sealed = Jiron.seal(data, "sealing-password",
 String unsealed = Jiron.unseal(sealed, "sealing-password",
 					Jiron.DEFAULT_ENCRYPTION_OPTIONS,
 					Jiron.DEFAULT_INTEGRITY_OPTIONS);
-</code></pre></div></div>
+</code></pre>
+</div>
 
 <p>The String <code class="highlighter-rouge">sealed</code> is what you can pass around and be sure that nobody can read or modify it, unless in possession of the sealing password.</p>
 
@@ -170,30 +171,33 @@ String unsealed = Jiron.unseal(sealed, "sealing-password",
 
 <p>Initially, a user not in possession of the cookie will be redirected to a login form and the cookie will be issued upon submission of valid credentials. Here is an excerpt of the <a href="https://github.com/algermissen/iron-cookie/blob/master/src/main/java/net/jalg/ironcookie/LoginResource.java">form processing JAX-RS resource</a>:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>String data = login + "|" + expires + "|" + realname;
+<div class="highlighter-rouge"><pre class="highlight"><code>String data = login + "|" + expires + "|" + realname;
 String cookieValue = Jiron.seal(data, ApplicationConfig.ENCRYPTION_KEY,
 					Jiron.DEFAULT_ENCRYPTION_OPTIONS,
 					Jiron.DEFAULT_INTEGRITY_OPTIONS);
 
 NewCookie c = new NewCookie(AuthFilter.COOKIE_NAME, cookieValue);
 return Response.seeOther(redirectUri).cookie(c).build();
-</code></pre></div></div>
+</code></pre>
+</div>
 
 <p>In the HTTP response the cookie will look something like (line breaks added for clarity):</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Set-Cookie:authtoken=Fe26.1**7A6A689DEC9563773B1264CF4CC585CFC9CF84403EE9143650D2EC2EE&lt;br&gt;&lt;/br&gt;24E36A3*k9yW1ZlC5Tr1a5o2Os_QMQ*sxZkQJfHsfyZE_0DI3ugHKdQ3IXwy1jySoz7GrKiTWU*9C58B956A11&lt;br&gt;&lt;/br&gt;81D1F1E3A1A7A1B67D2CF7738B0BFB16C5EB4B381151CAEEC4C6C*3PxSsg5aThLGvU2e8ItXfep-hpMw5x96&lt;br&gt;&lt;/br&gt;L_PbelhnU84;Version=1
-</code></pre></div></div>
+<div class="highlighter-rouge"><pre class="highlight"><code>Set-Cookie:authtoken=Fe26.1**7A6A689DEC9563773B1264CF4CC585CFC9CF84403EE9143650D2EC2EE&lt;br&gt;&lt;/br&gt;24E36A3*k9yW1ZlC5Tr1a5o2Os_QMQ*sxZkQJfHsfyZE_0DI3ugHKdQ3IXwy1jySoz7GrKiTWU*9C58B956A11&lt;br&gt;&lt;/br&gt;81D1F1E3A1A7A1B67D2CF7738B0BFB16C5EB4B381151CAEEC4C6C*3PxSsg5aThLGvU2e8ItXfep-hpMw5x96&lt;br&gt;&lt;/br&gt;L_PbelhnU84;Version=1
+</code></pre>
+</div>
 
 <p>To protect <a href="https://github.com/algermissen/iron-cookie/blob/master/src/main/java/net/jalg/ironcookie/DashboardResource.java">a resource class</a> by enforcing cookie auth, we bind a JAX-RS 2.0 filter to that class using a new <a href="https://github.com/algermissen/iron-cookie/blob/master/src/main/java/net/jalg/ironcookie/TokenAuthProtected.java">annotation</a>:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//...
+<div class="highlighter-rouge"><pre class="highlight"><code>//...
 @TokenAuthProtected
 public String getDashboard(@Context SecurityContext sc) { ... }
-</code></pre></div></div>
+</code></pre>
+</div>
 
 <p>The <a href="https://github.com/algermissen/iron-cookie/blob/master/src/main/java/net/jalg/ironcookie/AuthFilter.java">auth enforcing filter class</a> extracts the cookie, checks expiration time and puts the data contained in the cookie in a place where it can be accessed by the resource class.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Cookie cookie = context.getCookies().get(COOKIE_NAME);
+<div class="highlighter-rouge"><pre class="highlight"><code>Cookie cookie = context.getCookies().get(COOKIE_NAME);
 // Redirect to form if no cookie
 String data = Jiron.unseal(cookie.getValue(), ApplicationConfig.ENCRYPTION_KEY,
 					Jiron.DEFAULT_ENCRYPTION_OPTIONS,
@@ -210,7 +214,8 @@ if (now &gt; expires) {
 }
 
 context.setSecurityContext(new TokenSecurityContext(username, realname));
-</code></pre></div></div>
+</code></pre>
+</div>
 
 <p>Using the security context and a custom Principal, the resource class is provided access to the user’s login and realname.</p>
 
@@ -236,86 +241,128 @@ context.setSecurityContext(new TokenSecurityContext(username, realname));
   <h3>Archives</h3>
 
 
-  <h1>2017</h1>
+  <h1></h1>
     <ul>
-      
-        <li><a href="/2017/09/hyper-client-and-self-signed-certs">hyper client and self-signed certs</a></li>
-      
-        <li><a href="/2017/05/web-services-with-rust-part-3-accept-all-we-can">Web Services with Rust Part 3: Accept All We Can</a></li>
-      
-        <li><a href="/2017/04/web-services-with-rust-part-2-baseline-revisited">Web Services with Rust Part 2: Baseline Revisited</a></li>
-      
-        <li><a href="/2017/04/web-services-with-rust-part-1-exploring-hyper">Web Services with Rust Part 1: Exploring Hyper</a></li>
       
     </ul>
 
-  <h1>2013</h1>
+  <h1></h1>
     <ul>
-      
-        <li><a href="/2013/05/using-iron-to-encapsulate-cookies">Using iron to Encapsulate Cookies</a></li>
-      
-        <li><a href="/2013/05/beyond-oauth">Beyond OAuth</a></li>
       
     </ul>
 
-  <h1>2012</h1>
+  <h1></h1>
     <ul>
-      
-        <li><a href="/2012/11/getting-started-playing-around-with-jax-rs-2-0-in-an-ee-container">Getting Started Playing Around with JAX-RS 2.0 in an EE Container</a></li>
-      
-        <li><a href="/2012/11/jax-rs-2-0-essential-bookmarks">JAX-RS 2.0 Essential Bookmarks</a></li>
-      
-        <li><a href="/2012/10/jax-rs-2-0-mvc">JAX-RS 2.0 MVC</a></li>
-      
-        <li><a href="/2012/09/declarative-cache-control-with-jax-rs-2-0">Declarative Cache Control with JAX-RS 2.0</a></li>
-      
-        <li><a href="/2012/05/death-by-jboss-6-classloading">Death by JBoss 6 Classloading</a></li>
       
     </ul>
 
-  <h1>2011</h1>
+  <h1></h1>
     <ul>
-      
-        <li><a href="/2011/11/esi-facelift">ESI Facelift</a></li>
-      
-        <li><a href="/2011/11/cool-uris-and-integration">Cool URIs and Integration</a></li>
       
     </ul>
 
-  <h1>2010</h1>
+  <h1></h1>
     <ul>
-      
-        <li><a href="/2010/11/agency-boundary">Agency Boundary</a></li>
-      
-        <li><a href="/2010/11/interesting-changes-must-surface">Interesting Changes *Must* Surface</a></li>
-      
-        <li><a href="/2010/10/generic-vs-specific-media-types-and-evolution">Generic vs. Specific Media Types and Evolution</a></li>
-      
-        <li><a href="/2010/09/spotted-alternates-header-in-the-wild">Spotted Alternates Header in the Wild</a></li>
-      
-        <li><a href="/2010/08/put-and-content-location">PUT and Content-Location</a></li>
       
     </ul>
 
-  <h1>2005</h1>
+  <h1></h1>
     <ul>
-      
-        <li><a href="/2005/10/pretending-that-the-network-isnt-there">Pretending that the network isn't there....</a></li>
-      
-        <li><a href="/2005/09/the-fallacy-of-business-objects">The Fallacy of Business Objects</a></li>
-      
-        <li><a href="/2005/09/dont-assume-a-closed-world">Don't Assume a Closed World</a></li>
-      
-        <li><a href="/2005/09/don-knuth-vs-w3c-validator">Don Knuth vs. W3C Validator</a></li>
-      
-        <li><a href="/2005/06/is-fowler-a-restafarian">Is Fowler a RESTafarian?</a></li>
       
     </ul>
 
-  <h1>2003</h1>
+  <h1></h1>
     <ul>
       
-        <li><a href="/2003/04/building-web-services">Building Web Services</a></li>
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
       
     </ul>
 
@@ -368,6 +415,8 @@ context.setSecurityContext(new TokenSecurityContext(username, realname));
       <div class='links'>
         <h4>Recent posts</h4>
         <ul>
+          
+            <li><a href="/2018/01/go-bookmarks">Go Bookmarks</a></li>
           
             <li><a href="/2017/09/hyper-client-and-self-signed-certs">hyper client and self-signed certs</a></li>
           

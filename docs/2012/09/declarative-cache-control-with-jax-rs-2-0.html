@@ -165,56 +165,58 @@
 
 <p>All we need is a filter and an annotation to selectively bind that filter to any resource method of our liking. Here is the annotation which takes a Cache-Control header value as an argument:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">&lt;</span><span class="n">code</span><span class="p">&gt;</span>
-<span class="k">package</span> <span class="n">net</span><span class="p">.</span><span class="n">jalg</span><span class="p">.</span><span class="n">ccdecor</span><span class="p">;</span>
-<span class="n">import</span> <span class="n">java</span><span class="p">.</span><span class="n">lang</span><span class="p">.</span><span class="n">annotation</span><span class="p">.*;</span>
-<span class="n">import</span> <span class="n">javax</span><span class="p">.</span><span class="n">ws</span><span class="p">.</span><span class="n">rs</span><span class="p">.</span><span class="n">NameBinding</span><span class="p">;</span>
+<div class="highlighter-rouge"><pre class="highlight"><code>&lt;code&gt;
+package net.jalg.ccdecor;
+import java.lang.annotation.*;
+import javax.ws.rs.NameBinding;
 
-<span class="p">@</span><span class="n">NameBinding</span>
-<span class="p">@</span><span class="n">Target</span><span class="p">({</span> <span class="n">ElementType</span><span class="p">.</span><span class="n">TYPE</span><span class="p">,</span> <span class="n">ElementType</span><span class="p">.</span><span class="n">METHOD</span> <span class="p">})</span>
-<span class="p">@</span><span class="n">Retention</span><span class="p">(</span><span class="n">value</span> <span class="p">=</span> <span class="n">RetentionPolicy</span><span class="p">.</span><span class="n">RUNTIME</span><span class="p">)</span>
-<span class="k">public</span> <span class="p">@</span><span class="n">interface</span> <span class="n">Cacheable</span> <span class="p">{</span>
-  <span class="k">String</span> <span class="n">cc</span><span class="p">()</span> <span class="n">default</span> <span class="s2">"public, must-revalidate"</span><span class="p">;</span> 
-<span class="p">}</span>
-<span class="p">&lt;/</span><span class="n">code</span><span class="p">&gt;</span>
-</code></pre></div></div>
+@NameBinding
+@Target({ ElementType.TYPE, ElementType.METHOD })
+@Retention(value = RetentionPolicy.RUNTIME)
+public @interface Cacheable {
+  String cc() default "public, must-revalidate"; 
+}
+&lt;/code&gt;
+</code></pre>
+</div>
 
 <p>The new @NameBinding annotation tells a JAX-RS 2.0 runtime that our annotation should be used to match filters to resource methods.</p>
 
 <p>Here is the filter:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">&lt;</span><span class="n">code</span><span class="p">&gt;</span>
-<span class="k">package</span> <span class="n">net</span><span class="p">.</span><span class="n">jalg</span><span class="p">.</span><span class="n">ccdecor</span><span class="p">;</span>
+<div class="highlighter-rouge"><pre class="highlight"><code>&lt;code&gt;
+package net.jalg.ccdecor;
 
-<span class="n">import</span> <span class="n">java</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">IOException</span><span class="p">;</span>
-<span class="n">import</span> <span class="n">java</span><span class="p">.</span><span class="n">lang</span><span class="p">.</span><span class="n">annotation</span><span class="p">.</span><span class="n">Annotation</span><span class="p">;</span>
+import java.io.IOException;
+import java.lang.annotation.Annotation;
 
-<span class="n">import</span> <span class="n">javax</span><span class="p">.</span><span class="n">ws</span><span class="p">.</span><span class="n">rs</span><span class="p">.</span><span class="n">container</span><span class="p">.</span><span class="n">ContainerRequestContext</span><span class="p">;</span>
-<span class="n">import</span> <span class="n">javax</span><span class="p">.</span><span class="n">ws</span><span class="p">.</span><span class="n">rs</span><span class="p">.</span><span class="n">container</span><span class="p">.</span><span class="n">ContainerResponseContext</span><span class="p">;</span>
-<span class="n">import</span> <span class="n">javax</span><span class="p">.</span><span class="n">ws</span><span class="p">.</span><span class="n">rs</span><span class="p">.</span><span class="n">container</span><span class="p">.</span><span class="n">ContainerResponseFilter</span><span class="p">;</span>
-<span class="n">import</span> <span class="n">javax</span><span class="p">.</span><span class="n">ws</span><span class="p">.</span><span class="n">rs</span><span class="p">.</span><span class="n">ext</span><span class="p">.</span><span class="n">Provider</span><span class="p">;</span>
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.container.ContainerResponseContext;
+import javax.ws.rs.container.ContainerResponseFilter;
+import javax.ws.rs.ext.Provider;
 
-<span class="p">@</span><span class="n">Provider</span>
-<span class="p">@</span><span class="n">Cacheable</span>
-<span class="k">public</span> <span class="n">class</span> <span class="n">CacheControlDecorator</span> <span class="n">implements</span> <span class="n">ContainerResponseFilter</span> <span class="p">{</span>
+@Provider
+@Cacheable
+public class CacheControlDecorator implements ContainerResponseFilter {
 
-  <span class="p">@</span><span class="n">Override</span>
-  <span class="k">public</span> <span class="n">void</span> <span class="n">filter</span><span class="p">(</span><span class="n">ContainerRequestContext</span> <span class="n">requestContext</span><span class="p">,</span>
-        <span class="n">ContainerResponseContext</span> <span class="n">responseContext</span><span class="p">)</span> <span class="n">throws</span> <span class="n">IOException</span> <span class="p">{</span>
-    <span class="n">for</span> <span class="p">(</span><span class="n">Annotation</span> <span class="n">a</span> <span class="p">:</span> <span class="n">responseContext</span><span class="p">.</span><span class="n">getEntityAnnotations</span><span class="p">())</span> <span class="p">{</span>
-      <span class="k">if</span> <span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">annotationType</span><span class="p">()</span> <span class="p">==</span> <span class="n">Cacheable</span><span class="p">.</span><span class="n">class</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">String</span> <span class="n">cc</span> <span class="p">=</span> <span class="p">((</span><span class="n">Cacheable</span><span class="p">)</span> <span class="n">a</span><span class="p">).</span><span class="n">cc</span><span class="p">();</span>
-        <span class="n">responseContext</span><span class="p">.</span><span class="n">getHeaders</span><span class="p">().</span><span class="n">add</span><span class="p">(</span><span class="s2">"Cache-Control"</span><span class="p">,</span> <span class="n">cc</span><span class="p">);</span>
-      <span class="p">}</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
-<span class="p">}</span>
-<span class="p">&lt;/</span><span class="n">code</span><span class="p">&gt;</span>
-</code></pre></div></div>
+  @Override
+  public void filter(ContainerRequestContext requestContext,
+        ContainerResponseContext responseContext) throws IOException {
+    for (Annotation a : responseContext.getEntityAnnotations()) {
+      if (a.annotationType() == Cacheable.class) {
+        String cc = ((Cacheable) a).cc();
+        responseContext.getHeaders().add("Cache-Control", cc);
+      }
+    }
+  }
+}
+&lt;/code&gt;
+</code></pre>
+</div>
 
 <p>Don’t worry too much about that code for a minute but look at how the filter can be bound to a resource method:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;code&gt;
+<div class="highlighter-rouge"><pre class="highlight"><code>&lt;code&gt;
   @GET
   @Cacheable(cc="public, maxAge=3600")
   @Produces(MediaType.TEXT_PLAIN)
@@ -222,7 +224,8 @@
     return "Got it!";
   }
 &lt;/code&gt;
-</code></pre></div></div>
+</code></pre>
+</div>
 
 <p>The binding is achieved using our @Cacheable annotation.</p>
 
@@ -250,86 +253,128 @@
   <h3>Archives</h3>
 
 
-  <h1>2017</h1>
+  <h1></h1>
     <ul>
-      
-        <li><a href="/2017/09/hyper-client-and-self-signed-certs">hyper client and self-signed certs</a></li>
-      
-        <li><a href="/2017/05/web-services-with-rust-part-3-accept-all-we-can">Web Services with Rust Part 3: Accept All We Can</a></li>
-      
-        <li><a href="/2017/04/web-services-with-rust-part-2-baseline-revisited">Web Services with Rust Part 2: Baseline Revisited</a></li>
-      
-        <li><a href="/2017/04/web-services-with-rust-part-1-exploring-hyper">Web Services with Rust Part 1: Exploring Hyper</a></li>
       
     </ul>
 
-  <h1>2013</h1>
+  <h1></h1>
     <ul>
-      
-        <li><a href="/2013/05/using-iron-to-encapsulate-cookies">Using iron to Encapsulate Cookies</a></li>
-      
-        <li><a href="/2013/05/beyond-oauth">Beyond OAuth</a></li>
       
     </ul>
 
-  <h1>2012</h1>
+  <h1></h1>
     <ul>
-      
-        <li><a href="/2012/11/getting-started-playing-around-with-jax-rs-2-0-in-an-ee-container">Getting Started Playing Around with JAX-RS 2.0 in an EE Container</a></li>
-      
-        <li><a href="/2012/11/jax-rs-2-0-essential-bookmarks">JAX-RS 2.0 Essential Bookmarks</a></li>
-      
-        <li><a href="/2012/10/jax-rs-2-0-mvc">JAX-RS 2.0 MVC</a></li>
-      
-        <li><a href="/2012/09/declarative-cache-control-with-jax-rs-2-0">Declarative Cache Control with JAX-RS 2.0</a></li>
-      
-        <li><a href="/2012/05/death-by-jboss-6-classloading">Death by JBoss 6 Classloading</a></li>
       
     </ul>
 
-  <h1>2011</h1>
+  <h1></h1>
     <ul>
-      
-        <li><a href="/2011/11/esi-facelift">ESI Facelift</a></li>
-      
-        <li><a href="/2011/11/cool-uris-and-integration">Cool URIs and Integration</a></li>
       
     </ul>
 
-  <h1>2010</h1>
+  <h1></h1>
     <ul>
-      
-        <li><a href="/2010/11/agency-boundary">Agency Boundary</a></li>
-      
-        <li><a href="/2010/11/interesting-changes-must-surface">Interesting Changes *Must* Surface</a></li>
-      
-        <li><a href="/2010/10/generic-vs-specific-media-types-and-evolution">Generic vs. Specific Media Types and Evolution</a></li>
-      
-        <li><a href="/2010/09/spotted-alternates-header-in-the-wild">Spotted Alternates Header in the Wild</a></li>
-      
-        <li><a href="/2010/08/put-and-content-location">PUT and Content-Location</a></li>
       
     </ul>
 
-  <h1>2005</h1>
+  <h1></h1>
     <ul>
-      
-        <li><a href="/2005/10/pretending-that-the-network-isnt-there">Pretending that the network isn't there....</a></li>
-      
-        <li><a href="/2005/09/the-fallacy-of-business-objects">The Fallacy of Business Objects</a></li>
-      
-        <li><a href="/2005/09/dont-assume-a-closed-world">Don't Assume a Closed World</a></li>
-      
-        <li><a href="/2005/09/don-knuth-vs-w3c-validator">Don Knuth vs. W3C Validator</a></li>
-      
-        <li><a href="/2005/06/is-fowler-a-restafarian">Is Fowler a RESTafarian?</a></li>
       
     </ul>
 
-  <h1>2003</h1>
+  <h1></h1>
     <ul>
       
-        <li><a href="/2003/04/building-web-services">Building Web Services</a></li>
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
       
     </ul>
 
@@ -382,6 +427,8 @@
       <div class='links'>
         <h4>Recent posts</h4>
         <ul>
+          
+            <li><a href="/2018/01/go-bookmarks">Go Bookmarks</a></li>
           
             <li><a href="/2017/09/hyper-client-and-self-signed-certs">hyper client and self-signed certs</a></li>
           

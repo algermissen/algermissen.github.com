@@ -151,50 +151,56 @@
 
 <p>This will unzip to a glassfish3/ directory, so to start the server do</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>glassfish3/glassfish/bin/asadmin start-domain
-</code></pre></div></div>
+<div class="highlighter-rouge"><pre class="highlight"><code>glassfish3/glassfish/bin/asadmin start-domain
+</code></pre>
+</div>
 
 <p>To find the JAX-RS version included in the Glassfish you just downloaded do something like the following:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>jar -xf glassfish3/glassfish/modules/javax.ws.rs-api.jar META-INF/MANIFEST.MF; grep Bundle-Version META-INF/MANIFEST.MF
-</code></pre></div></div>
+<div class="highlighter-rouge"><pre class="highlight"><code>jar -xf glassfish3/glassfish/modules/javax.ws.rs-api.jar META-INF/MANIFEST.MF; grep Bundle-Version META-INF/MANIFEST.MF
+</code></pre>
+</div>
 
 <p>(This will leave a META-INF directory behind you might want to clean up afterwards)</p>
 
 <p>For the b63 version this yields:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Bundle-Version: 2.0.0.m12
-</code></pre></div></div>
+<div class="highlighter-rouge"><pre class="highlight"><code>Bundle-Version: 2.0.0.m12
+</code></pre>
+</div>
 
 <p>The next step is to create a project to test things out. I am using the following archetype, but any other EE Web profile archetype should work similarly:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mvn archetype:generate \
+<div class="highlighter-rouge"><pre class="highlight"><code>mvn archetype:generate \
   -DarchetypeGroupId=org.codehaus.mojo.archetypes \
   -DarchetypeArtifactId=webapp-javaee6 \
   -DgroupId=org.example \
   -DartifactId=test \
   -DinteractiveMode=false
-</code></pre></div></div>
+</code></pre>
+</div>
 
 <p>Now let’s edit the POM to pull in the JAX-RS 2.0-Version used by the Glassfish. First, add the proper repository.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> &lt;repository&gt;
+<div class="highlighter-rouge"><pre class="highlight"><code> &lt;repository&gt;
  &lt;id&gt;snapshot-repository.java.net&lt;/id&gt;
  &lt;name&gt;Java.net Snapshot Repository for Maven&lt;/name&gt;
  &lt;url&gt;https://maven.java.net/content/repositories/snapshots/&lt;/url&gt;
  &lt;layout&gt;default&lt;/layout&gt;
  &lt;/repository&gt;
-</code></pre></div></div>
+</code></pre>
+</div>
 
 <p>Then add the dependency to the specific release (note that the version is not literally the same as the bundle version you extracted above):</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;dependency&gt;
+<div class="highlighter-rouge"><pre class="highlight"><code>&lt;dependency&gt;
   &lt;groupId&gt;javax.ws.rs&lt;/groupId&gt;
   &lt;artifactId&gt;javax.ws.rs-api&lt;/artifactId&gt;
   &lt;version&gt;2.0-m12&lt;/version&gt;
   &lt;scope&gt;provided&lt;/scope&gt;
 &lt;/dependency&gt;
-</code></pre></div></div>
+</code></pre>
+</div>
 
 <p><strong>UPDATE</strong>: It seems you have to make sure you include this dependency <strong>before</strong> the dependency to the Java EE Web API. Otherwise, maven insists on trying to use the JAX-RS API version of the Java EE Web API.</p>
 
@@ -202,8 +208,9 @@
 
 <p>The final step will be to cd into your project folder and set up your IDE project. E.g. with Eclipse run</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mvn eclipse:eclipse
-</code></pre></div></div>
+<div class="highlighter-rouge"><pre class="highlight"><code>mvn eclipse:eclipse
+</code></pre>
+</div>
 
 <p>and import as existing Maven project into Eclipse.</p>
 
@@ -233,86 +240,128 @@
   <h3>Archives</h3>
 
 
-  <h1>2017</h1>
+  <h1></h1>
     <ul>
-      
-        <li><a href="/2017/09/hyper-client-and-self-signed-certs">hyper client and self-signed certs</a></li>
-      
-        <li><a href="/2017/05/web-services-with-rust-part-3-accept-all-we-can">Web Services with Rust Part 3: Accept All We Can</a></li>
-      
-        <li><a href="/2017/04/web-services-with-rust-part-2-baseline-revisited">Web Services with Rust Part 2: Baseline Revisited</a></li>
-      
-        <li><a href="/2017/04/web-services-with-rust-part-1-exploring-hyper">Web Services with Rust Part 1: Exploring Hyper</a></li>
       
     </ul>
 
-  <h1>2013</h1>
+  <h1></h1>
     <ul>
-      
-        <li><a href="/2013/05/using-iron-to-encapsulate-cookies">Using iron to Encapsulate Cookies</a></li>
-      
-        <li><a href="/2013/05/beyond-oauth">Beyond OAuth</a></li>
       
     </ul>
 
-  <h1>2012</h1>
+  <h1></h1>
     <ul>
-      
-        <li><a href="/2012/11/getting-started-playing-around-with-jax-rs-2-0-in-an-ee-container">Getting Started Playing Around with JAX-RS 2.0 in an EE Container</a></li>
-      
-        <li><a href="/2012/11/jax-rs-2-0-essential-bookmarks">JAX-RS 2.0 Essential Bookmarks</a></li>
-      
-        <li><a href="/2012/10/jax-rs-2-0-mvc">JAX-RS 2.0 MVC</a></li>
-      
-        <li><a href="/2012/09/declarative-cache-control-with-jax-rs-2-0">Declarative Cache Control with JAX-RS 2.0</a></li>
-      
-        <li><a href="/2012/05/death-by-jboss-6-classloading">Death by JBoss 6 Classloading</a></li>
       
     </ul>
 
-  <h1>2011</h1>
+  <h1></h1>
     <ul>
-      
-        <li><a href="/2011/11/esi-facelift">ESI Facelift</a></li>
-      
-        <li><a href="/2011/11/cool-uris-and-integration">Cool URIs and Integration</a></li>
       
     </ul>
 
-  <h1>2010</h1>
+  <h1></h1>
     <ul>
-      
-        <li><a href="/2010/11/agency-boundary">Agency Boundary</a></li>
-      
-        <li><a href="/2010/11/interesting-changes-must-surface">Interesting Changes *Must* Surface</a></li>
-      
-        <li><a href="/2010/10/generic-vs-specific-media-types-and-evolution">Generic vs. Specific Media Types and Evolution</a></li>
-      
-        <li><a href="/2010/09/spotted-alternates-header-in-the-wild">Spotted Alternates Header in the Wild</a></li>
-      
-        <li><a href="/2010/08/put-and-content-location">PUT and Content-Location</a></li>
       
     </ul>
 
-  <h1>2005</h1>
+  <h1></h1>
     <ul>
-      
-        <li><a href="/2005/10/pretending-that-the-network-isnt-there">Pretending that the network isn't there....</a></li>
-      
-        <li><a href="/2005/09/the-fallacy-of-business-objects">The Fallacy of Business Objects</a></li>
-      
-        <li><a href="/2005/09/dont-assume-a-closed-world">Don't Assume a Closed World</a></li>
-      
-        <li><a href="/2005/09/don-knuth-vs-w3c-validator">Don Knuth vs. W3C Validator</a></li>
-      
-        <li><a href="/2005/06/is-fowler-a-restafarian">Is Fowler a RESTafarian?</a></li>
       
     </ul>
 
-  <h1>2003</h1>
+  <h1></h1>
     <ul>
       
-        <li><a href="/2003/04/building-web-services">Building Web Services</a></li>
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
       
     </ul>
 
@@ -365,6 +414,8 @@
       <div class='links'>
         <h4>Recent posts</h4>
         <ul>
+          
+            <li><a href="/2018/01/go-bookmarks">Go Bookmarks</a></li>
           
             <li><a href="/2017/09/hyper-client-and-self-signed-certs">hyper client and self-signed certs</a></li>
           

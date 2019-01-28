@@ -181,7 +181,7 @@
 
 <p>While in my scenario the including entity (the article referencing the company information) would likely be HTML I have said above that we need something more non-XML friendly. One way would be to reuse the existing ESI XML-tags but explicitly allowing them in non-XML content:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET /article/123
+<div class="highlighter-rouge"><pre class="highlight"><code>GET /article/123
 Host: cms.example.org
 
 200 Ok
@@ -190,7 +190,8 @@ Content-Type: text/plain
 ACME in the News
 
 &lt;esi:include src="http://cims.example.org/company/acme"&gt;&lt;/esi:include&gt;
-</code></pre></div></div>
+</code></pre>
+</div>
 
 <p>(I am deliberately excluding any <a href="http://www.w3.org/TR/edge-arch">ESI headers</a> from all the examples)</p>
 
@@ -224,7 +225,7 @@ ACME in the News
 
 <p>This is also #1 on Mark’s list and he refers to it as the ability “to source variables from a URI”. The basic idea is this: an ESI element (say <esi:load>) tells the ESI processor to initiate a request to a target resource and make the response entity available as a variable. That variable could then be used in expressions to assemble the overall Web page.</esi:load></p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET /article/123
+<div class="highlighter-rouge"><pre class="highlight"><code>GET /article/123
 Host: cms.example.org
 
 200 Ok
@@ -238,7 +239,8 @@ Content-Type: text/html
 Yesterday, ${acme.name} (${acme.stock.symbol}) had a closing stock price of ${acme.stock.price}.
 <span class="nt">&lt;/p&gt;</span>
 <span class="nt">&lt;/html&gt;</span>
-</code></pre></div></div>
+</code></pre>
+</div>
 
 <p>However, there are two problems with this.</p>
 
@@ -248,7 +250,7 @@ Yesterday, ${acme.name} (${acme.stock.symbol}) had a closing stock price of ${ac
 
 <p>A solution to this issue would be to add an <em>accept</em> attribute to <esi:load> that would directly translate to the Accept header of the load-request.</esi:load></p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET /article/123
+<div class="highlighter-rouge"><pre class="highlight"><code>GET /article/123
 Host: cms.example.org
 
 200 Ok
@@ -262,7 +264,8 @@ Content-Type: text/html
 Yesterday, ${acme.name} (${acme.stock.symbol}) had a closing stock price of ${acme.stock.price}.
 <span class="nt">&lt;/p&gt;</span>
 <span class="nt">&lt;/html&gt;</span>
-</code></pre></div></div>
+</code></pre>
+</div>
 
 <p>Ah, yes. That immediately looks nice and RESTful.</p>
 
@@ -290,9 +293,10 @@ Yesterday, ${acme.name} (${acme.stock.symbol}) had a closing stock price of ${ac
 
 <p>This one though needs particular attention. A templating mechanism immediately raises the question of how much functionality one wants to offer. Variable souring and access is an inherent requirement. Mark also mentions string manipulation functions. For example:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;esi:load var="acme" href="http://cims.example.org/company/acme"&gt;&lt;/esi:load&gt;
+<div class="highlighter-rouge"><pre class="highlight"><code>&lt;esi:load var="acme" href="http://cims.example.org/company/acme"&gt;&lt;/esi:load&gt;
 Yesterday, ${substr(acme.name,0.10)} (${toUpper(acme.stock.symbol)}) had a closing stock price of ${acme.stock.price}.
-</code></pre></div></div>
+</code></pre>
+</div>
 
 <p>I think branching and looping constructs also make sense but they might conflict with the intermdiary processing model and request handling performance.</p>
 
@@ -334,86 +338,128 @@ Yesterday, ${substr(acme.name,0.10)} (${toUpper(acme.stock.symbol)}) had a closi
   <h3>Archives</h3>
 
 
-  <h1>2017</h1>
+  <h1></h1>
     <ul>
-      
-        <li><a href="/2017/09/hyper-client-and-self-signed-certs">hyper client and self-signed certs</a></li>
-      
-        <li><a href="/2017/05/web-services-with-rust-part-3-accept-all-we-can">Web Services with Rust Part 3: Accept All We Can</a></li>
-      
-        <li><a href="/2017/04/web-services-with-rust-part-2-baseline-revisited">Web Services with Rust Part 2: Baseline Revisited</a></li>
-      
-        <li><a href="/2017/04/web-services-with-rust-part-1-exploring-hyper">Web Services with Rust Part 1: Exploring Hyper</a></li>
       
     </ul>
 
-  <h1>2013</h1>
+  <h1></h1>
     <ul>
-      
-        <li><a href="/2013/05/using-iron-to-encapsulate-cookies">Using iron to Encapsulate Cookies</a></li>
-      
-        <li><a href="/2013/05/beyond-oauth">Beyond OAuth</a></li>
       
     </ul>
 
-  <h1>2012</h1>
+  <h1></h1>
     <ul>
-      
-        <li><a href="/2012/11/getting-started-playing-around-with-jax-rs-2-0-in-an-ee-container">Getting Started Playing Around with JAX-RS 2.0 in an EE Container</a></li>
-      
-        <li><a href="/2012/11/jax-rs-2-0-essential-bookmarks">JAX-RS 2.0 Essential Bookmarks</a></li>
-      
-        <li><a href="/2012/10/jax-rs-2-0-mvc">JAX-RS 2.0 MVC</a></li>
-      
-        <li><a href="/2012/09/declarative-cache-control-with-jax-rs-2-0">Declarative Cache Control with JAX-RS 2.0</a></li>
-      
-        <li><a href="/2012/05/death-by-jboss-6-classloading">Death by JBoss 6 Classloading</a></li>
       
     </ul>
 
-  <h1>2011</h1>
+  <h1></h1>
     <ul>
-      
-        <li><a href="/2011/11/esi-facelift">ESI Facelift</a></li>
-      
-        <li><a href="/2011/11/cool-uris-and-integration">Cool URIs and Integration</a></li>
       
     </ul>
 
-  <h1>2010</h1>
+  <h1></h1>
     <ul>
-      
-        <li><a href="/2010/11/agency-boundary">Agency Boundary</a></li>
-      
-        <li><a href="/2010/11/interesting-changes-must-surface">Interesting Changes *Must* Surface</a></li>
-      
-        <li><a href="/2010/10/generic-vs-specific-media-types-and-evolution">Generic vs. Specific Media Types and Evolution</a></li>
-      
-        <li><a href="/2010/09/spotted-alternates-header-in-the-wild">Spotted Alternates Header in the Wild</a></li>
-      
-        <li><a href="/2010/08/put-and-content-location">PUT and Content-Location</a></li>
       
     </ul>
 
-  <h1>2005</h1>
+  <h1></h1>
     <ul>
-      
-        <li><a href="/2005/10/pretending-that-the-network-isnt-there">Pretending that the network isn't there....</a></li>
-      
-        <li><a href="/2005/09/the-fallacy-of-business-objects">The Fallacy of Business Objects</a></li>
-      
-        <li><a href="/2005/09/dont-assume-a-closed-world">Don't Assume a Closed World</a></li>
-      
-        <li><a href="/2005/09/don-knuth-vs-w3c-validator">Don Knuth vs. W3C Validator</a></li>
-      
-        <li><a href="/2005/06/is-fowler-a-restafarian">Is Fowler a RESTafarian?</a></li>
       
     </ul>
 
-  <h1>2003</h1>
+  <h1></h1>
     <ul>
       
-        <li><a href="/2003/04/building-web-services">Building Web Services</a></li>
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
       
     </ul>
 
@@ -466,6 +512,8 @@ Yesterday, ${substr(acme.name,0.10)} (${toUpper(acme.stock.symbol)}) had a closi
       <div class='links'>
         <h4>Recent posts</h4>
         <ul>
+          
+            <li><a href="/2018/01/go-bookmarks">Go Bookmarks</a></li>
           
             <li><a href="/2017/09/hyper-client-and-self-signed-certs">hyper client and self-signed certs</a></li>
           

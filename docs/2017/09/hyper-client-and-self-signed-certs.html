@@ -157,7 +157,7 @@ be decoupled from SSL dependencies completely. So, how to go about that TLS prot
 <p>Fortunately <a href="https://hyper.rs/guides/client/configuration/">the docs are ready at hand</a>
  and victory just another copy/paste away…</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>extern crate hyper;
+<div class="highlighter-rouge"><pre class="highlight"><code>extern crate hyper;
 extern crate hyper_tls;
 extern crate tokio_core;
 
@@ -174,7 +174,8 @@ let client = Client::configure()
 let req = client.get("https://hyper.rs".parse()?);
 let res = core.run(req)?;
 assert!(res.status().is_success());
-</code></pre></div></div>
+</code></pre>
+</div>
 
 <p>But then, while the compiler runs it dawns on me: the evil cert master of
 this enterprise is into the self-signing witch craft (to save money or for
@@ -207,13 +208,14 @@ TlsConnectorBuilder::add_root_certificate.”</p>
 
 <p>What my browser can do, I can also do, I figure; Google turns up</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>openssl s_client -showcerts -connect example.org:443 &gt; server.crt
-</code></pre></div></div>
+<div class="highlighter-rouge"><pre class="highlight"><code>openssl s_client -showcerts -connect example.org:443 &gt; server.crt
+</code></pre>
+</div>
 
 <p>Great - let’s stick that into that method mentioned above and get this over with.
 Where I dug up the code for that I cannot remember, but it goes like this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let mut f = File::open("/...my cert file").unwrap();
+<div class="highlighter-rouge"><pre class="highlight"><code>let mut f = File::open("/...my cert file").unwrap();
 let mut buffer = vec![];
 f.read_to_end(&amp;mut buffer).unwrap();
 let cert = Certificate::from_der(buffer.as_slice()).unwrap();
@@ -227,7 +229,8 @@ let mut tls = tls.build().unwrap();
 
 let ct = HttpsConnector::from((http, tls));
 let client = Client::configure().connector(ct).build(handle);
-</code></pre></div></div>
+</code></pre>
+</div>
 
 <p>(It is also especially great to do this past midnight :-)</p>
 
@@ -238,8 +241,9 @@ as I could possibly think of to make sense.</p>
 
 <p>Eventually yielding</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>openssl x509 -in server.crt -outform der -out server.der
-</code></pre></div></div>
+<div class="highlighter-rouge"><pre class="highlight"><code>openssl x509 -in server.crt -outform der -out server.der
+</code></pre>
+</div>
 
 <p>I am skipping all the detours I took do to late night errors,
 byte array mistakes, wrong assumptions about company root cert
@@ -268,86 +272,128 @@ of the language Rust as such.</p>
   <h3>Archives</h3>
 
 
-  <h1>2017</h1>
+  <h1></h1>
     <ul>
-      
-        <li><a href="/2017/09/hyper-client-and-self-signed-certs">hyper client and self-signed certs</a></li>
-      
-        <li><a href="/2017/05/web-services-with-rust-part-3-accept-all-we-can">Web Services with Rust Part 3: Accept All We Can</a></li>
-      
-        <li><a href="/2017/04/web-services-with-rust-part-2-baseline-revisited">Web Services with Rust Part 2: Baseline Revisited</a></li>
-      
-        <li><a href="/2017/04/web-services-with-rust-part-1-exploring-hyper">Web Services with Rust Part 1: Exploring Hyper</a></li>
       
     </ul>
 
-  <h1>2013</h1>
+  <h1></h1>
     <ul>
-      
-        <li><a href="/2013/05/using-iron-to-encapsulate-cookies">Using iron to Encapsulate Cookies</a></li>
-      
-        <li><a href="/2013/05/beyond-oauth">Beyond OAuth</a></li>
       
     </ul>
 
-  <h1>2012</h1>
+  <h1></h1>
     <ul>
-      
-        <li><a href="/2012/11/getting-started-playing-around-with-jax-rs-2-0-in-an-ee-container">Getting Started Playing Around with JAX-RS 2.0 in an EE Container</a></li>
-      
-        <li><a href="/2012/11/jax-rs-2-0-essential-bookmarks">JAX-RS 2.0 Essential Bookmarks</a></li>
-      
-        <li><a href="/2012/10/jax-rs-2-0-mvc">JAX-RS 2.0 MVC</a></li>
-      
-        <li><a href="/2012/09/declarative-cache-control-with-jax-rs-2-0">Declarative Cache Control with JAX-RS 2.0</a></li>
-      
-        <li><a href="/2012/05/death-by-jboss-6-classloading">Death by JBoss 6 Classloading</a></li>
       
     </ul>
 
-  <h1>2011</h1>
+  <h1></h1>
     <ul>
-      
-        <li><a href="/2011/11/esi-facelift">ESI Facelift</a></li>
-      
-        <li><a href="/2011/11/cool-uris-and-integration">Cool URIs and Integration</a></li>
       
     </ul>
 
-  <h1>2010</h1>
+  <h1></h1>
     <ul>
-      
-        <li><a href="/2010/11/agency-boundary">Agency Boundary</a></li>
-      
-        <li><a href="/2010/11/interesting-changes-must-surface">Interesting Changes *Must* Surface</a></li>
-      
-        <li><a href="/2010/10/generic-vs-specific-media-types-and-evolution">Generic vs. Specific Media Types and Evolution</a></li>
-      
-        <li><a href="/2010/09/spotted-alternates-header-in-the-wild">Spotted Alternates Header in the Wild</a></li>
-      
-        <li><a href="/2010/08/put-and-content-location">PUT and Content-Location</a></li>
       
     </ul>
 
-  <h1>2005</h1>
+  <h1></h1>
     <ul>
-      
-        <li><a href="/2005/10/pretending-that-the-network-isnt-there">Pretending that the network isn't there....</a></li>
-      
-        <li><a href="/2005/09/the-fallacy-of-business-objects">The Fallacy of Business Objects</a></li>
-      
-        <li><a href="/2005/09/dont-assume-a-closed-world">Don't Assume a Closed World</a></li>
-      
-        <li><a href="/2005/09/don-knuth-vs-w3c-validator">Don Knuth vs. W3C Validator</a></li>
-      
-        <li><a href="/2005/06/is-fowler-a-restafarian">Is Fowler a RESTafarian?</a></li>
       
     </ul>
 
-  <h1>2003</h1>
+  <h1></h1>
     <ul>
       
-        <li><a href="/2003/04/building-web-services">Building Web Services</a></li>
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
       
     </ul>
 
@@ -400,6 +446,8 @@ of the language Rust as such.</p>
       <div class='links'>
         <h4>Recent posts</h4>
         <ul>
+          
+            <li><a href="/2018/01/go-bookmarks">Go Bookmarks</a></li>
           
             <li><a href="/2017/09/hyper-client-and-self-signed-certs">hyper client and self-signed certs</a></li>
           

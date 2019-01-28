@@ -6,9 +6,42 @@
 </description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 28 May 2018 06:29:50 +0200</pubDate>
-    <lastBuildDate>Mon, 28 May 2018 06:29:50 +0200</lastBuildDate>
-    <generator>Jekyll v3.7.3</generator>
+    <pubDate>Mon, 28 Jan 2019 09:14:18 +0000</pubDate>
+    <lastBuildDate>Mon, 28 Jan 2019 09:14:18 +0000</lastBuildDate>
+    <generator>Jekyll v3.3.0</generator>
+    
+      <item>
+        <title>Go Bookmarks</title>
+        <description>
+&lt;p&gt;This is my collection of references I found especially useful to understand
+idiomatic solutions to various design problems and Go internals.&lt;/p&gt;
+
+&lt;h1 id=&quot;application-architecture&quot;&gt;Application Architecture&lt;/h1&gt;
+
+&lt;p&gt;After digging through the considarable amount of articles applying the
+topic of Clean Architecture to Go I found this to be the most compelling
+one (and actually one of the few in the spirit of the original idea, AFAIK):&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://proandroiddev.com/clean-architecture-data-flow-dependency-rule-615ffdd79e29&quot;&gt;Clean Architecture Guide (with tested examples): Data Flow != Dependency Rule&lt;/a&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;error-handling&quot;&gt;Error Handling&lt;/h1&gt;
+
+&lt;p&gt;When approaching error handling in Go it is in my opinion very easy to make
+the mistake and work against the original ideas of the language. The
+approach I found to be naturally aligned with what GHop deliberately provides
+for errors out of the box is described in:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://banzaicloud.com/blog/error-handling-go/&quot;&gt;Error Handling Practices in Go&lt;/a&gt;&lt;/p&gt;
+
+</description>
+        <pubDate>Sun, 28 Jan 2018 00:00:00 +0000</pubDate>
+        <link>/2018/01/go-bookmarks</link>
+        <guid isPermaLink="true">/2018/01/go-bookmarks</guid>
+        
+        
+        <category>go</category>
+        
+      </item>
     
       <item>
         <title>hyper client and self-signed certs</title>
@@ -29,7 +62,7 @@ be decoupled from SSL dependencies completely. So, how to go about that TLS prot
 &lt;p&gt;Fortunately &lt;a href=&quot;https://hyper.rs/guides/client/configuration/&quot;&gt;the docs are ready at hand&lt;/a&gt;
  and victory just another copy/paste away…&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;extern crate hyper;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;extern crate hyper;
 extern crate hyper_tls;
 extern crate tokio_core;
 
@@ -46,7 +79,8 @@ let client = Client::configure()
 let req = client.get(&quot;https://hyper.rs&quot;.parse()?);
 let res = core.run(req)?;
 assert!(res.status().is_success());
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;p&gt;But then, while the compiler runs it dawns on me: the evil cert master of
 this enterprise is into the self-signing witch craft (to save money or for
@@ -79,13 +113,14 @@ TlsConnectorBuilder::add_root_certificate.”&lt;/p&gt;
 
 &lt;p&gt;What my browser can do, I can also do, I figure; Google turns up&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;openssl s_client -showcerts -connect example.org:443 &amp;gt; server.crt
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;openssl s_client -showcerts -connect example.org:443 &amp;gt; server.crt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;p&gt;Great - let’s stick that into that method mentioned above and get this over with.
 Where I dug up the code for that I cannot remember, but it goes like this:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;let mut f = File::open(&quot;/...my cert file&quot;).unwrap();
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;let mut f = File::open(&quot;/...my cert file&quot;).unwrap();
 let mut buffer = vec![];
 f.read_to_end(&amp;amp;mut buffer).unwrap();
 let cert = Certificate::from_der(buffer.as_slice()).unwrap();
@@ -99,7 +134,8 @@ let mut tls = tls.build().unwrap();
 
 let ct = HttpsConnector::from((http, tls));
 let client = Client::configure().connector(ct).build(handle);
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;p&gt;(It is also especially great to do this past midnight :-)&lt;/p&gt;
 
@@ -110,8 +146,9 @@ as I could possibly think of to make sense.&lt;/p&gt;
 
 &lt;p&gt;Eventually yielding&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;openssl x509 -in server.crt -outform der -out server.der
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;openssl x509 -in server.crt -outform der -out server.der
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;p&gt;I am skipping all the detours I took do to late night errors,
 byte array mistakes, wrong assumptions about company root cert
@@ -123,7 +160,7 @@ your worrior can go to bed, exhausted, but still in honest awe
 of the language Rust as such.&lt;/p&gt;
 
 </description>
-        <pubDate>Fri, 29 Sep 2017 00:00:00 +0200</pubDate>
+        <pubDate>Fri, 29 Sep 2017 00:00:00 +0000</pubDate>
         <link>/2017/09/hyper-client-and-self-signed-certs</link>
         <guid isPermaLink="true">/2017/09/hyper-client-and-self-signed-certs</guid>
         
@@ -157,7 +194,7 @@ HTTP request headers  set by test configurations, so
 &lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;Connection&quot;: &quot;close&quot;&lt;/code&gt; would trigger the load generator to open a new
 connection for every request.&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;definition.session(&quot;OneRequestPerConnection&quot;, function(session) {
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;definition.session(&quot;OneRequestPerConnection&quot;, function(session) {
   session.forEver( function(session) {
     session.get(&quot;/data&quot;, {
       headers: {
@@ -166,7 +203,8 @@ connection for every request.&lt;/p&gt;
     });
   });
 });
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;p&gt;I added some further metrics in order to compare the number of
 accepted and the number of done connections.&lt;/p&gt;
@@ -193,7 +231,7 @@ own Tokio Core. Since we cannot send a Core to another thread we create the
 Core on the main thread, create a remote handle to it and send that to
 a new thread along with the actual server startup.&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;fn start_server(n: usize, addr: &amp;amp;'static str) {
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;fn start_server(n: usize, addr: &amp;amp;'static str) {
 
   let mut workerCore = Core::new().unwrap();
   let remote = workerCore.remote();
@@ -208,13 +246,14 @@ a new thread along with the actual server startup.&lt;/p&gt;
     }
     serve(&amp;amp;remote, &amp;amp;addr, &amp;amp;protocol);
 });
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;p&gt;The request handler then creates a one-time channel and spawns a task on the
 remote handle. This taskperforms the CPU-bound work and sends the result through
 the channel to complete the response.&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;let f = match (req.method(), req.path()) {
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;let f = match (req.method(), req.path()) {
   (&amp;amp;Get, &quot;/data&quot;) =&amp;gt; {
     let (tx, rx) = futures::sync::oneshot::channel::&amp;lt;Self::Response&amp;gt;();
     self.remote.spawn(|_| {
@@ -230,7 +269,8 @@ the channel to complete the response.&lt;/p&gt;
     }).boxed())
   }
 }
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;p&gt;With this modification, the server can now do roughly 1300 requests per second
 until the 99th percentile of response latency starts to increase. At this point
@@ -244,7 +284,7 @@ on a different thread than more IO bound tasks.&lt;/p&gt;
 &lt;p&gt;See the &lt;a href=&quot;https://github.com/algermissen/web-rust/blob/master/src/bin/ts3.rs&quot;&gt;test server source code&lt;/a&gt;.&lt;/p&gt;
 
 </description>
-        <pubDate>Thu, 18 May 2017 00:00:00 +0200</pubDate>
+        <pubDate>Thu, 18 May 2017 00:00:00 +0000</pubDate>
         <link>/2017/05/web-services-with-rust-part-3-accept-all-we-can</link>
         <guid isPermaLink="true">/2017/05/web-services-with-rust-part-3-accept-all-we-can</guid>
         
@@ -310,7 +350,7 @@ being served.&lt;/p&gt;
 
 &lt;p&gt;The StormForger test case setup:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;definition.setTarget(&quot;xxx:8080&quot;);
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;definition.setTarget(&quot;xxx:8080&quot;);
 
 definition.setArrivalPhases([
   { duration: 20, rate: 20},
@@ -344,7 +384,8 @@ definition.setTestOptions({
 definition.session(&quot;ManyClientsOneRequest&quot;, function(context) {
   context.get(&quot;/data&quot;, { tag: &quot;root&quot; });
 });
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;p&gt;This test runs for about 7 minutes and gradually increases the rate of arriving clients from
 20/s to 350/s, each doing a single request.&lt;/p&gt;
@@ -396,7 +437,7 @@ leverage the no-cost abstractions nature of Rust and asynchronous IO to squeeze 
 of the available resources, activities like HTML template rendering or JSON serialization/deserialization
 directly impact the capacity limit of a server.&lt;/p&gt;
 </description>
-        <pubDate>Wed, 26 Apr 2017 00:00:00 +0200</pubDate>
+        <pubDate>Wed, 26 Apr 2017 00:00:00 +0000</pubDate>
         <link>/2017/04/web-services-with-rust-part-2-baseline-revisited</link>
         <guid isPermaLink="true">/2017/04/web-services-with-rust-part-2-baseline-revisited</guid>
         
@@ -476,7 +517,7 @@ server to the limit in a controlled way.&lt;/p&gt;
 &lt;p&gt;The &lt;a href=&quot;https://github.com/algermissen/web-rust/blob/ecc430d558aa60dcf2fd2d7ee89f73b7395e5e9d/src/bin/minimal_single_threaded.rs#L26&quot;&gt;work simulation&lt;/a&gt;
 looks like this&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-rust&quot; data-lang=&quot;rust&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-rust&quot; data-lang=&quot;rust&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
 2
 3
 4
@@ -488,10 +529,9 @@ looks like this&lt;/p&gt;
 10
 11
 12
-13
-&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;    &lt;span class=&quot;k&quot;&gt;fn&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;cpu_intensive_work&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+13&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;    &lt;span class=&quot;k&quot;&gt;fn&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;cpu_intensive_work&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
         &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;mut&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;X&quot;&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;.to_string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;..&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;..&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
             &lt;span class=&quot;n&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nd&quot;&gt;format!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Value: {}&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
         &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
         &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;address&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Address&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
@@ -501,14 +541,15 @@ looks like this&lt;/p&gt;
     
         &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;j&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;serde_json&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;to_string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;address&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;.unwrap&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
         &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;The server code I compiled as a statically linked executable for Linux (resulting
 in 4.5 MB).&lt;/p&gt;
 
 &lt;p&gt;The Stormforger load test looks like this:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;definition.setTarget(&quot;[host:port]&quot;);
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;definition.setTarget(&quot;[host:port]&quot;);
 
 definition.setArrivalPhases([
   {
@@ -529,7 +570,8 @@ definition.session(&quot;Load Test 1&quot;, function(session) {
 
   });
 });
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;p&gt;With that I was able to get about 6000 req/s out of the server before seeing
 the 99th percentile latency degrading. modifying the simulated work showed
@@ -549,7 +591,7 @@ hood uses the operating system’s SO_REUSEPORT feature.&lt;/p&gt;
 
 &lt;p&gt;Here is the interesting part of the code:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;fn serve(addr: &amp;amp;SocketAddr, protocol: &amp;amp;Http) {
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;fn serve(addr: &amp;amp;SocketAddr, protocol: &amp;amp;Http) {
     let mut core = Core::new().unwrap();
     let handle = core.handle();
     let listener = net2::TcpBuilder::new_v4().unwrap()
@@ -580,7 +622,8 @@ fn start_server(nb_instances: usize, addr: &amp;amp;str) {
 fn main() {
     start_server(2, &quot;0.0.0.0:8080&quot;);
 }
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;p&gt;Check out the &lt;a href=&quot;https://github.com/algermissen/web-rust/blob/master/src/bin/ts1.rs&quot;&gt;full source code&lt;/a&gt;.&lt;/p&gt;
 
@@ -619,7 +662,7 @@ request handling threads (for example for rate limiting, metrics collection,
 logging).&lt;/p&gt;
 
 </description>
-        <pubDate>Thu, 13 Apr 2017 00:00:00 +0200</pubDate>
+        <pubDate>Thu, 13 Apr 2017 00:00:00 +0000</pubDate>
         <link>/2017/04/web-services-with-rust-part-1-exploring-hyper</link>
         <guid isPermaLink="true">/2017/04/web-services-with-rust-part-1-exploring-hyper</guid>
         
@@ -643,7 +686,7 @@ logging).&lt;/p&gt;
 
 &lt;p&gt;First, let’s see, how to use jiron to seal and unseal data:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;import net.jalg.jiron.Jiron;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;import net.jalg.jiron.Jiron;
 
 String data = &quot;Some secret stuff we want protected&quot;;
 
@@ -654,7 +697,8 @@ String sealed = Jiron.seal(data, &quot;sealing-password&quot;,
 String unsealed = Jiron.unseal(sealed, &quot;sealing-password&quot;,
 					Jiron.DEFAULT_ENCRYPTION_OPTIONS,
 					Jiron.DEFAULT_INTEGRITY_OPTIONS);
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;p&gt;The String &lt;code class=&quot;highlighter-rouge&quot;&gt;sealed&lt;/code&gt; is what you can pass around and be sure that nobody can read or modify it, unless in possession of the sealing password.&lt;/p&gt;
 
@@ -662,30 +706,33 @@ String unsealed = Jiron.unseal(sealed, &quot;sealing-password&quot;,
 
 &lt;p&gt;Initially, a user not in possession of the cookie will be redirected to a login form and the cookie will be issued upon submission of valid credentials. Here is an excerpt of the &lt;a href=&quot;https://github.com/algermissen/iron-cookie/blob/master/src/main/java/net/jalg/ironcookie/LoginResource.java&quot;&gt;form processing JAX-RS resource&lt;/a&gt;:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;String data = login + &quot;|&quot; + expires + &quot;|&quot; + realname;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;String data = login + &quot;|&quot; + expires + &quot;|&quot; + realname;
 String cookieValue = Jiron.seal(data, ApplicationConfig.ENCRYPTION_KEY,
 					Jiron.DEFAULT_ENCRYPTION_OPTIONS,
 					Jiron.DEFAULT_INTEGRITY_OPTIONS);
 
 NewCookie c = new NewCookie(AuthFilter.COOKIE_NAME, cookieValue);
 return Response.seeOther(redirectUri).cookie(c).build();
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;p&gt;In the HTTP response the cookie will look something like (line breaks added for clarity):&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Set-Cookie:authtoken=Fe26.1**7A6A689DEC9563773B1264CF4CC585CFC9CF84403EE9143650D2EC2EE&amp;lt;br&amp;gt;&amp;lt;/br&amp;gt;24E36A3*k9yW1ZlC5Tr1a5o2Os_QMQ*sxZkQJfHsfyZE_0DI3ugHKdQ3IXwy1jySoz7GrKiTWU*9C58B956A11&amp;lt;br&amp;gt;&amp;lt;/br&amp;gt;81D1F1E3A1A7A1B67D2CF7738B0BFB16C5EB4B381151CAEEC4C6C*3PxSsg5aThLGvU2e8ItXfep-hpMw5x96&amp;lt;br&amp;gt;&amp;lt;/br&amp;gt;L_PbelhnU84;Version=1
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Set-Cookie:authtoken=Fe26.1**7A6A689DEC9563773B1264CF4CC585CFC9CF84403EE9143650D2EC2EE&amp;lt;br&amp;gt;&amp;lt;/br&amp;gt;24E36A3*k9yW1ZlC5Tr1a5o2Os_QMQ*sxZkQJfHsfyZE_0DI3ugHKdQ3IXwy1jySoz7GrKiTWU*9C58B956A11&amp;lt;br&amp;gt;&amp;lt;/br&amp;gt;81D1F1E3A1A7A1B67D2CF7738B0BFB16C5EB4B381151CAEEC4C6C*3PxSsg5aThLGvU2e8ItXfep-hpMw5x96&amp;lt;br&amp;gt;&amp;lt;/br&amp;gt;L_PbelhnU84;Version=1
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;p&gt;To protect &lt;a href=&quot;https://github.com/algermissen/iron-cookie/blob/master/src/main/java/net/jalg/ironcookie/DashboardResource.java&quot;&gt;a resource class&lt;/a&gt; by enforcing cookie auth, we bind a JAX-RS 2.0 filter to that class using a new &lt;a href=&quot;https://github.com/algermissen/iron-cookie/blob/master/src/main/java/net/jalg/ironcookie/TokenAuthProtected.java&quot;&gt;annotation&lt;/a&gt;:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;//...
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;//...
 @TokenAuthProtected
 public String getDashboard(@Context SecurityContext sc) { ... }
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;p&gt;The &lt;a href=&quot;https://github.com/algermissen/iron-cookie/blob/master/src/main/java/net/jalg/ironcookie/AuthFilter.java&quot;&gt;auth enforcing filter class&lt;/a&gt; extracts the cookie, checks expiration time and puts the data contained in the cookie in a place where it can be accessed by the resource class.&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Cookie cookie = context.getCookies().get(COOKIE_NAME);
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Cookie cookie = context.getCookies().get(COOKIE_NAME);
 // Redirect to form if no cookie
 String data = Jiron.unseal(cookie.getValue(), ApplicationConfig.ENCRYPTION_KEY,
 					Jiron.DEFAULT_ENCRYPTION_OPTIONS,
@@ -702,7 +749,8 @@ if (now &amp;gt; expires) {
 }
 
 context.setSecurityContext(new TokenSecurityContext(username, realname));
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;p&gt;Using the security context and a custom Principal, the resource class is provided access to the user’s login and realname.&lt;/p&gt;
 
@@ -711,7 +759,7 @@ context.setSecurityContext(new TokenSecurityContext(username, realname));
 &lt;p&gt;Please have a look at the source code for the code details.&lt;/p&gt;
 
 </description>
-        <pubDate>Wed, 29 May 2013 00:00:00 +0200</pubDate>
+        <pubDate>Wed, 29 May 2013 00:00:00 +0000</pubDate>
         <link>/2013/05/using-iron-to-encapsulate-cookies</link>
         <guid isPermaLink="true">/2013/05/using-iron-to-encapsulate-cookies</guid>
         
@@ -752,7 +800,7 @@ context.setSecurityContext(new TokenSecurityContext(username, realname));
 &lt;p&gt;In any case, it is a fascinating space to explore once you get over the initial crypto-confusion barrier.&lt;/p&gt;
 
 </description>
-        <pubDate>Wed, 29 May 2013 00:00:00 +0200</pubDate>
+        <pubDate>Wed, 29 May 2013 00:00:00 +0000</pubDate>
         <link>/2013/05/beyond-oauth</link>
         <guid isPermaLink="true">/2013/05/beyond-oauth</guid>
         
@@ -772,50 +820,56 @@ context.setSecurityContext(new TokenSecurityContext(username, realname));
 
 &lt;p&gt;This will unzip to a glassfish3/ directory, so to start the server do&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;glassfish3/glassfish/bin/asadmin start-domain
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;glassfish3/glassfish/bin/asadmin start-domain
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;p&gt;To find the JAX-RS version included in the Glassfish you just downloaded do something like the following:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;jar -xf glassfish3/glassfish/modules/javax.ws.rs-api.jar META-INF/MANIFEST.MF; grep Bundle-Version META-INF/MANIFEST.MF
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;jar -xf glassfish3/glassfish/modules/javax.ws.rs-api.jar META-INF/MANIFEST.MF; grep Bundle-Version META-INF/MANIFEST.MF
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;p&gt;(This will leave a META-INF directory behind you might want to clean up afterwards)&lt;/p&gt;
 
 &lt;p&gt;For the b63 version this yields:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Bundle-Version: 2.0.0.m12
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Bundle-Version: 2.0.0.m12
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;p&gt;The next step is to create a project to test things out. I am using the following archetype, but any other EE Web profile archetype should work similarly:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mvn archetype:generate \
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mvn archetype:generate \
   -DarchetypeGroupId=org.codehaus.mojo.archetypes \
   -DarchetypeArtifactId=webapp-javaee6 \
   -DgroupId=org.example \
   -DartifactId=test \
   -DinteractiveMode=false
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;p&gt;Now let’s edit the POM to pull in the JAX-RS 2.0-Version used by the Glassfish. First, add the proper repository.&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; &amp;lt;repository&amp;gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; &amp;lt;repository&amp;gt;
  &amp;lt;id&amp;gt;snapshot-repository.java.net&amp;lt;/id&amp;gt;
  &amp;lt;name&amp;gt;Java.net Snapshot Repository for Maven&amp;lt;/name&amp;gt;
  &amp;lt;url&amp;gt;https://maven.java.net/content/repositories/snapshots/&amp;lt;/url&amp;gt;
  &amp;lt;layout&amp;gt;default&amp;lt;/layout&amp;gt;
  &amp;lt;/repository&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;p&gt;Then add the dependency to the specific release (note that the version is not literally the same as the bundle version you extracted above):&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;lt;dependency&amp;gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;lt;dependency&amp;gt;
   &amp;lt;groupId&amp;gt;javax.ws.rs&amp;lt;/groupId&amp;gt;
   &amp;lt;artifactId&amp;gt;javax.ws.rs-api&amp;lt;/artifactId&amp;gt;
   &amp;lt;version&amp;gt;2.0-m12&amp;lt;/version&amp;gt;
   &amp;lt;scope&amp;gt;provided&amp;lt;/scope&amp;gt;
 &amp;lt;/dependency&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;p&gt;&lt;strong&gt;UPDATE&lt;/strong&gt;: It seems you have to make sure you include this dependency &lt;strong&gt;before&lt;/strong&gt; the dependency to the Java EE Web API. Otherwise, maven insists on trying to use the JAX-RS API version of the Java EE Web API.&lt;/p&gt;
 
@@ -823,8 +877,9 @@ context.setSecurityContext(new TokenSecurityContext(username, realname));
 
 &lt;p&gt;The final step will be to cd into your project folder and set up your IDE project. E.g. with Eclipse run&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mvn eclipse:eclipse
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mvn eclipse:eclipse
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;p&gt;and import as existing Maven project into Eclipse.&lt;/p&gt;
 
@@ -837,7 +892,7 @@ context.setSecurityContext(new TokenSecurityContext(username, realname));
 &lt;p&gt;&lt;strong&gt;UPDATE&lt;/strong&gt;: You can find the releases, including the apidoc jars &lt;a href=&quot;http://repo1.maven.org/maven2/javax/ws/rs/javax.ws.rs-api/&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
 
 </description>
-        <pubDate>Mon, 19 Nov 2012 00:00:00 +0100</pubDate>
+        <pubDate>Mon, 19 Nov 2012 00:00:00 +0000</pubDate>
         <link>/2012/11/getting-started-playing-around-with-jax-rs-2-0-in-an-ee-container</link>
         <guid isPermaLink="true">/2012/11/getting-started-playing-around-with-jax-rs-2-0-in-an-ee-container</guid>
         
@@ -881,7 +936,7 @@ context.setSecurityContext(new TokenSecurityContext(username, realname));
 &lt;/ul&gt;
 
 </description>
-        <pubDate>Tue, 13 Nov 2012 00:00:00 +0100</pubDate>
+        <pubDate>Tue, 13 Nov 2012 00:00:00 +0000</pubDate>
         <link>/2012/11/jax-rs-2-0-essential-bookmarks</link>
         <guid isPermaLink="true">/2012/11/jax-rs-2-0-essential-bookmarks</guid>
         
@@ -909,19 +964,20 @@ context.setSecurityContext(new TokenSecurityContext(username, realname));
 
 &lt;p&gt;First I created a project based on the archetype Arun uses:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mvn archetype:generate \
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mvn archetype:generate \
    -DarchetypeGroupId=org.codehaus.mojo.archetypes \
    -DarchetypeArtifactId=webapp-javaee6 \
    -DgroupId=net.jalg \
    -DartifactId=mvc \
    -DinteractiveMode=false
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;p&gt;and then added the neccessary repository and dependencies the way he describes. Because JAX-RS 2.0 and Jersey currently undergo some sort of last minute changes I have changed the Jersey dependencies to be on 2.0-SNAPSHOT to get the latest developments.&lt;/p&gt;
 
 &lt;p&gt;The templating support I have in mind would let me return any object from a JAX-RS resource method. In addition it would let me annotate the resource method to specify a template to use for constructing the representations. Like so:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;@Path(&quot;user/{userId}/account&quot;)
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;@Path(&quot;user/{userId}/account&quot;)
 public class Facade {
     @PathParam(&quot;userId&quot;) String userId;
  
@@ -933,25 +989,27 @@ public class Facade {
         return new Contract(&quot;123456&quot;, userId, &quot;new&quot;);
     }
 }
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;p&gt;The problem here is that the JAX-RS runtime will pick the MessageBodyWriter implementation based on the returned type. It will not, magically, invoke some sort of templating engine. So, how can we trick the runtime into choosing a different MessageBodyWriter? And how can we pass to that not only the returned object but also the path of the desired template?&lt;/p&gt;
 
 &lt;p&gt;Here the filter API comes in. We can use the @Template annotation to also act as a binding for a particular filter. This is done with the @NameBinding annotation from the new filter API:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;@NameBinding
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;@NameBinding
 @Target({ ElementType.TYPE, ElementType.METHOD })
 @Retention(value = RetentionPolicy.RUNTIME)
 public @interface Template {
   String value() default &quot;&quot;;
 }
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;p&gt;Now the runtime will invoke all filters annotated with @Template when our getContractDetails() method is called and we can work the magic in a filter.&lt;/p&gt;
 
 &lt;p&gt;What happens in the filter below is that we replace the response entity with a wrapper object that holds the template path and the original response entity. The template path we can extract from the annotation, the original response entity we extract from the response context.&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;@Provider
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;@Provider
 @Template
 public class EntityToModelAndViewWrapper implements ContainerResponseFilter {
  
@@ -971,11 +1029,12 @@ public class EntityToModelAndViewWrapper implements ContainerResponseFilter {
         }
     }
 }
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;p&gt;By changing the type of the response entity, we gain control over the MessageBodyWriter selection. And the runtime will now invoke the MessageBodyWriter we have provided for ModelAndView instances:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;@Provider
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;@Provider
 ...
 public class ModelToViewMBR implements MessageBodyWriter&amp;lt;ModelAndView&amp;gt; {
   ...
@@ -990,7 +1049,8 @@ public class ModelToViewMBR implements MessageBodyWriter&amp;lt;ModelAndView&amp
     }
     ...
 }
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
 &lt;p&gt;In the writeTo() method we make the original response entity available to a templating engine under the name ‘entity’ and invoke the merge of template and entity.&lt;/p&gt;
 
@@ -999,111 +1059,9 @@ public class ModelToViewMBR implements MessageBodyWriter&amp;lt;ModelAndView&amp
 &lt;p&gt;In addition to the response entity it should not be too hard to make available to the template engine all the managed beans of the container runtime’s current session (the request). That way one would have the full power of EJB 3.1 and CDI at one’s disposal.&lt;/p&gt;
 
 </description>
-        <pubDate>Mon, 08 Oct 2012 00:00:00 +0200</pubDate>
+        <pubDate>Mon, 08 Oct 2012 00:00:00 +0000</pubDate>
         <link>/2012/10/jax-rs-2-0-mvc</link>
         <guid isPermaLink="true">/2012/10/jax-rs-2-0-mvc</guid>
-        
-        
-      </item>
-    
-      <item>
-        <title>Declarative Cache Control with JAX-RS 2.0</title>
-        <description>
-&lt;p&gt;&lt;strong&gt;UPDATE&lt;/strong&gt;: The Maven/IDE setup below turned out not to work properly in all cases. Try &lt;a href=&quot;http://jalg.net/2012/11/getting-started-playing-around-with-jax-rs-2-0-in-an-ee-container/&quot;&gt;this&lt;/a&gt; for better results.&lt;/p&gt;
-
-&lt;p&gt;The final release of JAX-RS 2.0 is nearing. Time for a closer look at the new features.&lt;/p&gt;
-
-&lt;p&gt;As JAX-RS 2.0 isn’t yet part of any standard release, some up front work is inevitable. Fortunately, &lt;a href=&quot;http://marek.potociar.net&quot;&gt;Marek&lt;/a&gt; has some &lt;a href=&quot;http://marek.potociar.net/2012/08/10/jersey-2-0-m06-has-been-released/&quot;&gt;excellent write ups&lt;/a&gt; to get us started using the &lt;a href=&quot;http://jax-rs-spec.java.net&quot;&gt;JAX-RS&lt;/a&gt; 2.0 reference implementation &lt;a href=&quot;http://jersey.java.net/jersey20.html&quot;&gt;Jersey 2&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;I am currently working with Eclipse a lot and here is how you quick-start a JAX-RS 2.0 project with Jersey 2:&lt;/p&gt;
-
-&lt;p&gt;In Eclipse, choose New -&amp;gt; Other -&amp;gt; Maven Project and create an archetype-based project. For this you first need to add the archetype Marek is mentioning in his post (I am using the Grizzly version here):&lt;/p&gt;
-
-&lt;p&gt;[caption id=”attachment_132” align=”alignnone” width=”614”]&lt;a href=&quot;http://jalg.net/wp-content/uploads/2012/09/jersey2archetype.png&quot;&gt;&lt;img src=&quot;http://jalg.net/wp-content/uploads/2012/09/jersey2archetype.png&quot; alt=&quot;&quot; /&gt;&lt;/a&gt;[/caption]&lt;/p&gt;
-
-&lt;p&gt;Then, create a project with that archetype:&lt;/p&gt;
-
-&lt;p&gt;[caption id=”attachment_135” align=”alignnone” width=”598”]&lt;a href=&quot;http://jalg.net/wp-content/uploads/2012/09/selectArchetype.png&quot;&gt;&lt;img src=&quot;http://jalg.net/wp-content/uploads/2012/09/selectArchetype.png&quot; alt=&quot;&quot; /&gt;&lt;/a&gt;[/caption]&lt;/p&gt;
-
-&lt;p&gt;Now you are all set and ready to explore JAX-RS 2.0.&lt;/p&gt;
-
-&lt;p&gt;Making JAX-RS responses cacheable isn’t exactly elegant in 1.1. If you want caching, you need to return a Response object and manually add Cache-Control headers to it. Far from ideal. (And it gets even uglier if you try to unit test your resource classes just to find out that you cannot do so if you return Response objects because the idiomatic invocation of build() demands a JAX-RS runtime).&lt;/p&gt;
-
-&lt;p&gt;What, if we instead could annotate a resource method to decorate the response with a Cache-Control header? Turns out, that this is straight forward in JAX-RS 2.0 thanks to the new Filter API.&lt;/p&gt;
-
-&lt;p&gt;All we need is a filter and an annotation to selectively bind that filter to any resource method of our liking. Here is the annotation which takes a Cache-Control header value as an argument:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;code&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;package&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;net&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;jalg&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ccdecor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;java&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;lang&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;annotation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.*;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;javax&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ws&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NameBinding&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;p&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NameBinding&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Target&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ElementType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;TYPE&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ElementType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;METHOD&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Retention&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;value&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;RetentionPolicy&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;RUNTIME&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;interface&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Cacheable&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;default&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;public, must-revalidate&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; 
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;code&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;The new @NameBinding annotation tells a JAX-RS 2.0 runtime that our annotation should be used to match filters to resource methods.&lt;/p&gt;
-
-&lt;p&gt;Here is the filter:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;code&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;package&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;net&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;jalg&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ccdecor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;java&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;io&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;IOException&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;java&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;lang&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;annotation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Annotation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;javax&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ws&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;container&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ContainerRequestContext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;javax&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ws&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;container&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ContainerResponseContext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;javax&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ws&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;container&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ContainerResponseFilter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;javax&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ws&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Provider&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;p&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Provider&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Cacheable&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CacheControlDecorator&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;implements&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ContainerResponseFilter&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-
-  &lt;span class=&quot;p&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Override&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;filter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ContainerRequestContext&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;requestContext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;ContainerResponseContext&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;responseContext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;throws&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;IOException&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Annotation&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;responseContext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getEntityAnnotations&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-      &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;annotationType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Cacheable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;class&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cc&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Cacheable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;responseContext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getHeaders&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Cache-Control&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-      &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;code&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Don’t worry too much about that code for a minute but look at how the filter can be bound to a resource method:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;lt;code&amp;gt;
-  @GET
-  @Cacheable(cc=&quot;public, maxAge=3600&quot;)
-  @Produces(MediaType.TEXT_PLAIN)
-  public String getIt() {
-    return &quot;Got it!&quot;;
-  }
-&amp;lt;/code&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;The binding is achieved using our @Cacheable annotation.&lt;/p&gt;
-
-&lt;p&gt;Using annotation arguments it is possible to pass usage information to the filter. The annotations of the resource method are available in the filter by way of the getEntityAnnotations() method of the passed ContainerResponseContext argument (see above).&lt;/p&gt;
-
-&lt;p&gt;We just need to extract the cache control information from the annotation and add the Cache-Control header to the response.&lt;/p&gt;
-
-&lt;p&gt;You can download the example project from &lt;a href=&quot;https://github.com/algermissen/cache-control-decorator&quot;&gt;github&lt;/a&gt;.&lt;/p&gt;
-
-</description>
-        <pubDate>Mon, 24 Sep 2012 00:00:00 +0200</pubDate>
-        <link>/2012/09/declarative-cache-control-with-jax-rs-2-0</link>
-        <guid isPermaLink="true">/2012/09/declarative-cache-control-with-jax-rs-2-0</guid>
         
         
       </item>

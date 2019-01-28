@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Web Services with Rust Part 1: Exploring Hyper</title>
+  <title>Go Bookmarks</title>
   <meta name="description" content="">
   <link rel="shortcut icon" href="/favicon.ico">
   <link rel="stylesheet" href="/css/foundation.css">
@@ -36,7 +36,7 @@
   <script src="/javascripts/imagesloaded.pkgd.min.js" type="text/javascript"></script>
   <script src="/javascripts/slick.min.js" type="text/javascript"></script>
   <script src="/javascripts/json2.js" type="text/javascript"></script>
-  <link rel="canonical" href="/2017/04/web-services-with-rust-part-1-exploring-hyper">
+  <link rel="canonical" href="/2018/01/go-bookmarks">
   <link rel="alternate" type="application/rss+xml" title="Jan Algermissen - Solutions Engineering" href="/feed.xml" />
 </head>
 
@@ -137,219 +137,29 @@
       </div>
       <div class='content'>
         <p class='info'>
-          <span>April 13, 2017</span>
+          <span>January 28, 2018</span>
         </p>
-        <h3>Web Services with Rust Part 1: Exploring Hyper</h3>
+        <h3>Go Bookmarks</h3>
         
-<p>A while ago I have turned my head towards <a href="http://rustlang.org">Rust</a> for
-developing Web Services. Rust’s design in my opinion hits a sweet spot between
-ease of development and runtime efficiency, especially doing away with a
-garbage collector.</p>
+<p>This is my collection of references I found especially useful to understand
+idiomatic solutions to various design problems and Go internals.</p>
 
-<p>Recently sophisticated support for <a href="https://tokio.rs/docs/getting-started/futures/">future-based</a>,
-<a href="https://tokio.rs/docs/getting-started/reactor/">async</a>,
-and <a href="https://tokio.rs/docs/getting-started/streams-and-sinks/">reactive</a>
-programming has been added to the Rust ecosystem; putting together in the
-<a href="https://tokio.rs">Tokio project</a> some of the most
-<a href="https://aturon.github.io/blog/2016/08/11/futures/">intriguing</a> designs I
-have come across so far.</p>
+<h1 id="application-architecture">Application Architecture</h1>
 
-<p>In addition, the <a href="https://github.com/hyperium/hyper">hyper Web server</a> is
-being refactored to natively work with the
-async and reactive mechanics provided by Tokio. This work is very closely aligned with
-the work on Tokio, making for a very promising HTTP toolkit roadmap.</p>
+<p>After digging through the considarable amount of articles applying the
+topic of Clean Architecture to Go I found this to be the most compelling
+one (and actually one of the few in the spirit of the original idea, AFAIK):</p>
 
-<p>All in all, this feels a lot like the more lightweight, less bloated alternative to
-all I like about Akka-HTTP, that I have been hoping for for quite some time now.</p>
+<p><a href="https://proandroiddev.com/clean-architecture-data-flow-dependency-rule-615ffdd79e29">Clean Architecture Guide (with tested examples): Data Flow != Dependency Rule</a></p>
 
-<p>As sugar on top there are several very interesting developments in
-related topics, such as
-<a href="https://github.com/crossbeam-rs/crossbeam">lock free data structures</a>
-(also see <a href="https://aturon.github.io/blog/2015/08/27/epoch/">Lock-freedom without garbage collection</a>)
-and <a href="https://github.com/carllerche/kabuki">Actors</a>. I think there are lots of
-opportunities here for Web programming in constrained environments or for reducing
-resource consumption in the micro services world to avoid micro services
-eating up macro Euros of cloud computing budgets.</p>
+<h1 id="error-handling">Error Handling</h1>
 
-<p>In this series of blog postings we’ll explore how to build Web services with
-hyper, focusing primarily on non functional aspects such as using thread pools with
-Tokio and hyper, sharing state across requests, or running background activities.
-I think that while Rust forces you to be very close to many details of async and
-multi threaded programming it and its existing and upcoming libraries make up for
-that with quite gentle programming abstractions. Personally, I am willing to
-deprive myself from JVM and go runtime magic, humbly embrace the resulting
-learning curve, and hopefully end up with, for one thing, smaller, faster, and cheaper
-deployables at sufficient development speed. Not to mention the joy of the
-functional programming style…</p>
+<p>When approaching error handling in Go it is in my opinion very easy to make
+the mistake and work against the original ideas of the language. The
+approach I found to be naturally aligned with what GHop deliberately provides
+for errors out of the box is described in:</p>
 
-<p>Having said that, let’s dive right in.</p>
-
-<h3 id="minimal-single-threaded-server-no-shared-state-no-io">Minimal, Single-Threaded Server (No Shared State, No I/O)</h3>
-
-<p>The most simple server to run based on hyper is a single-threaded server that
-does not involve shared state or blocking calls. We’ll just use the
-<a href="https://github.com/hyperium/hyper/blob/9605e860ff46aa7cf02d4e29624f887604cb6541/examples/server.rs">echo server example</a>
-from the hyper repository.</p>
-
-<p>To get some rough idea about the performance impact of our forthcoming modifications
-we’ll use a simple testing setup using a <a href="https://www.packet.net/bare-metal/servers/type-0/">4 core 2.4 GHz, 8GB RAM, 1Gbps bare
-metal server</a> offered by
-<a href="https://www.packet.net">Packet</a> and <a href="https://stormforger.com/">Stormforger</a> to
-put substantial stress on the Web servers. Test server and load generators are both
-located in continental Europe.</p>
-
-<p>The first test runs with the example server capped around 10k req/s without CPU
-exhaustion. I added some CPU-bound work to the server, simulating, for example,
-template rendering activities you might have in a real Web server and had to
-experiment with the load test settings to get to a point where I could drive the
-server to the limit in a controlled way.</p>
-
-<p>The <a href="https://github.com/algermissen/web-rust/blob/ecc430d558aa60dcf2fd2d7ee89f73b7395e5e9d/src/bin/minimal_single_threaded.rs#L26">work simulation</a>
-looks like this</p>
-
-<figure class="highlight"><pre><code class="language-rust" data-lang="rust"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13</pre></td><td class="code"><pre>    <span class="k">fn</span> <span class="nf">cpu_intensive_work</span><span class="p">()</span> <span class="k">-&gt;</span> <span class="nb">String</span> <span class="p">{</span>
-        <span class="k">let</span> <span class="k">mut</span> <span class="n">y</span> <span class="o">=</span> <span class="s">"X"</span><span class="nf">.to_string</span><span class="p">();</span>
-        <span class="k">for</span> <span class="n">x</span> <span class="n">in</span> <span class="mi">0</span><span class="err">..</span><span class="mi">100</span> <span class="p">{</span>
-            <span class="n">y</span> <span class="o">=</span> <span class="nd">format!</span><span class="p">(</span><span class="s">"Value: {}"</span><span class="p">,</span> <span class="n">x</span><span class="p">);</span>
-        <span class="p">}</span>
-        <span class="k">let</span> <span class="n">address</span> <span class="o">=</span> <span class="n">Address</span> <span class="p">{</span>
-            <span class="n">street</span><span class="p">:</span> <span class="s">"10 Downing Street"</span><span class="nf">.to_owned</span><span class="p">(),</span>
-            <span class="n">city</span><span class="p">:</span> <span class="n">y</span><span class="nf">.to_owned</span><span class="p">(),</span>
-        <span class="p">};</span>
-    
-        <span class="k">let</span> <span class="n">j</span> <span class="o">=</span> <span class="nn">serde_json</span><span class="p">::</span><span class="nf">to_string</span><span class="p">(</span><span class="o">&amp;</span><span class="n">address</span><span class="p">)</span><span class="nf">.unwrap</span><span class="p">();</span>
-        <span class="k">return</span> <span class="n">j</span><span class="p">;</span>
-<span class="p">}</span><span class="w">
-</span></pre></td></tr></tbody></table></code></pre></figure>
-
-<p>The server code I compiled as a statically linked executable for Linux (resulting
-in 4.5 MB).</p>
-
-<p>The Stormforger load test looks like this:</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>definition.setTarget("[host:port]");
-
-definition.setArrivalPhases([
-  {
-    duration: 60,
-    rate: 8.0,         // clients per second to launch
-    max_clients: 500,
-  },
-]);
-
-definition.setTestOptions({
-  cluster: { sizing: "small", },
-});
-
-definition.session("Load Test 1", function(session) {
-
-  session.forEver(function(context){
-    context.get("/data", { tag: "root" });
-
-  });
-});
-</code></pre>
-</div>
-
-<p>With that I was able to get about 6000 req/s out of the server before seeing
-the 99th percentile latency degrading. modifying the simulated work showed
-corresponding variations in req/s numbers so I am now sure I am not hitting
-any unwanted capacity limits.</p>
-
-<p>Now that we have a baseline, let’s see what happens if we involve multiple cores.</p>
-
-<h3 id="minimal-multi-threaded-server-no-shared-state-no-io">Minimal Multi-Threaded Server (No Shared State, No I/O)</h3>
-
-<p>Running our server on multiple threads (and thus potentially cores) requires
-some changes to the approach towards server startup. As there is not
-yet any shared state between the individual requests we can spawn the threads
-independently, reusing the listening socket for each handler thread. This can
-be done with a combination of the net2 and tokio-core libraries and under the
-hood uses the operating system’s SO_REUSEPORT feature.</p>
-
-<p>Here is the interesting part of the code:</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>fn serve(addr: &amp;SocketAddr, protocol: &amp;Http) {
-    let mut core = Core::new().unwrap();
-    let handle = core.handle();
-    let listener = net2::TcpBuilder::new_v4().unwrap()
-    .reuse_port(true).unwrap()
-    .bind(addr).unwrap()
-    .listen(128).unwrap();
-    let listener = TcpListener::from_listener(listener, addr, &amp;handle).unwrap();
-    core.run(listener.incoming().for_each(|(socket, addr)| {
-        protocol.bind_connection(&amp;handle, socket, addr, Echo);
-        Ok(())
-    })).unwrap();
-}
-
-fn start_server(nb_instances: usize, addr: &amp;str) {
-    let addr = addr.parse().unwrap();
-
-    let protocol = Arc::new(Http::new());
-    {
-        for _ in 0..nb_instances - 1 {
-            let protocol = protocol.clone();
-            thread::spawn(move || serve(&amp;addr, &amp;protocol));
-        }
-    }
-    serve(&amp;addr, &amp;protocol);
-}
-
-
-fn main() {
-    start_server(2, "0.0.0.0:8080");
-}
-</code></pre>
-</div>
-
-<p>Check out the <a href="https://github.com/algermissen/web-rust/blob/master/src/bin/ts1.rs">full source code</a>.</p>
-
-<p>This version (using two threads) should give us roughly twice the throughput - let’s run
-the same test setup and meanwhile take a look at the graph from the single-threaded setup.
-It nicely shows how at 6k req/s the latencies start to increase, thereby capping the
-throughput at these 6k.</p>
-
-<p><img src="/images/blog/1-Threaded.jpg" alt="Results 1-threaded" /></p>
-
-<p>There, the result came back from the 2-threaded setup and (relief :-) just what we
-expected: the server is now giving us about 11k req/s and I indeed saw exactly two
-CPUs being saturated. Nice!</p>
-
-<p><img src="/images/blog/2-Threaded.jpg" alt="Results 2-threaded" /></p>
-
-<p>Next up is a 4-threaded version (on the 4 core machine) - will we be able to double
-again?</p>
-
-<p>Yes, I am seeing the 4 cores being saturated and the latencies remain pretty ok
-until about 20k req/s.</p>
-
-<p><img src="/images/blog/4-Threaded.jpg" alt="Results 4-threaded" /></p>
-
-<p>Yes, the 99th percentile rises somewhere around 15k, but for this initial
-verification that what I am doing makes some sort of sense the result is
-sufficient.</p>
-
-<p>As a side note: 20k req/s at $ 0.05/h for the server gives roughly
-72 million req/h at 5 cents…</p>
-
-<p>So much for getting out feet wet with Rust, hyper and Tokio and for establishing
-a baseline for comparing future variations. Next up I’ll look into a variant
-running on a Tokio-managed thread pool and how to share state across
-request handling threads (for example for rate limiting, metrics collection,
-logging).</p>
+<p><a href="https://banzaicloud.com/blog/error-handling-go/">Error Handling Practices in Go</a></p>
 
 
       </div>

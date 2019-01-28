@@ -1,4 +1,4 @@
-jekyll build -d docs
+bundle exec jekyll build -d docs
 cp CNAME docs/CNAME
 
 

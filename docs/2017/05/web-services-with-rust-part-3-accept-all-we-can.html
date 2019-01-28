@@ -161,7 +161,7 @@ HTTP request headers  set by test configurations, so
 <code class="highlighter-rouge">"Connection": "close"</code> would trigger the load generator to open a new
 connection for every request.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>definition.session("OneRequestPerConnection", function(session) {
+<div class="highlighter-rouge"><pre class="highlight"><code>definition.session("OneRequestPerConnection", function(session) {
   session.forEver( function(session) {
     session.get("/data", {
       headers: {
@@ -170,7 +170,8 @@ connection for every request.</p>
     });
   });
 });
-</code></pre></div></div>
+</code></pre>
+</div>
 
 <p>I added some further metrics in order to compare the number of
 accepted and the number of done connections.</p>
@@ -197,7 +198,7 @@ own Tokio Core. Since we cannot send a Core to another thread we create the
 Core on the main thread, create a remote handle to it and send that to
 a new thread along with the actual server startup.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>fn start_server(n: usize, addr: &amp;'static str) {
+<div class="highlighter-rouge"><pre class="highlight"><code>fn start_server(n: usize, addr: &amp;'static str) {
 
   let mut workerCore = Core::new().unwrap();
   let remote = workerCore.remote();
@@ -212,13 +213,14 @@ a new thread along with the actual server startup.</p>
     }
     serve(&amp;remote, &amp;addr, &amp;protocol);
 });
-</code></pre></div></div>
+</code></pre>
+</div>
 
 <p>The request handler then creates a one-time channel and spawns a task on the
 remote handle. This taskperforms the CPU-bound work and sends the result through
 the channel to complete the response.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let f = match (req.method(), req.path()) {
+<div class="highlighter-rouge"><pre class="highlight"><code>let f = match (req.method(), req.path()) {
   (&amp;Get, "/data") =&gt; {
     let (tx, rx) = futures::sync::oneshot::channel::&lt;Self::Response&gt;();
     self.remote.spawn(|_| {
@@ -234,7 +236,8 @@ the channel to complete the response.</p>
     }).boxed())
   }
 }
-</code></pre></div></div>
+</code></pre>
+</div>
 
 <p>With this modification, the server can now do roughly 1300 requests per second
 until the 99th percentile of response latency starts to increase. At this point
@@ -265,86 +268,128 @@ on a different thread than more IO bound tasks.</p>
   <h3>Archives</h3>
 
 
-  <h1>2017</h1>
+  <h1></h1>
     <ul>
-      
-        <li><a href="/2017/09/hyper-client-and-self-signed-certs">hyper client and self-signed certs</a></li>
-      
-        <li><a href="/2017/05/web-services-with-rust-part-3-accept-all-we-can">Web Services with Rust Part 3: Accept All We Can</a></li>
-      
-        <li><a href="/2017/04/web-services-with-rust-part-2-baseline-revisited">Web Services with Rust Part 2: Baseline Revisited</a></li>
-      
-        <li><a href="/2017/04/web-services-with-rust-part-1-exploring-hyper">Web Services with Rust Part 1: Exploring Hyper</a></li>
       
     </ul>
 
-  <h1>2013</h1>
+  <h1></h1>
     <ul>
-      
-        <li><a href="/2013/05/using-iron-to-encapsulate-cookies">Using iron to Encapsulate Cookies</a></li>
-      
-        <li><a href="/2013/05/beyond-oauth">Beyond OAuth</a></li>
       
     </ul>
 
-  <h1>2012</h1>
+  <h1></h1>
     <ul>
-      
-        <li><a href="/2012/11/getting-started-playing-around-with-jax-rs-2-0-in-an-ee-container">Getting Started Playing Around with JAX-RS 2.0 in an EE Container</a></li>
-      
-        <li><a href="/2012/11/jax-rs-2-0-essential-bookmarks">JAX-RS 2.0 Essential Bookmarks</a></li>
-      
-        <li><a href="/2012/10/jax-rs-2-0-mvc">JAX-RS 2.0 MVC</a></li>
-      
-        <li><a href="/2012/09/declarative-cache-control-with-jax-rs-2-0">Declarative Cache Control with JAX-RS 2.0</a></li>
-      
-        <li><a href="/2012/05/death-by-jboss-6-classloading">Death by JBoss 6 Classloading</a></li>
       
     </ul>
 
-  <h1>2011</h1>
+  <h1></h1>
     <ul>
-      
-        <li><a href="/2011/11/esi-facelift">ESI Facelift</a></li>
-      
-        <li><a href="/2011/11/cool-uris-and-integration">Cool URIs and Integration</a></li>
       
     </ul>
 
-  <h1>2010</h1>
+  <h1></h1>
     <ul>
-      
-        <li><a href="/2010/11/agency-boundary">Agency Boundary</a></li>
-      
-        <li><a href="/2010/11/interesting-changes-must-surface">Interesting Changes *Must* Surface</a></li>
-      
-        <li><a href="/2010/10/generic-vs-specific-media-types-and-evolution">Generic vs. Specific Media Types and Evolution</a></li>
-      
-        <li><a href="/2010/09/spotted-alternates-header-in-the-wild">Spotted Alternates Header in the Wild</a></li>
-      
-        <li><a href="/2010/08/put-and-content-location">PUT and Content-Location</a></li>
       
     </ul>
 
-  <h1>2005</h1>
+  <h1></h1>
     <ul>
-      
-        <li><a href="/2005/10/pretending-that-the-network-isnt-there">Pretending that the network isn't there....</a></li>
-      
-        <li><a href="/2005/09/the-fallacy-of-business-objects">The Fallacy of Business Objects</a></li>
-      
-        <li><a href="/2005/09/dont-assume-a-closed-world">Don't Assume a Closed World</a></li>
-      
-        <li><a href="/2005/09/don-knuth-vs-w3c-validator">Don Knuth vs. W3C Validator</a></li>
-      
-        <li><a href="/2005/06/is-fowler-a-restafarian">Is Fowler a RESTafarian?</a></li>
       
     </ul>
 
-  <h1>2003</h1>
+  <h1></h1>
     <ul>
       
-        <li><a href="/2003/04/building-web-services">Building Web Services</a></li>
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
       
     </ul>
 
@@ -397,6 +442,8 @@ on a different thread than more IO bound tasks.</p>
       <div class='links'>
         <h4>Recent posts</h4>
         <ul>
+          
+            <li><a href="/2018/01/go-bookmarks">Go Bookmarks</a></li>
           
             <li><a href="/2017/09/hyper-client-and-self-signed-certs">hyper client and self-signed certs</a></li>
           
