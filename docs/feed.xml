@@ -6,8 +6,8 @@
 </description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 28 Jan 2019 09:14:18 +0000</pubDate>
-    <lastBuildDate>Mon, 28 Jan 2019 09:14:18 +0000</lastBuildDate>
+    <pubDate>Wed, 30 Jan 2019 07:50:58 +0000</pubDate>
+    <lastBuildDate>Wed, 30 Jan 2019 07:50:58 +0000</lastBuildDate>
     <generator>Jekyll v3.3.0</generator>
     
       <item>
@@ -16,7 +16,7 @@
 &lt;p&gt;This is my collection of references I found especially useful to understand
 idiomatic solutions to various design problems and Go internals.&lt;/p&gt;
 
-&lt;h1 id=&quot;application-architecture&quot;&gt;Application Architecture&lt;/h1&gt;
+&lt;h2 id=&quot;application-architecture&quot;&gt;Application Architecture&lt;/h2&gt;
 
 &lt;p&gt;After digging through the considarable amount of articles applying the
 topic of Clean Architecture to Go I found this to be the most compelling
@@ -24,7 +24,7 @@ one (and actually one of the few in the spirit of the original idea, AFAIK):&lt;
 
 &lt;p&gt;&lt;a href=&quot;https://proandroiddev.com/clean-architecture-data-flow-dependency-rule-615ffdd79e29&quot;&gt;Clean Architecture Guide (with tested examples): Data Flow != Dependency Rule&lt;/a&gt;&lt;/p&gt;
 
-&lt;h1 id=&quot;error-handling&quot;&gt;Error Handling&lt;/h1&gt;
+&lt;h2 id=&quot;error-handling&quot;&gt;Error Handling&lt;/h2&gt;
 
 &lt;p&gt;When approaching error handling in Go it is in my opinion very easy to make
 the mistake and work against the original ideas of the language. The
@@ -32,6 +32,22 @@ approach I found to be naturally aligned with what GHop deliberately provides
 for errors out of the box is described in:&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&quot;https://banzaicloud.com/blog/error-handling-go/&quot;&gt;Error Handling Practices in Go&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;go-gotchas&quot;&gt;Go Gotchas&lt;/h2&gt;
+
+&lt;p&gt;These links address subtle issues about the Go language, that do not appear
+obvious at fiorst sight:&lt;/p&gt;
+
+&lt;p&gt;Go has a potential for memory leaks, described in this section
+&lt;a href=&quot;https://github.com/golang/go/wiki/SliceTricks#delete-without-preserving-order&quot;&gt;Delete without preserving order&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;other-reference-lists&quot;&gt;Other Reference Lists&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;https://github.com/golang/go/wiki/Articles&lt;/li&gt;
+  &lt;li&gt;https://awesome-go.com&lt;/li&gt;
+  &lt;li&gt;&lt;/li&gt;
+&lt;/ul&gt;
 
 </description>
         <pubDate>Sun, 28 Jan 2018 00:00:00 +0000</pubDate>

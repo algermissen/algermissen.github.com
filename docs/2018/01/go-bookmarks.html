@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <title>Go Bookmarks</title>
-  <meta name="description" content="">
+  <meta name="description" content="This is my collection of references I found especially useful to understand idiomatic solutions to various design problems and Go internals.">
   <link rel="shortcut icon" href="/favicon.ico">
   <link rel="stylesheet" href="/css/foundation.css">
   <link rel="stylesheet" href="/css/style.css">
@@ -144,7 +144,7 @@
 <p>This is my collection of references I found especially useful to understand
 idiomatic solutions to various design problems and Go internals.</p>
 
-<h1 id="application-architecture">Application Architecture</h1>
+<h2 id="application-architecture">Application Architecture</h2>
 
 <p>After digging through the considarable amount of articles applying the
 topic of Clean Architecture to Go I found this to be the most compelling
@@ -152,7 +152,7 @@ one (and actually one of the few in the spirit of the original idea, AFAIK):</p>
 
 <p><a href="https://proandroiddev.com/clean-architecture-data-flow-dependency-rule-615ffdd79e29">Clean Architecture Guide (with tested examples): Data Flow != Dependency Rule</a></p>
 
-<h1 id="error-handling">Error Handling</h1>
+<h2 id="error-handling">Error Handling</h2>
 
 <p>When approaching error handling in Go it is in my opinion very easy to make
 the mistake and work against the original ideas of the language. The
@@ -160,6 +160,22 @@ approach I found to be naturally aligned with what GHop deliberately provides
 for errors out of the box is described in:</p>
 
 <p><a href="https://banzaicloud.com/blog/error-handling-go/">Error Handling Practices in Go</a></p>
+
+<h2 id="go-gotchas">Go Gotchas</h2>
+
+<p>These links address subtle issues about the Go language, that do not appear
+obvious at fiorst sight:</p>
+
+<p>Go has a potential for memory leaks, described in this section
+<a href="https://github.com/golang/go/wiki/SliceTricks#delete-without-preserving-order">Delete without preserving order</a></p>
+
+<h2 id="other-reference-lists">Other Reference Lists</h2>
+
+<ul>
+  <li>https://github.com/golang/go/wiki/Articles</li>
+  <li>https://awesome-go.com</li>
+  <li></li>
+</ul>
 
 
       </div>
