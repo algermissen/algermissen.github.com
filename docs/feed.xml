@@ -6,8 +6,8 @@
 </description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 30 Jan 2019 07:50:58 +0000</pubDate>
-    <lastBuildDate>Wed, 30 Jan 2019 07:50:58 +0000</lastBuildDate>
+    <pubDate>Wed, 06 Feb 2019 06:48:04 +0000</pubDate>
+    <lastBuildDate>Wed, 06 Feb 2019 06:48:04 +0000</lastBuildDate>
     <generator>Jekyll v3.3.0</generator>
     
       <item>
@@ -32,6 +32,16 @@ approach I found to be naturally aligned with what GHop deliberately provides
 for errors out of the box is described in:&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&quot;https://banzaicloud.com/blog/error-handling-go/&quot;&gt;Error Handling Practices in Go&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;http-handler-functions&quot;&gt;HTTP Handler Functions&lt;/h2&gt;
+
+&lt;p&gt;At the end of this blog post a proper technique is show how to pass data from
+one handler to another in an HTTP handler ‘chain’. In my opinion, using a
+closure approach and create the actual handling function on the fly and closing
+over the pass-id data is far superior than any other approach (eg writing your own
+handlers signature or using request context values):&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.calhoun.io/pitfalls-of-context-values-and-how-to-avoid-or-mitigate-them/&quot;&gt;Pitfalls of context values and how to avoid or mitigate them in Go&lt;/a&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;go-gotchas&quot;&gt;Go Gotchas&lt;/h2&gt;
 

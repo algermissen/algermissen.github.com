@@ -28,6 +28,18 @@ for errors out of the box is described in:
 [Error Handling Practices in Go](https://banzaicloud.com/blog/error-handling-go/)
 
 
+## HTTP Handler Functions
+
+At the end of this blog post a proper technique is show how to pass data from
+one handler to another in an HTTP handler 'chain'. In my opinion, using a
+closure approach and create the actual handling function on the fly and closing
+over the pass-id data is far superior than any other approach (eg writing your own
+handlers signature or using request context values):
+
+[Pitfalls of context values and how to avoid or mitigate them in Go](https://www.calhoun.io/pitfalls-of-context-values-and-how-to-avoid-or-mitigate-them/)
+
+
+
 ## Go Gotchas
 
 These links address subtle issues about the Go language, that do not appear
