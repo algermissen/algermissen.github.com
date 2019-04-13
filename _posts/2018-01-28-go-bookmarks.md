@@ -39,6 +39,17 @@ handlers signature or using request context values):
 [Pitfalls of context values and how to avoid or mitigate them in Go](https://www.calhoun.io/pitfalls-of-context-values-and-how-to-avoid-or-mitigate-them/)
 
 
+## Testing
+
+This talk discusses useful strategies for testing that mostly present in Go's standard library but are
+are not well known. 
+["Advanced Testing with Go by Mitchell Hashimoto"](https://m.youtube.com/watch?v=yszygk1cpEc)
+
+
+TODO
+["xx"](https://talks.golang.org/2014/testing.slide#1)
+
+
 
 ## Go Gotchas
 
@@ -53,6 +64,6 @@ Go has a potential for memory leaks, described in this section
 
 - https://github.com/golang/go/wiki/Articles
 - https://awesome-go.com
-- 
+
 
 
