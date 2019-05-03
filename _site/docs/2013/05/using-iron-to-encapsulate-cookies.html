@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Using iron to Encapsulate Cookies</title>
+  <meta name="description" content="">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="stylesheet" href="/css/foundation.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/fontello.css">
+  <link rel="stylesheet" href="/css/font-awesome.css">
+  <link rel="stylesheet" href="/css/syntax.css">
+  <script src="/javascripts/libs.js" type="text/javascript"></script>
+  <script>
+    // terrificjs bootstrap
+    (function($) {
+        $(document).ready(function() {
+            var $page = $('body');
+            var config = {
+              dependencyPath: {
+                plugin: 'javascripts/'
+              }
+            }
+            var application = new Tc.Application($page, config);
+            application.registerModules();
+            application.start();
+        });
+    })(Tc.$);
+  </script>
+  <link href="http://fonts.googleapis.com/css?family=Raleway:400,700,300" media="screen" rel="stylesheet" type="text/css" />
+  <script src="/javascripts/masonry.pkgd.js" type="text/javascript"></script>
+  <script src="/javascripts/imagesloaded.pkgd.min.js" type="text/javascript"></script>
+  <script src="/javascripts/slick.min.js" type="text/javascript"></script>
+  <script src="/javascripts/json2.js" type="text/javascript"></script>
+  <link rel="canonical" href="/2013/05/using-iron-to-encapsulate-cookies">
+  <link rel="alternate" type="application/rss+xml" title="Jan Algermissen - Solutions Engineering" href="/feed.xml" />
+</head>
+
+
+  <body>
+
+    <div class='contain-to-grid sticky'>
+  <nav class='top-bar' data-options='sticky_on: large' data-topbar=''>
+    <ul class='title-area'>
+      <li class='name'>
+        <h1>
+            <span>
+          <a href='/index.html'>
+            <img alt="" src="/images/logo_text.png" />
+          </a>
+            </span>
+        </h1>
+      </li>
+    </ul>
+    <section class='top-bar-section'>
+      <ul class="right">
+        
+          
+
+          
+            <li class="">
+              <a href="/#soleng">Solutions Engineering</a>
+            </li>
+          
+        
+          
+
+          
+            <li class="">
+              <a href="/#cloud">Cloud</a>
+            </li>
+          
+        
+          
+
+          
+            <li class="">
+              <a href="/#sre">Site Reliability Engineering</a>
+            </li>
+          
+        
+          
+
+          
+            <li class="">
+              <a href="/#dev">Development</a>
+            </li>
+          
+        
+          
+
+          
+            <li class="">
+              <a href="/blog/">Blog</a>
+            </li>
+          
+        
+      </ul>
+    </section>
+  </nav>
+</div>
+
+
+    <div id='main' role='main'>
+      <div class='full parallax bg'>
+  <div class='row'>
+    <div class='large-12 columns'>
+      <div class="mod modSectionHeader big">
+  <div class="special-title centered-text">
+    <h2 style="color: #fff;">Applying the Web to Enterprise IT</h2>
+  </div>
+  
+    <h3 class='centered-text' style='color: #fff'></h3>
+  
+</div>
+    </div>
+  </div>
+  <div class='four spacing'></div>
+</div>
+
+
+<div class='full' style='background: #f5f5f5'>
+  <div class='row'>
+    <div class='large-9 columns'>
+
+      <div class='row'>
+</div>
+<div class='row'>
+  <div class='large-12 columns'>
+    <div class='mod modBlogPost big'>
+      <div class='images'>
+        
+      </div>
+      <div class='content'>
+        <p class='info'>
+          <span>May 29, 2013</span>
+        </p>
+        <h3>Using iron to Encapsulate Cookies</h3>
+        
+<p><a href="http://hueniverse.com">Eran Hammer</a> has recently created <a href="https://github.com/hueniverse/iron">iron</a>, a cryptographic procedure and tool to seal arbitrary data in a way so that it cannot be read and also cannot be changed without being noticed.</p>
+
+<p>Besides its intended use in combination with <a href="https://github.com/hueniverse/oz">Oz</a> it can also be used in other scenarios. One of them being encapsulated HTTP cookies. While it is in no way a new thing to pass state to Web clients in encrypted form so they cannot read it or tamper with it, doing it right is relatively hard. Hence, it is great to now have a quasi-standard and sound <a href="https://github.com/hueniverse/iron#introduction">definition</a>.</p>
+
+<p><strong>Update</strong>: Looking something up in <a href="https://twitter.com/postwait">Theo Schlossnagle</a>’s <a href="http://omniti.com/writes/scalable-internet-architectures"><em>Building Scalable Internet Architectures</em></a> I found a passage <em>Addressing Security and Integrity</em> in chapter 7, p.130 that resembles the topic of this post.</p>
+
+<p>To bring iron into the Java world, I have created <a href="https://github.com/algermissen/jiron">jiron</a> and an <a href="https://github.com/algermissen/iron-cookie">example project</a> to illustrate how to use iron for HTTP cookie authentication with encapsulated tokens.</p>
+
+<p>First, let’s see, how to use jiron to seal and unseal data:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>import net.jalg.jiron.Jiron;
+
+String data = "Some secret stuff we want protected";
+
+String sealed = Jiron.seal(data, "sealing-password",
+                                        Jiron.DEFAULT_ENCRYPTION_OPTIONS,
+                                        Jiron.DEFAULT_INTEGRITY_OPTIONS);
+   
+String unsealed = Jiron.unseal(sealed, "sealing-password",
+					Jiron.DEFAULT_ENCRYPTION_OPTIONS,
+					Jiron.DEFAULT_INTEGRITY_OPTIONS);
+</code></pre>
+</div>
+
+<p>The String <code class="highlighter-rouge">sealed</code> is what you can pass around and be sure that nobody can read or modify it, unless in possession of the sealing password.</p>
+
+<p>Suppose you have a Web site that employs cookie-based authentication and suppose you have some data you want to store in that cookie directly so you do not have to go to a database shared by all server instances for looking up that data. For example the user’s login, her real name and information when the cookie expires and re-authentication is enforced.</p>
+
+<p>Initially, a user not in possession of the cookie will be redirected to a login form and the cookie will be issued upon submission of valid credentials. Here is an excerpt of the <a href="https://github.com/algermissen/iron-cookie/blob/master/src/main/java/net/jalg/ironcookie/LoginResource.java">form processing JAX-RS resource</a>:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>String data = login + "|" + expires + "|" + realname;
+String cookieValue = Jiron.seal(data, ApplicationConfig.ENCRYPTION_KEY,
+					Jiron.DEFAULT_ENCRYPTION_OPTIONS,
+					Jiron.DEFAULT_INTEGRITY_OPTIONS);
+
+NewCookie c = new NewCookie(AuthFilter.COOKIE_NAME, cookieValue);
+return Response.seeOther(redirectUri).cookie(c).build();
+</code></pre>
+</div>
+
+<p>In the HTTP response the cookie will look something like (line breaks added for clarity):</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Set-Cookie:authtoken=Fe26.1**7A6A689DEC9563773B1264CF4CC585CFC9CF84403EE9143650D2EC2EE&lt;br&gt;&lt;/br&gt;24E36A3*k9yW1ZlC5Tr1a5o2Os_QMQ*sxZkQJfHsfyZE_0DI3ugHKdQ3IXwy1jySoz7GrKiTWU*9C58B956A11&lt;br&gt;&lt;/br&gt;81D1F1E3A1A7A1B67D2CF7738B0BFB16C5EB4B381151CAEEC4C6C*3PxSsg5aThLGvU2e8ItXfep-hpMw5x96&lt;br&gt;&lt;/br&gt;L_PbelhnU84;Version=1
+</code></pre>
+</div>
+
+<p>To protect <a href="https://github.com/algermissen/iron-cookie/blob/master/src/main/java/net/jalg/ironcookie/DashboardResource.java">a resource class</a> by enforcing cookie auth, we bind a JAX-RS 2.0 filter to that class using a new <a href="https://github.com/algermissen/iron-cookie/blob/master/src/main/java/net/jalg/ironcookie/TokenAuthProtected.java">annotation</a>:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>//...
+@TokenAuthProtected
+public String getDashboard(@Context SecurityContext sc) { ... }
+</code></pre>
+</div>
+
+<p>The <a href="https://github.com/algermissen/iron-cookie/blob/master/src/main/java/net/jalg/ironcookie/AuthFilter.java">auth enforcing filter class</a> extracts the cookie, checks expiration time and puts the data contained in the cookie in a place where it can be accessed by the resource class.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Cookie cookie = context.getCookies().get(COOKIE_NAME);
+// Redirect to form if no cookie
+String data = Jiron.unseal(cookie.getValue(), ApplicationConfig.ENCRYPTION_KEY,
+					Jiron.DEFAULT_ENCRYPTION_OPTIONS,
+					Jiron.DEFAULT_INTEGRITY_OPTIONS);
+// ...
+String[] fields = data.split("\\|");
+final String username = fields[0];
+final long expires = Long.parseLong(fields[1]);
+final String realname = fields[2];
+// ...
+if (now &gt; expires) {
+  context.abortWith(Response.temporaryRedirect(loginFormUri).build());
+  return;
+}
+
+context.setSecurityContext(new TokenSecurityContext(username, realname));
+</code></pre>
+</div>
+
+<p>Using the security context and a custom Principal, the resource class is provided access to the user’s login and realname.</p>
+
+<p>(There is currently discussion in the JAX-RS 2 expert group to enable passing information from filters to resource classes using properties on the filter chain. That would be the better solution than the SecurityContext/Principal ‘hack’).</p>
+
+<p>Please have a look at the source code for the code details.</p>
+
+
+      </div>
+    </div>
+    <div class='two spacing'></div>
+  </div>
+</div>
+
+
+      
+
+
+      <div class='four spacing'></div>
+    </div>
+    <div class='large-3 columns' id='sidebar'>
+      <div class='links'>
+  <h3>Archives</h3>
+
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+</div>
+
+      <div class='four spacing'></div>
+    </div>
+  </div>
+</div>
+
+    </div>
+
+    <div id='footer'>
+  <div class='three spacing'></div>
+  <div class='row'>
+    
+    <div class='large-3 medium-3 columns'>
+        <!--
+      <h1>
+        <a href='index.html'>
+          <img alt="" src="/images/logo-grey.png" />
+        </a>
+      </h1>
+        -->
+      <p>©Jan Algermissen<br />Solutions Engineering 2018</p>
+      <p>
+      Background SVG customized at svgbackgrounds.com.
+      </p>
+      <!--
+      <div class='spacing'></div>
+      -->
+    </div>
+    <!--
+    <div class='large-3 medium-3 columns'>
+      <div class='spacing'></div>
+      <div class='links'>
+        <h4>Some pages</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="portfolio.html">View some works here</a></li>
+          <li><a href="blog.html">Follow our blog</a></li>
+          <li><a href="contact.html">Contact us</a></li>
+          <li><a href="services.html">Our services</a></li>
+        </ul>
+      </div>
+      <div class='spacing'></div>
+    </div>
+    <div class='large-3 medium-3 columns'>
+      <div class='spacing'></div>
+      <div class='links'>
+        <h4>Recent posts</h4>
+        <ul>
+          
+            <li><a href="/2018/01/go-bookmarks">Go Bookmarks</a></li>
+          
+            <li><a href="/2017/09/hyper-client-and-self-signed-certs">hyper client and self-signed certs</a></li>
+          
+            <li><a href="/2017/05/web-services-with-rust-part-3-accept-all-we-can">Web Services with Rust Part 3: Accept All We Can</a></li>
+          
+            <li><a href="/2017/04/web-services-with-rust-part-2-baseline-revisited">Web Services with Rust Part 2: Baseline Revisited</a></li>
+          
+            <li><a href="/2017/04/web-services-with-rust-part-1-exploring-hyper">Web Services with Rust Part 1: Exploring Hyper</a></li>
+          
+            <li><a href="/2013/05/using-iron-to-encapsulate-cookies">Using iron to Encapsulate Cookies</a></li>
+          
+            <li><a href="/2013/05/beyond-oauth">Beyond OAuth</a></li>
+          
+            <li><a href="/2012/11/getting-started-playing-around-with-jax-rs-2-0-in-an-ee-container">Getting Started Playing Around with JAX-RS 2.0 in an EE Container</a></li>
+          
+            <li><a href="/2012/11/jax-rs-2-0-essential-bookmarks">JAX-RS 2.0 Essential Bookmarks</a></li>
+          
+            <li><a href="/2012/10/jax-rs-2-0-mvc">JAX-RS 2.0 MVC</a></li>
+          
+            <li><a href="/2012/09/declarative-cache-control-with-jax-rs-2-0">Declarative Cache Control with JAX-RS 2.0</a></li>
+          
+            <li><a href="/2012/05/death-by-jboss-6-classloading">Death by JBoss 6 Classloading</a></li>
+          
+            <li><a href="/2011/11/esi-facelift">ESI Facelift</a></li>
+          
+            <li><a href="/2011/11/cool-uris-and-integration">Cool URIs and Integration</a></li>
+          
+            <li><a href="/2010/11/agency-boundary">Agency Boundary</a></li>
+          
+            <li><a href="/2010/11/interesting-changes-must-surface">Interesting Changes *Must* Surface</a></li>
+          
+            <li><a href="/2010/10/generic-vs-specific-media-types-and-evolution">Generic vs. Specific Media Types and Evolution</a></li>
+          
+            <li><a href="/2010/09/spotted-alternates-header-in-the-wild">Spotted Alternates Header in the Wild</a></li>
+          
+            <li><a href="/2010/08/put-and-content-location">PUT and Content-Location</a></li>
+          
+            <li><a href="/2005/10/pretending-that-the-network-isnt-there">Pretending that the network isn't there....</a></li>
+          
+            <li><a href="/2005/09/the-fallacy-of-business-objects">The Fallacy of Business Objects</a></li>
+          
+            <li><a href="/2005/09/dont-assume-a-closed-world">Don't Assume a Closed World</a></li>
+          
+            <li><a href="/2005/09/don-knuth-vs-w3c-validator">Don Knuth vs. W3C Validator</a></li>
+          
+            <li><a href="/2005/06/is-fowler-a-restafarian">Is Fowler a RESTafarian?</a></li>
+          
+            <li><a href="/2003/04/building-web-services">Building Web Services</a></li>
+          
+        </ul>
+      </div>
+      <div class='spacing'></div>
+    </div>
+    -->
+    <div class='large-3 medium-3 columns'>
+      <ul class='socials'>
+        <li>
+          <a href='http://twitter.com/algermissen'>
+            <i class='fa fa-twitter'></i>
+          </a>
+          <a href='http://linkedin.com/in/algermissen'>
+            <i class='fa fa-linkedin'></i>
+          </a>
+          <a href='http://github.com/algermissen'>
+            <i class='fa fa-github'></i>
+          </a>
+          <a href='https://www.xing.com/profile/Jan_Algermissen'>
+            <i class='fa fa-xing'></i>
+          </a>
+          <a href='https://stackexchange.com/users/98783/jan-algermissen'>
+            <i class='fa fa-stack-overflow'></i>
+          </a>
+        </li>
+      </ul>
+      <!--
+      <div class='spacing'></div>
+      -->
+    </div>
+
+    <div class='large-3 medium-3 columns'>
+        <!--
+      <div class='spacing'></div>
+        -->
+      <div class='links'>
+        <ul>
+          <li><a href="/impressum.html">Impressum</a></li>
+          <li><a href="/datenschutz.html">Datenschutz</a></li>
+        </ul>
+      </div>
+      <div class='links'>
+        <ul>
+          <li><a href="/classification_of_http_apis.html">Classification of HTTP APIs</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class='large-3 medium-3 columns'>
+        <!--
+      <div class='spacing'></div>
+        -->
+      <ul>
+        <li>Phone: +49 (0) 151 54725268</li>
+        <li>Email: algermissen@acm.org</li>
+        <li>Location: Melkerstieg 4,&nbsp;D-22559 Hamburg</li>
+      </ul>
+    </div>
+  </div>
+  <div class='two spacing'></div>
+</div>
+<script src="/javascripts/jquery.countTo.js" type="text/javascript"></script>
+<script src="/javascripts/jquery.appear.js" type="text/javascript"></script>
+<script src="/javascripts/jquery.validate.js" type="text/javascript"></script>
+<script src="/javascripts/jquery.sequence-min.js" type="text/javascript"></script>
+<script src="/javascripts/jquery.easing.1.3.js" type="text/javascript"></script>
+<script src="/javascripts/app.js" type="text/javascript"></script>
+
+
+  </body>
+
+</html>

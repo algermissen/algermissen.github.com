@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>hyper client and self-signed certs</title>
+  <meta name="description" content="Fortunate are those that are chosen to ride down the happy path...">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="stylesheet" href="/css/foundation.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/fontello.css">
+  <link rel="stylesheet" href="/css/font-awesome.css">
+  <link rel="stylesheet" href="/css/syntax.css">
+  <script src="/javascripts/libs.js" type="text/javascript"></script>
+  <script>
+    // terrificjs bootstrap
+    (function($) {
+        $(document).ready(function() {
+            var $page = $('body');
+            var config = {
+              dependencyPath: {
+                plugin: 'javascripts/'
+              }
+            }
+            var application = new Tc.Application($page, config);
+            application.registerModules();
+            application.start();
+        });
+    })(Tc.$);
+  </script>
+  <link href="http://fonts.googleapis.com/css?family=Raleway:400,700,300" media="screen" rel="stylesheet" type="text/css" />
+  <script src="/javascripts/masonry.pkgd.js" type="text/javascript"></script>
+  <script src="/javascripts/imagesloaded.pkgd.min.js" type="text/javascript"></script>
+  <script src="/javascripts/slick.min.js" type="text/javascript"></script>
+  <script src="/javascripts/json2.js" type="text/javascript"></script>
+  <link rel="canonical" href="/2017/09/hyper-client-and-self-signed-certs">
+  <link rel="alternate" type="application/rss+xml" title="Jan Algermissen - Solutions Engineering" href="/feed.xml" />
+</head>
+
+
+  <body>
+
+    <div class='contain-to-grid sticky'>
+  <nav class='top-bar' data-options='sticky_on: large' data-topbar=''>
+    <ul class='title-area'>
+      <li class='name'>
+        <h1>
+            <span>
+          <a href='/index.html'>
+            <img alt="" src="/images/logo_text.png" />
+          </a>
+            </span>
+        </h1>
+      </li>
+    </ul>
+    <section class='top-bar-section'>
+      <ul class="right">
+        
+          
+
+          
+            <li class="">
+              <a href="/#soleng">Solutions Engineering</a>
+            </li>
+          
+        
+          
+
+          
+            <li class="">
+              <a href="/#cloud">Cloud</a>
+            </li>
+          
+        
+          
+
+          
+            <li class="">
+              <a href="/#sre">Site Reliability Engineering</a>
+            </li>
+          
+        
+          
+
+          
+            <li class="">
+              <a href="/#dev">Development</a>
+            </li>
+          
+        
+          
+
+          
+            <li class="">
+              <a href="/blog/">Blog</a>
+            </li>
+          
+        
+      </ul>
+    </section>
+  </nav>
+</div>
+
+
+    <div id='main' role='main'>
+      <div class='full parallax bg'>
+  <div class='row'>
+    <div class='large-12 columns'>
+      <div class="mod modSectionHeader big">
+  <div class="special-title centered-text">
+    <h2 style="color: #fff;">Applying the Web to Enterprise IT</h2>
+  </div>
+  
+    <h3 class='centered-text' style='color: #fff'></h3>
+  
+</div>
+    </div>
+  </div>
+  <div class='four spacing'></div>
+</div>
+
+
+<div class='full' style='background: #f5f5f5'>
+  <div class='row'>
+    <div class='large-9 columns'>
+
+      <div class='row'>
+</div>
+<div class='row'>
+  <div class='large-12 columns'>
+    <div class='mod modBlogPost big'>
+      <div class='images'>
+        
+      </div>
+      <div class='content'>
+        <p class='info'>
+          <span>September 29, 2017</span>
+        </p>
+        <h3>hyper client and self-signed certs</h3>
+        
+<p>Fortunate are those that are chosen to ride down the happy path…</p>
+
+<p>This is, however, for the warriors like me, with n00b-level Rust knowledge, armed with razor sharp, but early-stage tools,
+brave enough to enter the evil land of the enterprise. (Honestly, it also did not help that I had passed on
+reading up on TLS and certificates in depth all those years :-/ )</p>
+
+<p>Taken out of a larger context, the battle at hand was to talk to a REST API using
+<a href="https://tokio.rs/">Tokio</a> and <a href="https://hyper.rs/guides/client/basic/">hyper client</a>. Simple enough:
+copy/paste the docs, change the URI and shoot.</p>
+
+<p>Argrr, yeah, sure - it’s an https: URI! And, yeah, I remember that hyper’s design is clever enough to
+be decoupled from SSL dependencies completely. So, how to go about that TLS protected request now?</p>
+
+<p>Fortunately <a href="https://hyper.rs/guides/client/configuration/">the docs are ready at hand</a>
+ and victory just another copy/paste away…</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>extern crate hyper;
+extern crate hyper_tls;
+extern crate tokio_core;
+
+use hyper::Client;
+use hyper_tls::HttpsConnector;
+use tokio_core::reactor::Core;
+
+let mut core = Core::new()?;
+let handle = core.handle();
+let client = Client::configure()
+    .connector(HttpsConnector::new(4, &amp;handle)?)
+    .build(&amp;handle);
+
+let req = client.get("https://hyper.rs".parse()?);
+let res = core.run(req)?;
+assert!(res.status().is_success());
+</code></pre>
+</div>
+
+<p>But then, while the compiler runs it dawns on me: the evil cert master of
+this enterprise is into the self-signing witch craft (to save money or for
+whatever crazy reason). And while one would normaly go ahead, ignore that
+exception and proceed (because it is after all just an evaluation I am
+doing) I cannot really remember having seen anything like that in the docs
+so far. Hmmm….</p>
+
+<p>Searches and chat questions (thanks <a href="https://twitter.com/seanmonstar">Sean</a>) eventually
+produced <a href="https://github.com/sfackler/rust-native-tls/issues/13">this</a> 
+which made its way into the crate in a
+<a href="https://twitter.com/algermissen/status/913438875250458624">nicely explicit way</a>
+and <a href="https://github.com/sfackler/rust-native-tls/issues/13#issuecomment-293628743">this</a>.
+While the former does not really do the trick, the later got me all excited - so
+simple.</p>
+
+<blockquote>
+  <p>“Build a Certificate from the DER-encoded self signed cert and pass it to
+TlsConnectorBuilder::add_root_certificate.”</p>
+</blockquote>
+
+<p>But…</p>
+
+<ul>
+  <li>How do I get the certificate?</li>
+  <li>WTF does “Build a Certificate from the DER-encoded self signed cert” mean?</li>
+  <li>Haven’t seen a <code class="highlighter-rouge">TlsConnectorBuilder</code> yet.</li>
+  <li>Will that really be it?</li>
+</ul>
+
+<p>What my browser can do, I can also do, I figure; Google turns up</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>openssl s_client -showcerts -connect example.org:443 &gt; server.crt
+</code></pre>
+</div>
+
+<p>Great - let’s stick that into that method mentioned above and get this over with.
+Where I dug up the code for that I cannot remember, but it goes like this:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>let mut f = File::open("/...my cert file").unwrap();
+let mut buffer = vec![];
+f.read_to_end(&amp;mut buffer).unwrap();
+let cert = Certificate::from_der(buffer.as_slice()).unwrap();
+
+let mut http = HttpConnector::new(4, handle);
+http.enforce_http(false);
+
+let mut tls = TlsConnector::builder().unwrap();
+tls.add_root_certificate(cert);
+let mut tls = tls.build().unwrap();
+
+let ct = HttpsConnector::from((http, tls));
+let client = Client::configure().connector(ct).build(handle);
+</code></pre>
+</div>
+
+<p>(It is also especially great to do this past midnight :-)</p>
+
+<p>Victory? - You guessed it: not yet. Why is that method called
+from_der() and my file is a crt? This can’t end well. At this
+point I honestly just shoved as many things into the search box
+as I could possibly think of to make sense.</p>
+
+<p>Eventually yielding</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>openssl x509 -in server.crt -outform der -out server.der
+</code></pre>
+</div>
+
+<p>I am skipping all the detours I took do to late night errors,
+byte array mistakes, wrong assumptions about company root cert
+I should get hold of and misinterpreted timeouts that actually
+weren’t any.</p>
+
+<p>Putting the DER file in the right spot solves the problem and
+your worrior can go to bed, exhausted, but still in honest awe
+of the language Rust as such.</p>
+
+
+      </div>
+    </div>
+    <div class='two spacing'></div>
+  </div>
+</div>
+
+
+      
+
+
+      <div class='four spacing'></div>
+    </div>
+    <div class='large-3 columns' id='sidebar'>
+      <div class='links'>
+  <h3>Archives</h3>
+
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+  <h1></h1>
+    <ul>
+      
+    </ul>
+
+</div>
+
+      <div class='four spacing'></div>
+    </div>
+  </div>
+</div>
+
+    </div>
+
+    <div id='footer'>
+  <div class='three spacing'></div>
+  <div class='row'>
+    
+    <div class='large-3 medium-3 columns'>
+        <!--
+      <h1>
+        <a href='index.html'>
+          <img alt="" src="/images/logo-grey.png" />
+        </a>
+      </h1>
+        -->
+      <p>©Jan Algermissen<br />Solutions Engineering 2018</p>
+      <p>
+      Background SVG customized at svgbackgrounds.com.
+      </p>
+      <!--
+      <div class='spacing'></div>
+      -->
+    </div>
+    <!--
+    <div class='large-3 medium-3 columns'>
+      <div class='spacing'></div>
+      <div class='links'>
+        <h4>Some pages</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="portfolio.html">View some works here</a></li>
+          <li><a href="blog.html">Follow our blog</a></li>
+          <li><a href="contact.html">Contact us</a></li>
+          <li><a href="services.html">Our services</a></li>
+        </ul>
+      </div>
+      <div class='spacing'></div>
+    </div>
+    <div class='large-3 medium-3 columns'>
+      <div class='spacing'></div>
+      <div class='links'>
+        <h4>Recent posts</h4>
+        <ul>
+          
+            <li><a href="/2018/01/go-bookmarks">Go Bookmarks</a></li>
+          
+            <li><a href="/2017/09/hyper-client-and-self-signed-certs">hyper client and self-signed certs</a></li>
+          
+            <li><a href="/2017/05/web-services-with-rust-part-3-accept-all-we-can">Web Services with Rust Part 3: Accept All We Can</a></li>
+          
+            <li><a href="/2017/04/web-services-with-rust-part-2-baseline-revisited">Web Services with Rust Part 2: Baseline Revisited</a></li>
+          
+            <li><a href="/2017/04/web-services-with-rust-part-1-exploring-hyper">Web Services with Rust Part 1: Exploring Hyper</a></li>
+          
+            <li><a href="/2013/05/using-iron-to-encapsulate-cookies">Using iron to Encapsulate Cookies</a></li>
+          
+            <li><a href="/2013/05/beyond-oauth">Beyond OAuth</a></li>
+          
+            <li><a href="/2012/11/getting-started-playing-around-with-jax-rs-2-0-in-an-ee-container">Getting Started Playing Around with JAX-RS 2.0 in an EE Container</a></li>
+          
+            <li><a href="/2012/11/jax-rs-2-0-essential-bookmarks">JAX-RS 2.0 Essential Bookmarks</a></li>
+          
+            <li><a href="/2012/10/jax-rs-2-0-mvc">JAX-RS 2.0 MVC</a></li>
+          
+            <li><a href="/2012/09/declarative-cache-control-with-jax-rs-2-0">Declarative Cache Control with JAX-RS 2.0</a></li>
+          
+            <li><a href="/2012/05/death-by-jboss-6-classloading">Death by JBoss 6 Classloading</a></li>
+          
+            <li><a href="/2011/11/esi-facelift">ESI Facelift</a></li>
+          
+            <li><a href="/2011/11/cool-uris-and-integration">Cool URIs and Integration</a></li>
+          
+            <li><a href="/2010/11/agency-boundary">Agency Boundary</a></li>
+          
+            <li><a href="/2010/11/interesting-changes-must-surface">Interesting Changes *Must* Surface</a></li>
+          
+            <li><a href="/2010/10/generic-vs-specific-media-types-and-evolution">Generic vs. Specific Media Types and Evolution</a></li>
+          
+            <li><a href="/2010/09/spotted-alternates-header-in-the-wild">Spotted Alternates Header in the Wild</a></li>
+          
+            <li><a href="/2010/08/put-and-content-location">PUT and Content-Location</a></li>
+          
+            <li><a href="/2005/10/pretending-that-the-network-isnt-there">Pretending that the network isn't there....</a></li>
+          
+            <li><a href="/2005/09/the-fallacy-of-business-objects">The Fallacy of Business Objects</a></li>
+          
+            <li><a href="/2005/09/dont-assume-a-closed-world">Don't Assume a Closed World</a></li>
+          
+            <li><a href="/2005/09/don-knuth-vs-w3c-validator">Don Knuth vs. W3C Validator</a></li>
+          
+            <li><a href="/2005/06/is-fowler-a-restafarian">Is Fowler a RESTafarian?</a></li>
+          
+            <li><a href="/2003/04/building-web-services">Building Web Services</a></li>
+          
+        </ul>
+      </div>
+      <div class='spacing'></div>
+    </div>
+    -->
+    <div class='large-3 medium-3 columns'>
+      <ul class='socials'>
+        <li>
+          <a href='http://twitter.com/algermissen'>
+            <i class='fa fa-twitter'></i>
+          </a>
+          <a href='http://linkedin.com/in/algermissen'>
+            <i class='fa fa-linkedin'></i>
+          </a>
+          <a href='http://github.com/algermissen'>
+            <i class='fa fa-github'></i>
+          </a>
+          <a href='https://www.xing.com/profile/Jan_Algermissen'>
+            <i class='fa fa-xing'></i>
+          </a>
+          <a href='https://stackexchange.com/users/98783/jan-algermissen'>
+            <i class='fa fa-stack-overflow'></i>
+          </a>
+        </li>
+      </ul>
+      <!--
+      <div class='spacing'></div>
+      -->
+    </div>
+
+    <div class='large-3 medium-3 columns'>
+        <!--
+      <div class='spacing'></div>
+        -->
+      <div class='links'>
+        <ul>
+          <li><a href="/impressum.html">Impressum</a></li>
+          <li><a href="/datenschutz.html">Datenschutz</a></li>
+        </ul>
+      </div>
+      <div class='links'>
+        <ul>
+          <li><a href="/classification_of_http_apis.html">Classification of HTTP APIs</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class='large-3 medium-3 columns'>
+        <!--
+      <div class='spacing'></div>
+        -->
+      <ul>
+        <li>Phone: +49 (0) 151 54725268</li>
+        <li>Email: algermissen@acm.org</li>
+        <li>Location: Melkerstieg 4,&nbsp;D-22559 Hamburg</li>
+      </ul>
+    </div>
+  </div>
+  <div class='two spacing'></div>
+</div>
+<script src="/javascripts/jquery.countTo.js" type="text/javascript"></script>
+<script src="/javascripts/jquery.appear.js" type="text/javascript"></script>
+<script src="/javascripts/jquery.validate.js" type="text/javascript"></script>
+<script src="/javascripts/jquery.sequence-min.js" type="text/javascript"></script>
+<script src="/javascripts/jquery.easing.1.3.js" type="text/javascript"></script>
+<script src="/javascripts/app.js" type="text/javascript"></script>
+
+
+  </body>
+
+</html>

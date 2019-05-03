@@ -43,11 +43,14 @@ handlers signature or using request context values):
 
 This talk discusses useful strategies for testing that mostly present in Go's standard library but are
 are not well known. 
+
 ["Advanced Testing with Go by Mitchell Hashimoto"](https://m.youtube.com/watch?v=yszygk1cpEc)
 
 
-TODO
-["xx"](https://talks.golang.org/2014/testing.slide#1)
+Silde deck summarizing a number of testing features in a concise way. Good place
+to look somethingup quickly.
+
+["Testing Techniques"](https://talks.golang.org/2014/testing.slide#1)
 
 
 
@@ -57,13 +60,12 @@ These links address subtle issues about the Go language, that do not appear
 obvious at fiorst sight:
 
 Go has a potential for memory leaks, described in this section
+
 [Delete without preserving order](https://github.com/golang/go/wiki/SliceTricks#delete-without-preserving-order)
+
 
 
 ## Other Reference Lists
 
 - https://github.com/golang/go/wiki/Articles
 - https://awesome-go.com
-
-
-

@@ -1,0 +1,1096 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Jan Algermissen - Solutions Engineering</title>
+    <description>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.
+</description>
+    <link>/</link>
+    <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Wed, 06 Feb 2019 06:48:04 +0000</pubDate>
+    <lastBuildDate>Wed, 06 Feb 2019 06:48:04 +0000</lastBuildDate>
+    <generator>Jekyll v3.3.0</generator>
+    
+      <item>
+        <title>Go Bookmarks</title>
+        <description>
+&lt;p&gt;This is my collection of references I found especially useful to understand
+idiomatic solutions to various design problems and Go internals.&lt;/p&gt;
+
+&lt;h2 id=&quot;application-architecture&quot;&gt;Application Architecture&lt;/h2&gt;
+
+&lt;p&gt;After digging through the considarable amount of articles applying the
+topic of Clean Architecture to Go I found this to be the most compelling
+one (and actually one of the few in the spirit of the original idea, AFAIK):&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://proandroiddev.com/clean-architecture-data-flow-dependency-rule-615ffdd79e29&quot;&gt;Clean Architecture Guide (with tested examples): Data Flow != Dependency Rule&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;error-handling&quot;&gt;Error Handling&lt;/h2&gt;
+
+&lt;p&gt;When approaching error handling in Go it is in my opinion very easy to make
+the mistake and work against the original ideas of the language. The
+approach I found to be naturally aligned with what GHop deliberately provides
+for errors out of the box is described in:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://banzaicloud.com/blog/error-handling-go/&quot;&gt;Error Handling Practices in Go&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;http-handler-functions&quot;&gt;HTTP Handler Functions&lt;/h2&gt;
+
+&lt;p&gt;At the end of this blog post a proper technique is show how to pass data from
+one handler to another in an HTTP handler ‘chain’. In my opinion, using a
+closure approach and create the actual handling function on the fly and closing
+over the pass-id data is far superior than any other approach (eg writing your own
+handlers signature or using request context values):&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.calhoun.io/pitfalls-of-context-values-and-how-to-avoid-or-mitigate-them/&quot;&gt;Pitfalls of context values and how to avoid or mitigate them in Go&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;go-gotchas&quot;&gt;Go Gotchas&lt;/h2&gt;
+
+&lt;p&gt;These links address subtle issues about the Go language, that do not appear
+obvious at fiorst sight:&lt;/p&gt;
+
+&lt;p&gt;Go has a potential for memory leaks, described in this section
+&lt;a href=&quot;https://github.com/golang/go/wiki/SliceTricks#delete-without-preserving-order&quot;&gt;Delete without preserving order&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;other-reference-lists&quot;&gt;Other Reference Lists&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;https://github.com/golang/go/wiki/Articles&lt;/li&gt;
+  &lt;li&gt;https://awesome-go.com&lt;/li&gt;
+  &lt;li&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+</description>
+        <pubDate>Sun, 28 Jan 2018 00:00:00 +0000</pubDate>
+        <link>/2018/01/go-bookmarks</link>
+        <guid isPermaLink="true">/2018/01/go-bookmarks</guid>
+        
+        
+        <category>go</category>
+        
+      </item>
+    
+      <item>
+        <title>hyper client and self-signed certs</title>
+        <description>
+&lt;p&gt;Fortunate are those that are chosen to ride down the happy path…&lt;/p&gt;
+
+&lt;p&gt;This is, however, for the warriors like me, with n00b-level Rust knowledge, armed with razor sharp, but early-stage tools,
+brave enough to enter the evil land of the enterprise. (Honestly, it also did not help that I had passed on
+reading up on TLS and certificates in depth all those years :-/ )&lt;/p&gt;
+
+&lt;p&gt;Taken out of a larger context, the battle at hand was to talk to a REST API using
+&lt;a href=&quot;https://tokio.rs/&quot;&gt;Tokio&lt;/a&gt; and &lt;a href=&quot;https://hyper.rs/guides/client/basic/&quot;&gt;hyper client&lt;/a&gt;. Simple enough:
+copy/paste the docs, change the URI and shoot.&lt;/p&gt;
+
+&lt;p&gt;Argrr, yeah, sure - it’s an https: URI! And, yeah, I remember that hyper’s design is clever enough to
+be decoupled from SSL dependencies completely. So, how to go about that TLS protected request now?&lt;/p&gt;
+
+&lt;p&gt;Fortunately &lt;a href=&quot;https://hyper.rs/guides/client/configuration/&quot;&gt;the docs are ready at hand&lt;/a&gt;
+ and victory just another copy/paste away…&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;extern crate hyper;
+extern crate hyper_tls;
+extern crate tokio_core;
+
+use hyper::Client;
+use hyper_tls::HttpsConnector;
+use tokio_core::reactor::Core;
+
+let mut core = Core::new()?;
+let handle = core.handle();
+let client = Client::configure()
+    .connector(HttpsConnector::new(4, &amp;amp;handle)?)
+    .build(&amp;amp;handle);
+
+let req = client.get(&quot;https://hyper.rs&quot;.parse()?);
+let res = core.run(req)?;
+assert!(res.status().is_success());
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;But then, while the compiler runs it dawns on me: the evil cert master of
+this enterprise is into the self-signing witch craft (to save money or for
+whatever crazy reason). And while one would normaly go ahead, ignore that
+exception and proceed (because it is after all just an evaluation I am
+doing) I cannot really remember having seen anything like that in the docs
+so far. Hmmm….&lt;/p&gt;
+
+&lt;p&gt;Searches and chat questions (thanks &lt;a href=&quot;https://twitter.com/seanmonstar&quot;&gt;Sean&lt;/a&gt;) eventually
+produced &lt;a href=&quot;https://github.com/sfackler/rust-native-tls/issues/13&quot;&gt;this&lt;/a&gt; 
+which made its way into the crate in a
+&lt;a href=&quot;https://twitter.com/algermissen/status/913438875250458624&quot;&gt;nicely explicit way&lt;/a&gt;
+and &lt;a href=&quot;https://github.com/sfackler/rust-native-tls/issues/13#issuecomment-293628743&quot;&gt;this&lt;/a&gt;.
+While the former does not really do the trick, the later got me all excited - so
+simple.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;“Build a Certificate from the DER-encoded self signed cert and pass it to
+TlsConnectorBuilder::add_root_certificate.”&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;But…&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;How do I get the certificate?&lt;/li&gt;
+  &lt;li&gt;WTF does “Build a Certificate from the DER-encoded self signed cert” mean?&lt;/li&gt;
+  &lt;li&gt;Haven’t seen a &lt;code class=&quot;highlighter-rouge&quot;&gt;TlsConnectorBuilder&lt;/code&gt; yet.&lt;/li&gt;
+  &lt;li&gt;Will that really be it?&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;What my browser can do, I can also do, I figure; Google turns up&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;openssl s_client -showcerts -connect example.org:443 &amp;gt; server.crt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Great - let’s stick that into that method mentioned above and get this over with.
+Where I dug up the code for that I cannot remember, but it goes like this:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;let mut f = File::open(&quot;/...my cert file&quot;).unwrap();
+let mut buffer = vec![];
+f.read_to_end(&amp;amp;mut buffer).unwrap();
+let cert = Certificate::from_der(buffer.as_slice()).unwrap();
+
+let mut http = HttpConnector::new(4, handle);
+http.enforce_http(false);
+
+let mut tls = TlsConnector::builder().unwrap();
+tls.add_root_certificate(cert);
+let mut tls = tls.build().unwrap();
+
+let ct = HttpsConnector::from((http, tls));
+let client = Client::configure().connector(ct).build(handle);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;(It is also especially great to do this past midnight :-)&lt;/p&gt;
+
+&lt;p&gt;Victory? - You guessed it: not yet. Why is that method called
+from_der() and my file is a crt? This can’t end well. At this
+point I honestly just shoved as many things into the search box
+as I could possibly think of to make sense.&lt;/p&gt;
+
+&lt;p&gt;Eventually yielding&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;openssl x509 -in server.crt -outform der -out server.der
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;I am skipping all the detours I took do to late night errors,
+byte array mistakes, wrong assumptions about company root cert
+I should get hold of and misinterpreted timeouts that actually
+weren’t any.&lt;/p&gt;
+
+&lt;p&gt;Putting the DER file in the right spot solves the problem and
+your worrior can go to bed, exhausted, but still in honest awe
+of the language Rust as such.&lt;/p&gt;
+
+</description>
+        <pubDate>Fri, 29 Sep 2017 00:00:00 +0000</pubDate>
+        <link>/2017/09/hyper-client-and-self-signed-certs</link>
+        <guid isPermaLink="true">/2017/09/hyper-client-and-self-signed-certs</guid>
+        
+        <category>rust-web</category>
+        
+        
+        <category></category>
+        
+      </item>
+    
+      <item>
+        <title>Web Services with Rust Part 3: Accept All We Can</title>
+        <description>
+&lt;p&gt;In the last posting we added metrics to our very basic test Web service. 
+Initially this third
+part was supposed to be about adding logging to the server, comparing the
+performance impact of mutex based- and, especially,
+&lt;a href=&quot;https://github.com/crossbeam-rs/crossbeam&quot;&gt;lock free data structures&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;However, I was also still puzzled by the observation that the number of
+connections the server took from the stream of accepted sockets somehow
+seemed related to the request processing rate. I just could find no reason
+that would explain this observation. Especially not, since the stream and
+actually handling the connections definitely happens in different tasks.&lt;/p&gt;
+
+&lt;p&gt;As a first step I changed the load testing configuration to have each
+request use a fresh connection and thus get a 1:1 ratio of requests and
+accepted connections. The &lt;a href=&quot;https://stormforger.com/&quot;&gt;Stormforger&lt;/a&gt; team
+fortunately pointed out to me that their load generators react on the
+HTTP request headers  set by test configurations, so
+&lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;Connection&quot;: &quot;close&quot;&lt;/code&gt; would trigger the load generator to open a new
+connection for every request.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;definition.session(&quot;OneRequestPerConnection&quot;, function(session) {
+  session.forEver( function(session) {
+    session.get(&quot;/data&quot;, {
+      headers: {
+        &quot;Connection&quot;: &quot;close&quot;,
+      }
+    });
+  });
+});
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;I added some further metrics in order to compare the number of
+accepted and the number of done connections.&lt;/p&gt;
+
+&lt;p&gt;As before, the server was able to handle up to 250 requests per second,
+being bound by the roughly 4ms of CPU bound time per request. Still,
+the number of accepted requests did correlate with the number of 
+handled requests, showing that the server indeed did not simply pull in all
+accepted requests from the listening socket.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/tokio-rs/tokio/issues/8&quot;&gt;The Tokio team suggested&lt;/a&gt; that
+doing the CPU-bound work on the same thread as the task that is taking
+connections of the listeing socket might actually yield this behavior, so
+next up was having the CPU-bound work been done on a different thread.&lt;/p&gt;
+
+&lt;p&gt;The great thing about the &lt;a href=&quot;https://github.com/tokio-rs&quot;&gt;Tokio ecosystem&lt;/a&gt;
+is that it comes with &lt;a href=&quot;https://github.com/alexcrichton/futures-rs/tree/master/src/sync&quot;&gt;all the tools&lt;/a&gt;
+that make working with threads and
+asynchronous work
+a breeze.&lt;/p&gt;
+
+&lt;p&gt;In order to send work off to a different thread that thread needs to run its
+own Tokio Core. Since we cannot send a Core to another thread we create the
+Core on the main thread, create a remote handle to it and send that to
+a new thread along with the actual server startup.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;fn start_server(n: usize, addr: &amp;amp;'static str) {
+
+  let mut workerCore = Core::new().unwrap();
+  let remote = workerCore.remote();
+
+  thread::spawn(move || {
+    let addr = addr.parse().unwrap();
+    let protocol = Arc::new(Http::new());
+    for i in 0..n - 1 {
+      let protocol = protocol.clone();
+      let remote = remote.clone();
+      thread::spawn(move || serve(&amp;amp;remote, , &amp;amp;addr, &amp;amp;protocol));
+    }
+    serve(&amp;amp;remote, &amp;amp;addr, &amp;amp;protocol);
+});
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;The request handler then creates a one-time channel and spawns a task on the
+remote handle. This taskperforms the CPU-bound work and sends the result through
+the channel to complete the response.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;let f = match (req.method(), req.path()) {
+  (&amp;amp;Get, &quot;/data&quot;) =&amp;gt; {
+    let (tx, rx) = futures::sync::oneshot::channel::&amp;lt;Self::Response&amp;gt;();
+    self.remote.spawn(|_| {
+      let b = cpu_intensive_work().into_bytes();
+      let res = Response::new()
+               .with_header(ContentLength(b.len() as u64))
+               .with_body(b);
+      let _ = tx.send(res);
+      Ok(())
+    });
+    FutureResponse(rx.or_else(|_| -&amp;gt; Result&amp;lt;Response, Self::Error&amp;gt; {
+      Ok(Response::new().with_status(StatusCode::InternalServerError))
+    }).boxed())
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;With this modification, the server can now do roughly 1300 requests per second
+until the 99th percentile of response latency starts to increase. At this point
+we now indeed see the server taking more accepted connections of the
+listen queue than it can complete.&lt;/p&gt;
+
+&lt;p&gt;Though the server is now running on two threads instead of one, the performance
+gain seen suggests that intense CPU bound work should be run
+on a different thread than more IO bound tasks.&lt;/p&gt;
+
+&lt;p&gt;See the &lt;a href=&quot;https://github.com/algermissen/web-rust/blob/master/src/bin/ts3.rs&quot;&gt;test server source code&lt;/a&gt;.&lt;/p&gt;
+
+</description>
+        <pubDate>Thu, 18 May 2017 00:00:00 +0000</pubDate>
+        <link>/2017/05/web-services-with-rust-part-3-accept-all-we-can</link>
+        <guid isPermaLink="true">/2017/05/web-services-with-rust-part-3-accept-all-we-can</guid>
+        
+        <category>rust-web</category>
+        
+        
+        <category>rust</category>
+        
+      </item>
+    
+      <item>
+        <title>Web Services with Rust Part 2: Baseline Revisited</title>
+        <description>
+&lt;p&gt;In the last posting I started exploring implementing Web services in Rust, using
+hyper with some minimal single- and multi-threaded servers.&lt;/p&gt;
+
+&lt;p&gt;If you have been paying attention to the test setup description there (as I should have
+done) you will have noticed that the load test configuration is limiting the number
+of clients to 500. Many requests with few clients are not the common case reality for
+most Web services and definitely not what I had in mind when I ran the tests.&lt;/p&gt;
+
+&lt;p&gt;Then again, few clients that send many requests is probably exactly what we want to
+test for a micro services environment when thinking about not public facing services.&lt;/p&gt;
+
+&lt;p&gt;Given that Tokio and hyper allow for controlling what happens at the per-connection-
+and thread level let’s take another turn at exploring different usage patterns and
+establishing a baseline. We can leverage the
+&lt;a href=&quot;https://docs.stormforger.com/reference/&quot;&gt;configuration options of StormForger&lt;/a&gt;
+to extend the test scenarios.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;A note on &lt;a href=&quot;https://stormforger.com/&quot;&gt;StormForger&lt;/a&gt;: I have worked with them in
+a previous client project where they provided their platform and traffic modeling
+and result analysis support. We very much benefited from their deep understanding of
+load testing issues and their traffic shaping DSL makes creating test scenarios a
+breeze. Naturally, I picked them for this exploration and since they graciously
+fuel my tests here, I am more than happy to give credit :-)&lt;/em&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;instrumenting-the-server&quot;&gt;Instrumenting the Server&lt;/h3&gt;
+
+&lt;p&gt;While StormForger is providing excellent reports on the test runs, I still want
+to measure directly in the server to get a better picture of what is happening
+and to verify the assumptions I make about the Rust and &lt;a href=&quot;https://tokio.rs/&quot;&gt;Tokio&lt;/a&gt;
+ecosystems.&lt;/p&gt;
+
+&lt;p&gt;Recently &lt;a href=&quot;https://prometheus.io&quot;&gt;Prometheus&lt;/a&gt; has become my application metrics
+system of choice and since a &lt;a href=&quot;https://github.com/pingcap/rust-prometheus&quot;&gt;Prometheus client for Rust&lt;/a&gt;
+already exists (apparently developed and used by the &lt;a href=&quot;https://github.com/pingcap/tikv&quot;&gt;TiKV Team&lt;/a&gt;)
+I have used this to implement an &lt;a href=&quot;https://github.com/algermissen/web-rust/blob/master/src/bin/ts2.rs&quot;&gt;instrumented minimal hyper server&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;One &lt;a href=&quot;https://prometheus.io/docs/concepts/metric_types/#gauge&quot;&gt;gauge&lt;/a&gt;
+metric &lt;a href=&quot;https://github.com/algermissen/web-rust/blob/master/src/bin/ts2.rs#L57&quot;&gt;keeps track of the number of connected clients&lt;/a&gt;
+and a &lt;a href=&quot;https://prometheus.io/docs/concepts/metric_types/#histogram&quot;&gt;histogram&lt;/a&gt; is
+used to &lt;a href=&quot;https://github.com/algermissen/web-rust/blob/master/src/bin/ts2.rs#L73&quot;&gt;measure the individual requests&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;So, let’s see what the instruments report when we throw load at the server.&lt;/p&gt;
+
+&lt;h3 id=&quot;test-case-many-clients-one-request&quot;&gt;Test Case: Many-Clients-One-Request&lt;/h3&gt;
+
+&lt;p&gt;This test case focuses on maximizing the number of clients while having each
+client just send a single request. My goal is to use this to get as many
+clients as possible connected in parallel while minimizing the time they spend
+being served.&lt;/p&gt;
+
+&lt;p&gt;The StormForger test case setup:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;definition.setTarget(&quot;xxx:8080&quot;);
+
+definition.setArrivalPhases([
+  { duration: 20, rate: 20},
+  { duration: 20, rate: 60},
+  { duration: 20, rate: 100},
+  { duration: 20, rate: 120},
+  { duration: 20, rate: 160},
+  { duration: 20, rate: 180},
+  { duration: 20, rate: 200},
+  { duration: 20, rate: 210},
+  { duration: 20, rate: 220},
+  { duration: 20, rate: 230},
+  { duration: 20, rate: 240},
+  { duration: 20, rate: 250},
+  { duration: 20, rate: 260},
+  { duration: 20, rate: 270},
+  { duration: 20, rate: 280},
+  { duration: 20, rate: 290},
+  { duration: 20, rate: 300},
+  { duration: 20, rate: 310},
+  { duration: 20, rate: 320},
+  { duration: 20, rate: 330},
+  { duration: 20, rate: 340},
+  { duration: 20, rate: 350},
+]);
+
+definition.setTestOptions({
+  cluster: { sizing: &quot;large&quot;, },
+});
+
+definition.session(&quot;ManyClientsOneRequest&quot;, function(context) {
+  context.get(&quot;/data&quot;, { tag: &quot;root&quot; });
+});
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;This test runs for about 7 minutes and gradually increases the rate of arriving clients from
+20/s to 350/s, each doing a single request.&lt;/p&gt;
+
+&lt;p&gt;When running this against a single threaded version of our test server, the response
+latencies start to degrade at about 200 req/s. This is the maximum throughput of the
+server, requests start to pile up and are completed down the line with very high latencies.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/blog/web-rust/test1/test1_sf_graph.jpg&quot; alt=&quot;Test 1 - Client Side Graph&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;While a capacity of 200 req/s seems surprisingly low for our server, a look at the internal
+latency metrics for the CPU intensive work the server is doing provides an explanation.
+Each work operation takes around 4ms and this plus network stack operations is roughly
+what fits 200 times into a second.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/blog/web-rust/test1/test1_gf_latencies.jpg&quot; alt=&quot;Test 1 - Server Side Graph&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The next graph shows the rate of internally completed requests, which roughly corresponds
+to the request rate measured on the client side.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/blog/web-rust/test1/test1_gf_reqs.jpg&quot; alt=&quot;Test 1 - Server Side Graph&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Out of curiosity I also took the count and rate of connections the server has taken from
+the listen queue.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/blog/web-rust/test1/test1_gf_conn.jpg&quot; alt=&quot;Test 1 - Server Side Graph&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The server is using a &lt;a href=&quot;https://github.com/algermissen/web-rust/blob/master/src/bin/ts2.rs#L112&quot;&gt;listen queue size of 128&lt;/a&gt;
+and that corresponds very much to the number of current requests in the graph. This leaves me a bit
+puzzled, because I would have thought that, given the asynchronous nature of Tokio, the
+server would just grab all the requests it can get of the queue, leading to an increasing number of
+connected clients. Changing the queue size affects the number of current connections so there is
+clearly something going on I do not yet understand to be investigated at later time. (Some
+interesting details of the listen queue are discussed in
+&lt;a href=&quot;http://veithen.github.io/2014/01/01/how-tcp-backlog-works-in-linux.html&quot;&gt;How TCP backlog works in Linux&lt;/a&gt;)&lt;/p&gt;
+
+&lt;p&gt;Having said that, changing the listen queue capacity did not affect performance results so I leave it at that
+for now.&lt;/p&gt;
+
+&lt;h3 id=&quot;take-away&quot;&gt;Take Away&lt;/h3&gt;
+
+&lt;p&gt;I did some cross checking with more threads and reduced CPU intensive work, confirming that the
+conclusions above at least make sense and that I can now proceed with a better baseline
+than I had established in part 1 of this series.&lt;/p&gt;
+
+&lt;p&gt;Although obvious, I found it an interesting observation that the capacity of an asynchronous server
+eventually is a function of the latency of the CPU bound work it is doing. Hence, if we want to
+leverage the no-cost abstractions nature of Rust and asynchronous IO to squeeze more capacity out
+of the available resources, activities like HTML template rendering or JSON serialization/deserialization
+directly impact the capacity limit of a server.&lt;/p&gt;
+</description>
+        <pubDate>Wed, 26 Apr 2017 00:00:00 +0000</pubDate>
+        <link>/2017/04/web-services-with-rust-part-2-baseline-revisited</link>
+        <guid isPermaLink="true">/2017/04/web-services-with-rust-part-2-baseline-revisited</guid>
+        
+        <category>rust-web</category>
+        
+        
+        <category>rust</category>
+        
+      </item>
+    
+      <item>
+        <title>Web Services with Rust Part 1: Exploring Hyper</title>
+        <description>
+&lt;p&gt;A while ago I have turned my head towards &lt;a href=&quot;http://rustlang.org&quot;&gt;Rust&lt;/a&gt; for
+developing Web Services. Rust’s design in my opinion hits a sweet spot between
+ease of development and runtime efficiency, especially doing away with a
+garbage collector.&lt;/p&gt;
+
+&lt;p&gt;Recently sophisticated support for &lt;a href=&quot;https://tokio.rs/docs/getting-started/futures/&quot;&gt;future-based&lt;/a&gt;,
+&lt;a href=&quot;https://tokio.rs/docs/getting-started/reactor/&quot;&gt;async&lt;/a&gt;,
+and &lt;a href=&quot;https://tokio.rs/docs/getting-started/streams-and-sinks/&quot;&gt;reactive&lt;/a&gt;
+programming has been added to the Rust ecosystem; putting together in the
+&lt;a href=&quot;https://tokio.rs&quot;&gt;Tokio project&lt;/a&gt; some of the most
+&lt;a href=&quot;https://aturon.github.io/blog/2016/08/11/futures/&quot;&gt;intriguing&lt;/a&gt; designs I
+have come across so far.&lt;/p&gt;
+
+&lt;p&gt;In addition, the &lt;a href=&quot;https://github.com/hyperium/hyper&quot;&gt;hyper Web server&lt;/a&gt; is
+being refactored to natively work with the
+async and reactive mechanics provided by Tokio. This work is very closely aligned with
+the work on Tokio, making for a very promising HTTP toolkit roadmap.&lt;/p&gt;
+
+&lt;p&gt;All in all, this feels a lot like the more lightweight, less bloated alternative to
+all I like about Akka-HTTP, that I have been hoping for for quite some time now.&lt;/p&gt;
+
+&lt;p&gt;As sugar on top there are several very interesting developments in
+related topics, such as
+&lt;a href=&quot;https://github.com/crossbeam-rs/crossbeam&quot;&gt;lock free data structures&lt;/a&gt;
+(also see &lt;a href=&quot;https://aturon.github.io/blog/2015/08/27/epoch/&quot;&gt;Lock-freedom without garbage collection&lt;/a&gt;)
+and &lt;a href=&quot;https://github.com/carllerche/kabuki&quot;&gt;Actors&lt;/a&gt;. I think there are lots of
+opportunities here for Web programming in constrained environments or for reducing
+resource consumption in the micro services world to avoid micro services
+eating up macro Euros of cloud computing budgets.&lt;/p&gt;
+
+&lt;p&gt;In this series of blog postings we’ll explore how to build Web services with
+hyper, focusing primarily on non functional aspects such as using thread pools with
+Tokio and hyper, sharing state across requests, or running background activities.
+I think that while Rust forces you to be very close to many details of async and
+multi threaded programming it and its existing and upcoming libraries make up for
+that with quite gentle programming abstractions. Personally, I am willing to
+deprive myself from JVM and go runtime magic, humbly embrace the resulting
+learning curve, and hopefully end up with, for one thing, smaller, faster, and cheaper
+deployables at sufficient development speed. Not to mention the joy of the
+functional programming style…&lt;/p&gt;
+
+&lt;p&gt;Having said that, let’s dive right in.&lt;/p&gt;
+
+&lt;h3 id=&quot;minimal-single-threaded-server-no-shared-state-no-io&quot;&gt;Minimal, Single-Threaded Server (No Shared State, No I/O)&lt;/h3&gt;
+
+&lt;p&gt;The most simple server to run based on hyper is a single-threaded server that
+does not involve shared state or blocking calls. We’ll just use the
+&lt;a href=&quot;https://github.com/hyperium/hyper/blob/9605e860ff46aa7cf02d4e29624f887604cb6541/examples/server.rs&quot;&gt;echo server example&lt;/a&gt;
+from the hyper repository.&lt;/p&gt;
+
+&lt;p&gt;To get some rough idea about the performance impact of our forthcoming modifications
+we’ll use a simple testing setup using a &lt;a href=&quot;https://www.packet.net/bare-metal/servers/type-0/&quot;&gt;4 core 2.4 GHz, 8GB RAM, 1Gbps bare
+metal server&lt;/a&gt; offered by
+&lt;a href=&quot;https://www.packet.net&quot;&gt;Packet&lt;/a&gt; and &lt;a href=&quot;https://stormforger.com/&quot;&gt;Stormforger&lt;/a&gt; to
+put substantial stress on the Web servers. Test server and load generators are both
+located in continental Europe.&lt;/p&gt;
+
+&lt;p&gt;The first test runs with the example server capped around 10k req/s without CPU
+exhaustion. I added some CPU-bound work to the server, simulating, for example,
+template rendering activities you might have in a real Web server and had to
+experiment with the load test settings to get to a point where I could drive the
+server to the limit in a controlled way.&lt;/p&gt;
+
+&lt;p&gt;The &lt;a href=&quot;https://github.com/algermissen/web-rust/blob/ecc430d558aa60dcf2fd2d7ee89f73b7395e5e9d/src/bin/minimal_single_threaded.rs#L26&quot;&gt;work simulation&lt;/a&gt;
+looks like this&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-rust&quot; data-lang=&quot;rust&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;    &lt;span class=&quot;k&quot;&gt;fn&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;cpu_intensive_work&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;mut&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;X&quot;&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;.to_string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;..&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nd&quot;&gt;format!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Value: {}&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;address&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Address&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;street&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;10 Downing Street&quot;&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;.to_owned&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;city&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;.to_owned&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+    
+        &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;j&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;serde_json&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;to_string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;address&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;.unwrap&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;The server code I compiled as a statically linked executable for Linux (resulting
+in 4.5 MB).&lt;/p&gt;
+
+&lt;p&gt;The Stormforger load test looks like this:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;definition.setTarget(&quot;[host:port]&quot;);
+
+definition.setArrivalPhases([
+  {
+    duration: 60,
+    rate: 8.0,         // clients per second to launch
+    max_clients: 500,
+  },
+]);
+
+definition.setTestOptions({
+  cluster: { sizing: &quot;small&quot;, },
+});
+
+definition.session(&quot;Load Test 1&quot;, function(session) {
+
+  session.forEver(function(context){
+    context.get(&quot;/data&quot;, { tag: &quot;root&quot; });
+
+  });
+});
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;With that I was able to get about 6000 req/s out of the server before seeing
+the 99th percentile latency degrading. modifying the simulated work showed
+corresponding variations in req/s numbers so I am now sure I am not hitting
+any unwanted capacity limits.&lt;/p&gt;
+
+&lt;p&gt;Now that we have a baseline, let’s see what happens if we involve multiple cores.&lt;/p&gt;
+
+&lt;h3 id=&quot;minimal-multi-threaded-server-no-shared-state-no-io&quot;&gt;Minimal Multi-Threaded Server (No Shared State, No I/O)&lt;/h3&gt;
+
+&lt;p&gt;Running our server on multiple threads (and thus potentially cores) requires
+some changes to the approach towards server startup. As there is not
+yet any shared state between the individual requests we can spawn the threads
+independently, reusing the listening socket for each handler thread. This can
+be done with a combination of the net2 and tokio-core libraries and under the
+hood uses the operating system’s SO_REUSEPORT feature.&lt;/p&gt;
+
+&lt;p&gt;Here is the interesting part of the code:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;fn serve(addr: &amp;amp;SocketAddr, protocol: &amp;amp;Http) {
+    let mut core = Core::new().unwrap();
+    let handle = core.handle();
+    let listener = net2::TcpBuilder::new_v4().unwrap()
+    .reuse_port(true).unwrap()
+    .bind(addr).unwrap()
+    .listen(128).unwrap();
+    let listener = TcpListener::from_listener(listener, addr, &amp;amp;handle).unwrap();
+    core.run(listener.incoming().for_each(|(socket, addr)| {
+        protocol.bind_connection(&amp;amp;handle, socket, addr, Echo);
+        Ok(())
+    })).unwrap();
+}
+
+fn start_server(nb_instances: usize, addr: &amp;amp;str) {
+    let addr = addr.parse().unwrap();
+
+    let protocol = Arc::new(Http::new());
+    {
+        for _ in 0..nb_instances - 1 {
+            let protocol = protocol.clone();
+            thread::spawn(move || serve(&amp;amp;addr, &amp;amp;protocol));
+        }
+    }
+    serve(&amp;amp;addr, &amp;amp;protocol);
+}
+
+
+fn main() {
+    start_server(2, &quot;0.0.0.0:8080&quot;);
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Check out the &lt;a href=&quot;https://github.com/algermissen/web-rust/blob/master/src/bin/ts1.rs&quot;&gt;full source code&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;This version (using two threads) should give us roughly twice the throughput - let’s run
+the same test setup and meanwhile take a look at the graph from the single-threaded setup.
+It nicely shows how at 6k req/s the latencies start to increase, thereby capping the
+throughput at these 6k.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/blog/1-Threaded.jpg&quot; alt=&quot;Results 1-threaded&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;There, the result came back from the 2-threaded setup and (relief :-) just what we
+expected: the server is now giving us about 11k req/s and I indeed saw exactly two
+CPUs being saturated. Nice!&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/blog/2-Threaded.jpg&quot; alt=&quot;Results 2-threaded&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Next up is a 4-threaded version (on the 4 core machine) - will we be able to double
+again?&lt;/p&gt;
+
+&lt;p&gt;Yes, I am seeing the 4 cores being saturated and the latencies remain pretty ok
+until about 20k req/s.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/blog/4-Threaded.jpg&quot; alt=&quot;Results 4-threaded&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Yes, the 99th percentile rises somewhere around 15k, but for this initial
+verification that what I am doing makes some sort of sense the result is
+sufficient.&lt;/p&gt;
+
+&lt;p&gt;As a side note: 20k req/s at $ 0.05/h for the server gives roughly
+72 million req/h at 5 cents…&lt;/p&gt;
+
+&lt;p&gt;So much for getting out feet wet with Rust, hyper and Tokio and for establishing
+a baseline for comparing future variations. Next up I’ll look into a variant
+running on a Tokio-managed thread pool and how to share state across
+request handling threads (for example for rate limiting, metrics collection,
+logging).&lt;/p&gt;
+
+</description>
+        <pubDate>Thu, 13 Apr 2017 00:00:00 +0000</pubDate>
+        <link>/2017/04/web-services-with-rust-part-1-exploring-hyper</link>
+        <guid isPermaLink="true">/2017/04/web-services-with-rust-part-1-exploring-hyper</guid>
+        
+        <category>rust-web</category>
+        
+        
+        <category>rust</category>
+        
+      </item>
+    
+      <item>
+        <title>Using iron to Encapsulate Cookies</title>
+        <description>
+&lt;p&gt;&lt;a href=&quot;http://hueniverse.com&quot;&gt;Eran Hammer&lt;/a&gt; has recently created &lt;a href=&quot;https://github.com/hueniverse/iron&quot;&gt;iron&lt;/a&gt;, a cryptographic procedure and tool to seal arbitrary data in a way so that it cannot be read and also cannot be changed without being noticed.&lt;/p&gt;
+
+&lt;p&gt;Besides its intended use in combination with &lt;a href=&quot;https://github.com/hueniverse/oz&quot;&gt;Oz&lt;/a&gt; it can also be used in other scenarios. One of them being encapsulated HTTP cookies. While it is in no way a new thing to pass state to Web clients in encrypted form so they cannot read it or tamper with it, doing it right is relatively hard. Hence, it is great to now have a quasi-standard and sound &lt;a href=&quot;https://github.com/hueniverse/iron#introduction&quot;&gt;definition&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Update&lt;/strong&gt;: Looking something up in &lt;a href=&quot;https://twitter.com/postwait&quot;&gt;Theo Schlossnagle&lt;/a&gt;’s &lt;a href=&quot;http://omniti.com/writes/scalable-internet-architectures&quot;&gt;&lt;em&gt;Building Scalable Internet Architectures&lt;/em&gt;&lt;/a&gt; I found a passage &lt;em&gt;Addressing Security and Integrity&lt;/em&gt; in chapter 7, p.130 that resembles the topic of this post.&lt;/p&gt;
+
+&lt;p&gt;To bring iron into the Java world, I have created &lt;a href=&quot;https://github.com/algermissen/jiron&quot;&gt;jiron&lt;/a&gt; and an &lt;a href=&quot;https://github.com/algermissen/iron-cookie&quot;&gt;example project&lt;/a&gt; to illustrate how to use iron for HTTP cookie authentication with encapsulated tokens.&lt;/p&gt;
+
+&lt;p&gt;First, let’s see, how to use jiron to seal and unseal data:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;import net.jalg.jiron.Jiron;
+
+String data = &quot;Some secret stuff we want protected&quot;;
+
+String sealed = Jiron.seal(data, &quot;sealing-password&quot;,
+                                        Jiron.DEFAULT_ENCRYPTION_OPTIONS,
+                                        Jiron.DEFAULT_INTEGRITY_OPTIONS);
+   
+String unsealed = Jiron.unseal(sealed, &quot;sealing-password&quot;,
+					Jiron.DEFAULT_ENCRYPTION_OPTIONS,
+					Jiron.DEFAULT_INTEGRITY_OPTIONS);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;The String &lt;code class=&quot;highlighter-rouge&quot;&gt;sealed&lt;/code&gt; is what you can pass around and be sure that nobody can read or modify it, unless in possession of the sealing password.&lt;/p&gt;
+
+&lt;p&gt;Suppose you have a Web site that employs cookie-based authentication and suppose you have some data you want to store in that cookie directly so you do not have to go to a database shared by all server instances for looking up that data. For example the user’s login, her real name and information when the cookie expires and re-authentication is enforced.&lt;/p&gt;
+
+&lt;p&gt;Initially, a user not in possession of the cookie will be redirected to a login form and the cookie will be issued upon submission of valid credentials. Here is an excerpt of the &lt;a href=&quot;https://github.com/algermissen/iron-cookie/blob/master/src/main/java/net/jalg/ironcookie/LoginResource.java&quot;&gt;form processing JAX-RS resource&lt;/a&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;String data = login + &quot;|&quot; + expires + &quot;|&quot; + realname;
+String cookieValue = Jiron.seal(data, ApplicationConfig.ENCRYPTION_KEY,
+					Jiron.DEFAULT_ENCRYPTION_OPTIONS,
+					Jiron.DEFAULT_INTEGRITY_OPTIONS);
+
+NewCookie c = new NewCookie(AuthFilter.COOKIE_NAME, cookieValue);
+return Response.seeOther(redirectUri).cookie(c).build();
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;In the HTTP response the cookie will look something like (line breaks added for clarity):&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Set-Cookie:authtoken=Fe26.1**7A6A689DEC9563773B1264CF4CC585CFC9CF84403EE9143650D2EC2EE&amp;lt;br&amp;gt;&amp;lt;/br&amp;gt;24E36A3*k9yW1ZlC5Tr1a5o2Os_QMQ*sxZkQJfHsfyZE_0DI3ugHKdQ3IXwy1jySoz7GrKiTWU*9C58B956A11&amp;lt;br&amp;gt;&amp;lt;/br&amp;gt;81D1F1E3A1A7A1B67D2CF7738B0BFB16C5EB4B381151CAEEC4C6C*3PxSsg5aThLGvU2e8ItXfep-hpMw5x96&amp;lt;br&amp;gt;&amp;lt;/br&amp;gt;L_PbelhnU84;Version=1
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;To protect &lt;a href=&quot;https://github.com/algermissen/iron-cookie/blob/master/src/main/java/net/jalg/ironcookie/DashboardResource.java&quot;&gt;a resource class&lt;/a&gt; by enforcing cookie auth, we bind a JAX-RS 2.0 filter to that class using a new &lt;a href=&quot;https://github.com/algermissen/iron-cookie/blob/master/src/main/java/net/jalg/ironcookie/TokenAuthProtected.java&quot;&gt;annotation&lt;/a&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;//...
+@TokenAuthProtected
+public String getDashboard(@Context SecurityContext sc) { ... }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;The &lt;a href=&quot;https://github.com/algermissen/iron-cookie/blob/master/src/main/java/net/jalg/ironcookie/AuthFilter.java&quot;&gt;auth enforcing filter class&lt;/a&gt; extracts the cookie, checks expiration time and puts the data contained in the cookie in a place where it can be accessed by the resource class.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Cookie cookie = context.getCookies().get(COOKIE_NAME);
+// Redirect to form if no cookie
+String data = Jiron.unseal(cookie.getValue(), ApplicationConfig.ENCRYPTION_KEY,
+					Jiron.DEFAULT_ENCRYPTION_OPTIONS,
+					Jiron.DEFAULT_INTEGRITY_OPTIONS);
+// ...
+String[] fields = data.split(&quot;\\|&quot;);
+final String username = fields[0];
+final long expires = Long.parseLong(fields[1]);
+final String realname = fields[2];
+// ...
+if (now &amp;gt; expires) {
+  context.abortWith(Response.temporaryRedirect(loginFormUri).build());
+  return;
+}
+
+context.setSecurityContext(new TokenSecurityContext(username, realname));
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Using the security context and a custom Principal, the resource class is provided access to the user’s login and realname.&lt;/p&gt;
+
+&lt;p&gt;(There is currently discussion in the JAX-RS 2 expert group to enable passing information from filters to resource classes using properties on the filter chain. That would be the better solution than the SecurityContext/Principal ‘hack’).&lt;/p&gt;
+
+&lt;p&gt;Please have a look at the source code for the code details.&lt;/p&gt;
+
+</description>
+        <pubDate>Wed, 29 May 2013 00:00:00 +0000</pubDate>
+        <link>/2013/05/using-iron-to-encapsulate-cookies</link>
+        <guid isPermaLink="true">/2013/05/using-iron-to-encapsulate-cookies</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>Beyond OAuth</title>
+        <description>
+&lt;p&gt;&lt;a href=&quot;http://hueniverse.com&quot;&gt;Eran Hammer&lt;/a&gt;’s &lt;a href=&quot;http://hueniverse.com/2012/07/oauth-2-0-and-the-road-to-hell/&quot;&gt;noisy departure&lt;/a&gt; from &lt;a href=&quot;http://tools.ietf.org/html/rfc6749&quot;&gt;OAuth 2&lt;/a&gt; woke me up to finally engage in that HTTP security investigation that had been buried in my todo list for years. Thanks a bunch for that, Eran!&lt;/p&gt;
+
+&lt;p&gt;Starting from close-to-zero security knowledge it took some time to understand the &lt;a href=&quot;http://hueniverse.com/2010/09/oauth-bearer-tokens-are-a-terrible-idea/&quot;&gt;points&lt;/a&gt; &lt;a href=&quot;http://www.ietf.org/mail-archive/web/oauth/current/msg00507.html&quot;&gt;he&lt;/a&gt; &lt;a href=&quot;http://hueniverse.com/2010/09/oauth-2-0-without-signatures-is-bad-for-the-web/&quot;&gt;is&lt;/a&gt; &lt;a href=&quot;http://hueniverse.com/2010/09/more-oauth-nonsense/&quot;&gt;making&lt;/a&gt; but finally it all came together: Yep - sadly he’s spot on with his &lt;a href=&quot;http://hueniverse.com/2012/11/fuckoauth-realtimeconf/&quot;&gt;criticism&lt;/a&gt;. If in doubt, look at the &lt;a href=&quot;http://tools.ietf.org/html/rfc6819&quot;&gt;OAuth 2.0 Threat Model&lt;/a&gt; or the &lt;a href=&quot;https://datatracker.ietf.org/doc/search/?name=oauth&amp;amp;activeDrafts=on&quot;&gt;bloating OAuth related I-Ds&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Regarding his IETF criticism, I can see where he is coming from, given the amount of Big Co representatives in that WG, but I don’t think the IETF is to blame in general. Personally I like written standards and I like the process to be slow to buffer change. In the end, it depends on the staffing I’d say, not the organization as such.&lt;/p&gt;
+
+&lt;p&gt;Suggestions? Steer clear of OAuth 2, it’s a waste of time. Stick to &lt;a href=&quot;http://tools.ietf.org/html/rfc5849&quot;&gt;OAuth 1&lt;/a&gt; if you need something right now, or, much better, follow the new thing…&lt;/p&gt;
+
+&lt;p&gt;Fortunately &lt;a href=&quot;https://groups.google.com/forum/?fromgroups=#!forum/oz-protocol&quot;&gt;Eran resumed productivity&lt;/a&gt; and started work on a set of &lt;em&gt;the-code-is-the-specification&lt;/em&gt; modules for node.js that each cover a distinct aspect of what really smells like a useful successor of OAuth: &lt;a href=&quot;https://github.com/hueniverse/iron&quot;&gt;iron&lt;/a&gt;, &lt;a href=&quot;https://github.com/hueniverse/hawk&quot;&gt;Hawk&lt;/a&gt;, and &lt;a href=&quot;https://github.com/hueniverse/oz&quot;&gt;Oz&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/hueniverse/iron&quot;&gt;iron&lt;/a&gt; implements a cryptographic procedure for encrypting arbitrary data and ensuring the integrity of the result. In the context of coming up with an OAuth successor it serves as a tool to provide a stateless way of authenticating a request and checking authorization. “Stateless” as in “no shared state between hundreds of scaled-out auth-checking servers”. That in itself is big.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/hueniverse/hawk&quot;&gt;Hawk&lt;/a&gt; implements an HTTP HMAC-based authentication scheme. It builds upon the &lt;a href=&quot;http://tools.ietf.org/html/draft-ietf-oauth-v2-http-mac-01&quot;&gt;work&lt;/a&gt; Eran has done on this in the OAuth 2 context and addresses the requirement of doing authentication without passing passwords around the Web.&lt;/p&gt;
+
+&lt;p&gt;Finally, &lt;a href=&quot;https://github.com/hueniverse/oz&quot;&gt;Oz&lt;/a&gt; addresses the use case of delegated authorization, the stuff you have in mind when you are looking for an OAuth successor. Oz builds upon iron and Hawk to solve some of the statefulness problems of OAuth 1 and to employ a mandatory, sound, yet simpler-than-OAuth-1 signature mechanism.&lt;/p&gt;
+
+&lt;p&gt;Over the past months I have been sort of reengineering the procedures implicitly defined by the three modules to create implementations of them in Java and C. I also work on creating written specs for them to reduce the impact of programming language specifics on the procedures. This should help to create interoperable implementations in other languages. For example, there is quite some implicit encoding stuff going on in the node.js implementation that needs to be nailed down when you do the Java thing.&lt;/p&gt;
+
+&lt;p&gt;So far, I have a Java implementation of iron ready, called &lt;a href=&quot;https://github.com/algermissen/jiron&quot;&gt;jiron&lt;/a&gt; and one in C called &lt;a href=&quot;https://github.com/algermissen/ciron&quot;&gt;ciron&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;There is also an implementation of Hawk in Java, named &lt;a href=&quot;https://github.com/algermissen/hawkj&quot;&gt;hawkj&lt;/a&gt; and I am working on example JAX-RS 2 filter implementations to show how to use it.&lt;/p&gt;
+
+&lt;p&gt;The situation regarding Oz is a bit difficult because Eran has not yet produced a writeup of his ideas and I do not feel capable of extracting these ideas from the existing node.js module code base. AFAIU his ideas are still not completely stable either So I will put this on hold for now. He’s activelu on it so it won’t be too long.&lt;/p&gt;
+
+&lt;p&gt;Another thing is that, while I am excited with what you can see in Oz already, I have use cases in mind for an OAuth successor myself. While Eran is explicitly focussing on mobile and steering clear of typical enterprise use cases (“boss wants to grant secretary access to his calendar” , “Report generator client must have read-access to all calendars of all users”) I am interested in a solution that covers all the use cases you can think of for RESTful APIs. Public-facing as well as intra-enterprise.&lt;/p&gt;
+
+&lt;p&gt;I think I have something there that addresses arbitrary use cases in the HTTP-API space and is not just an &lt;a href=&quot;http://tools.ietf.org/html/rfc6749&quot;&gt;essentially meaningless framework&lt;/a&gt; and also doesn’t end up being an enterprisey, complexity-bloated monster. I am not yet clear whether it can be an evolution of Oz or needs to be a competitor. We’ll see about that.&lt;/p&gt;
+
+&lt;p&gt;In any case, it is a fascinating space to explore once you get over the initial crypto-confusion barrier.&lt;/p&gt;
+
+</description>
+        <pubDate>Wed, 29 May 2013 00:00:00 +0000</pubDate>
+        <link>/2013/05/beyond-oauth</link>
+        <guid isPermaLink="true">/2013/05/beyond-oauth</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>Getting Started Playing Around with JAX-RS 2.0 in an EE Container</title>
+        <description>
+&lt;p&gt;Trying out the latest JAX-RS API advancements in an EE container is a bit of a pain because pulling in the latest JAX-RS 2.0 libraries into a Java EE environment creates conflicts with the EE-shipped JAX-RS version. Ah yes, and of course you want your IDE to pick up the correct libs for code completion.&lt;/p&gt;
+
+&lt;p&gt;After trying and tweaking a bit the most workable solution for me was to download the latest Glassfish 4 build. It uses a Jersey version that is usually only a couple of days behind the JAX-RS API Snapshot.&lt;/p&gt;
+
+&lt;p&gt;Here is what I do:&lt;/p&gt;
+
+&lt;p&gt;First, go to the &lt;a href=&quot;http://dlc.sun.com.edgesuite.net/glassfish/4.0/promoted/&quot;&gt;lastest Glassfish builds&lt;/a&gt; and download the file named glassfish-4.0-bxx.zip with xx having the highest number (as of Nov 19th this is &lt;a href=&quot;http://dlc.sun.com.edgesuite.net/glassfish/4.0/promoted/glassfish-4.0-b63.zip&quot;&gt;glassfish-4.0-b63.zip&lt;/a&gt;).&lt;/p&gt;
+
+&lt;p&gt;This will unzip to a glassfish3/ directory, so to start the server do&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;glassfish3/glassfish/bin/asadmin start-domain
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;To find the JAX-RS version included in the Glassfish you just downloaded do something like the following:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;jar -xf glassfish3/glassfish/modules/javax.ws.rs-api.jar META-INF/MANIFEST.MF; grep Bundle-Version META-INF/MANIFEST.MF
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;(This will leave a META-INF directory behind you might want to clean up afterwards)&lt;/p&gt;
+
+&lt;p&gt;For the b63 version this yields:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Bundle-Version: 2.0.0.m12
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;The next step is to create a project to test things out. I am using the following archetype, but any other EE Web profile archetype should work similarly:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mvn archetype:generate \
+  -DarchetypeGroupId=org.codehaus.mojo.archetypes \
+  -DarchetypeArtifactId=webapp-javaee6 \
+  -DgroupId=org.example \
+  -DartifactId=test \
+  -DinteractiveMode=false
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Now let’s edit the POM to pull in the JAX-RS 2.0-Version used by the Glassfish. First, add the proper repository.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; &amp;lt;repository&amp;gt;
+ &amp;lt;id&amp;gt;snapshot-repository.java.net&amp;lt;/id&amp;gt;
+ &amp;lt;name&amp;gt;Java.net Snapshot Repository for Maven&amp;lt;/name&amp;gt;
+ &amp;lt;url&amp;gt;https://maven.java.net/content/repositories/snapshots/&amp;lt;/url&amp;gt;
+ &amp;lt;layout&amp;gt;default&amp;lt;/layout&amp;gt;
+ &amp;lt;/repository&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Then add the dependency to the specific release (note that the version is not literally the same as the bundle version you extracted above):&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;lt;dependency&amp;gt;
+  &amp;lt;groupId&amp;gt;javax.ws.rs&amp;lt;/groupId&amp;gt;
+  &amp;lt;artifactId&amp;gt;javax.ws.rs-api&amp;lt;/artifactId&amp;gt;
+  &amp;lt;version&amp;gt;2.0-m12&amp;lt;/version&amp;gt;
+  &amp;lt;scope&amp;gt;provided&amp;lt;/scope&amp;gt;
+&amp;lt;/dependency&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;UPDATE&lt;/strong&gt;: It seems you have to make sure you include this dependency &lt;strong&gt;before&lt;/strong&gt; the dependency to the Java EE Web API. Otherwise, maven insists on trying to use the JAX-RS API version of the Java EE Web API.&lt;/p&gt;
+
+&lt;p&gt;You should now be able to &lt;code class=&quot;highlighter-rouge&quot;&gt;mvn package&lt;/code&gt; and deploy to the Glassfish instance any 2.0-m12 based source code.&lt;/p&gt;
+
+&lt;p&gt;The final step will be to cd into your project folder and set up your IDE project. E.g. with Eclipse run&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mvn eclipse:eclipse
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;and import as existing Maven project into Eclipse.&lt;/p&gt;
+
+&lt;p&gt;Code completion should now suggest you the 2.0-m12 API.&lt;/p&gt;
+
+&lt;p&gt;If you want to have code completion work with the SNAPSHOT, simply change the POM dependency and rerun &lt;code class=&quot;highlighter-rouge&quot;&gt;mvn eclipse:eclipse&lt;/code&gt;. This will likely break when deployed in the container (if you use a SNAPSHOT-only API feature) but still it is nice to play around with the very latest API changes.&lt;/p&gt;
+
+&lt;p&gt;This focusses on JAX-RS 2.0 latest features. Keep in mind that for the rest of Java EE we referenced the EE6 Web API  profile. This is not for testing latest EE7 features in general.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;UPDATE&lt;/strong&gt;: You can find the releases, including the apidoc jars &lt;a href=&quot;http://repo1.maven.org/maven2/javax/ws/rs/javax.ws.rs-api/&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+</description>
+        <pubDate>Mon, 19 Nov 2012 00:00:00 +0000</pubDate>
+        <link>/2012/11/getting-started-playing-around-with-jax-rs-2-0-in-an-ee-container</link>
+        <guid isPermaLink="true">/2012/11/getting-started-playing-around-with-jax-rs-2-0-in-an-ee-container</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>JAX-RS 2.0 Essential Bookmarks</title>
+        <description>
+&lt;p&gt;In my &lt;a href=&quot;http://www.slideshare.net/algermissen/jaxrs-20-new-features&quot;&gt;JAX-RS 2.0 talk&lt;/a&gt; at DEVOXX 2012 I promised to write down the useful links to play around with 2.0. Here they come:&lt;/p&gt;
+
+&lt;h3 id=&quot;jax-rs-20&quot;&gt;JAX-RS 2.0&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;http://www.jcp.org/en/jsr/detail?id=339`&quot;&gt;JSR339 Homepage&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://jax-rs-spec.java.net/nonav/2.0-SNAPSHOT/apidocs/&quot;&gt;SNAPSHOT API docs&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://java.net/jira/browse/JAX_RS_SPEC&quot;&gt;JAX-RS 2.0 Specification JIRA&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://java.net/projects/jax-rs-spec/sources/git/show&quot;&gt;Spec and API latest sources&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;jersey--glassfish&quot;&gt;Jersey + glassfish&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;http://jersey.java.net/nonav/apidocs/snapshot/jersey/&quot;&gt;Jersey 2.0 API docs&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://jersey.java.net/nonav/documentation/snapshot/index.html&quot;&gt;Jersey 2.0 Snapshot User Guide&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://java.net/jira/browse/JERSEY/&quot;&gt;Jersey JIRA&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://dlc.sun.com.edgesuite.net/glassfish/4.0/promoted/&quot;&gt;Glassfish latest builds&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;resteasy&quot;&gt;RESTEasy&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://issues.jboss.org/browse/RESTEASY&quot;&gt;RESTEasy JIRA&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;blogs&quot;&gt;Blogs&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;http://marek.potociar.net&quot;&gt;Marek’s Blog&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://bill.burkecentral.com/category/jax-rs/&quot;&gt;Bill’s JAX-RS blogs&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+</description>
+        <pubDate>Tue, 13 Nov 2012 00:00:00 +0000</pubDate>
+        <link>/2012/11/jax-rs-2-0-essential-bookmarks</link>
+        <guid isPermaLink="true">/2012/11/jax-rs-2-0-essential-bookmarks</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>JAX-RS 2.0 MVC</title>
+        <description>
+&lt;p&gt;It is not unusual for services that expose a technical REST API to also need human-targeted UI for configuration, status checks or reporting.&lt;/p&gt;
+
+&lt;p&gt;What I have seen a couple of times is that developers naturally use some form of REST framework (for example JAX-RS) for the technical API but then make use of yet another API technology (for example Spring or JSF) for the human-targeted UI.&lt;/p&gt;
+
+&lt;p&gt;This not only increases the technology mix (something I personally strive to avoid as much as possible), but it also introduces a distinction between technical and human API that should not be made in my opinion. From an API point of view an HTTP interface that serves HTML and AJAX-targeted JSON is as much a REST-API as is one that serves XML or ‘technical’ JSON.&lt;/p&gt;
+
+&lt;p&gt;Instead, you should treat both as aspects of one and the same API. For one you will likely find resources in both API-’parts’ that serve representations of the same concepts (for example calendar events, shopping carts or contract information). Such repesentations of should be produced by one and the same resource. This reduces the amount of code and will help you, for example, to apply corresponding cacheability properties to both representations.&lt;/p&gt;
+
+&lt;p&gt;In addition, it will encourage you to treat the human-targeted API-parts with the same care as the technical ones. For example, you should allow introspection into them using some form of home document. Above all, you’ll never know in which ways clients re-use those HTML pages or snippets you serve.&lt;/p&gt;
+
+&lt;p&gt;Having said that, what might – besides just habits – be the reason that developers do not think ‘REST-API’ when they think ‘GUI’? Is it because many REST frameworks out there have very poor support for serving document-oriented representations such as HTML pages?&lt;/p&gt;
+
+&lt;p&gt;While some JAX-RS implementations have proprietary support for templating, the new JAX-RS 2.0 filter API lets you roll your own with a couple of lines of code.&lt;/p&gt;
+
+&lt;p&gt;Instead of the ‘Web-container-only’-setup I used in the last blog I would like full Java EE6 support this time. Fortunately, Arun Gupta has provided an example of how get JAX-RS 2.0 to work in a Java EE 6 container.&lt;/p&gt;
+
+&lt;p&gt;First I created a project based on the archetype Arun uses:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mvn archetype:generate \
+   -DarchetypeGroupId=org.codehaus.mojo.archetypes \
+   -DarchetypeArtifactId=webapp-javaee6 \
+   -DgroupId=net.jalg \
+   -DartifactId=mvc \
+   -DinteractiveMode=false
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;and then added the neccessary repository and dependencies the way he describes. Because JAX-RS 2.0 and Jersey currently undergo some sort of last minute changes I have changed the Jersey dependencies to be on 2.0-SNAPSHOT to get the latest developments.&lt;/p&gt;
+
+&lt;p&gt;The templating support I have in mind would let me return any object from a JAX-RS resource method. In addition it would let me annotate the resource method to specify a template to use for constructing the representations. Like so:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;@Path(&quot;user/{userId}/account&quot;)
+public class Facade {
+    @PathParam(&quot;userId&quot;) String userId;
+ 
+    @GET
+    @Produces(&quot;text/html&quot;)
+    @Path(&quot;contract-details&quot;)
+    @Template(&quot;templates/contract.vm&quot;)
+    public Contract getContractDetails() {
+        return new Contract(&quot;123456&quot;, userId, &quot;new&quot;);
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;The problem here is that the JAX-RS runtime will pick the MessageBodyWriter implementation based on the returned type. It will not, magically, invoke some sort of templating engine. So, how can we trick the runtime into choosing a different MessageBodyWriter? And how can we pass to that not only the returned object but also the path of the desired template?&lt;/p&gt;
+
+&lt;p&gt;Here the filter API comes in. We can use the @Template annotation to also act as a binding for a particular filter. This is done with the @NameBinding annotation from the new filter API:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;@NameBinding
+@Target({ ElementType.TYPE, ElementType.METHOD })
+@Retention(value = RetentionPolicy.RUNTIME)
+public @interface Template {
+  String value() default &quot;&quot;;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Now the runtime will invoke all filters annotated with @Template when our getContractDetails() method is called and we can work the magic in a filter.&lt;/p&gt;
+
+&lt;p&gt;What happens in the filter below is that we replace the response entity with a wrapper object that holds the template path and the original response entity. The template path we can extract from the annotation, the original response entity we extract from the response context.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;@Provider
+@Template
+public class EntityToModelAndViewWrapper implements ContainerResponseFilter {
+ 
+    @Override
+    public void filter(ContainerRequestContext requestContext,
+      ContainerResponseContext responseContext) throws IOException {
+ 
+        for (Annotation a : responseContext.getEntityAnnotations()) {
+            if (a.annotationType() == Template.class) {
+                String templatePath = ((Template) a).value();
+                ModelAndView mav = new ModelAndView(responseContext.getEntity(),templatePath);
+                responseContext.setEntity(mav,
+                   responseContext.getEntityAnnotations(),
+                responseContext.getMediaType());
+                break;
+            }
+        }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;By changing the type of the response entity, we gain control over the MessageBodyWriter selection. And the runtime will now invoke the MessageBodyWriter we have provided for ModelAndView instances:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;@Provider
+...
+public class ModelToViewMBR implements MessageBodyWriter&amp;lt;ModelAndView&amp;gt; {
+  ...
+    @Override
+    void writeTo(ModelAndView mav, Class&amp;lt;?&amp;gt; arg1, Type arg2,
+            Annotation[] arg3, MediaType arg4,
+            MultivaluedMap&amp;lt;String, Object&amp;gt; arg5, OutputStream output)
+            throws IOException, WebApplicationException {
+        Map&amp;lt;String, Object&amp;gt; map = new HashMap&amp;lt;String,Object&amp;gt;();
+        map.put(&quot;entity&quot;, mav.getModel());
+        engine.merge(mav.getView(),output,map);
+    }
+    ...
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;In the writeTo() method we make the original response entity available to a templating engine under the name ‘entity’ and invoke the merge of template and entity.&lt;/p&gt;
+
+&lt;p&gt;The engine member is an instance of a template engine wrapper. You can see the details in the TemplateEngine class in the example source code.&lt;/p&gt;
+
+&lt;p&gt;In addition to the response entity it should not be too hard to make available to the template engine all the managed beans of the container runtime’s current session (the request). That way one would have the full power of EJB 3.1 and CDI at one’s disposal.&lt;/p&gt;
+
+</description>
+        <pubDate>Mon, 08 Oct 2012 00:00:00 +0000</pubDate>
+        <link>/2012/10/jax-rs-2-0-mvc</link>
+        <guid isPermaLink="true">/2012/10/jax-rs-2-0-mvc</guid>
+        
+        
+      </item>
+    
+  </channel>
+</rss>

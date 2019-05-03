@@ -1,9 +1,9 @@
 ---
 layout: post
-title: "Go Bookmarks"
-description: "A collection of references for Go programming"
-category: "go"
-excerpt: This is my collection of references I found especially useful to understand idiomatic solutions to various design problems and Go internals.
+title: "REST Design Essentials"
+description: "A collection of resources that discuss essential REST design patterns"
+category: "rest"
+excerpt: This is a collection of references that discuss elegant or interesting RESTful solutions to specific problems.
 ---
 {% include JB/setup %}
 
