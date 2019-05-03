@@ -4,10 +4,10 @@
     <title>Jan Algermissen - Solutions Engineering</title>
     <description>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.
 </description>
-    <link>http://localhost:4000/</link>
-    <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Fri, 03 May 2019 14:30:16 +0200</pubDate>
-    <lastBuildDate>Fri, 03 May 2019 14:30:16 +0200</lastBuildDate>
+    <link>/</link>
+    <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Fri, 03 May 2019 14:36:54 +0200</pubDate>
+    <lastBuildDate>Fri, 03 May 2019 14:36:54 +0200</lastBuildDate>
     <generator>Jekyll v3.3.0</generator>
     
       <item>
@@ -19,8 +19,8 @@
 
 </description>
         <pubDate>Sat, 02 Mar 2019 00:00:00 +0100</pubDate>
-        <link>http://localhost:4000/2019/03/rest-design-essentials</link>
-        <guid isPermaLink="true">http://localhost:4000/2019/03/rest-design-essentials</guid>
+        <link>/2019/03/rest-design-essentials</link>
+        <guid isPermaLink="true">/2019/03/rest-design-essentials</guid>
         
         
         <category>rest</category>
@@ -89,8 +89,8 @@ obvious at fiorst sight:&lt;/p&gt;
 &lt;/ul&gt;
 </description>
         <pubDate>Sun, 28 Jan 2018 00:00:00 +0100</pubDate>
-        <link>http://localhost:4000/2018/01/go-bookmarks</link>
-        <guid isPermaLink="true">http://localhost:4000/2018/01/go-bookmarks</guid>
+        <link>/2018/01/go-bookmarks</link>
+        <guid isPermaLink="true">/2018/01/go-bookmarks</guid>
         
         
         <category>go</category>
@@ -215,8 +215,8 @@ of the language Rust as such.&lt;/p&gt;
 
 </description>
         <pubDate>Fri, 29 Sep 2017 00:00:00 +0200</pubDate>
-        <link>http://localhost:4000/2017/09/hyper-client-and-self-signed-certs</link>
-        <guid isPermaLink="true">http://localhost:4000/2017/09/hyper-client-and-self-signed-certs</guid>
+        <link>/2017/09/hyper-client-and-self-signed-certs</link>
+        <guid isPermaLink="true">/2017/09/hyper-client-and-self-signed-certs</guid>
         
         <category>rust-web</category>
         
@@ -339,8 +339,8 @@ on a different thread than more IO bound tasks.&lt;/p&gt;
 
 </description>
         <pubDate>Thu, 18 May 2017 00:00:00 +0200</pubDate>
-        <link>http://localhost:4000/2017/05/web-services-with-rust-part-3-accept-all-we-can</link>
-        <guid isPermaLink="true">http://localhost:4000/2017/05/web-services-with-rust-part-3-accept-all-we-can</guid>
+        <link>/2017/05/web-services-with-rust-part-3-accept-all-we-can</link>
+        <guid isPermaLink="true">/2017/05/web-services-with-rust-part-3-accept-all-we-can</guid>
         
         <category>rust-web</category>
         
@@ -492,8 +492,8 @@ of the available resources, activities like HTML template rendering or JSON seri
 directly impact the capacity limit of a server.&lt;/p&gt;
 </description>
         <pubDate>Wed, 26 Apr 2017 00:00:00 +0200</pubDate>
-        <link>http://localhost:4000/2017/04/web-services-with-rust-part-2-baseline-revisited</link>
-        <guid isPermaLink="true">http://localhost:4000/2017/04/web-services-with-rust-part-2-baseline-revisited</guid>
+        <link>/2017/04/web-services-with-rust-part-2-baseline-revisited</link>
+        <guid isPermaLink="true">/2017/04/web-services-with-rust-part-2-baseline-revisited</guid>
         
         <category>rust-web</category>
         
@@ -717,8 +717,8 @@ logging).&lt;/p&gt;
 
 </description>
         <pubDate>Thu, 13 Apr 2017 00:00:00 +0200</pubDate>
-        <link>http://localhost:4000/2017/04/web-services-with-rust-part-1-exploring-hyper</link>
-        <guid isPermaLink="true">http://localhost:4000/2017/04/web-services-with-rust-part-1-exploring-hyper</guid>
+        <link>/2017/04/web-services-with-rust-part-1-exploring-hyper</link>
+        <guid isPermaLink="true">/2017/04/web-services-with-rust-part-1-exploring-hyper</guid>
         
         <category>rust-web</category>
         
@@ -814,8 +814,8 @@ context.setSecurityContext(new TokenSecurityContext(username, realname));
 
 </description>
         <pubDate>Wed, 29 May 2013 00:00:00 +0200</pubDate>
-        <link>http://localhost:4000/2013/05/using-iron-to-encapsulate-cookies</link>
-        <guid isPermaLink="true">http://localhost:4000/2013/05/using-iron-to-encapsulate-cookies</guid>
+        <link>/2013/05/using-iron-to-encapsulate-cookies</link>
+        <guid isPermaLink="true">/2013/05/using-iron-to-encapsulate-cookies</guid>
         
         
       </item>
@@ -855,8 +855,8 @@ context.setSecurityContext(new TokenSecurityContext(username, realname));
 
 </description>
         <pubDate>Wed, 29 May 2013 00:00:00 +0200</pubDate>
-        <link>http://localhost:4000/2013/05/beyond-oauth</link>
-        <guid isPermaLink="true">http://localhost:4000/2013/05/beyond-oauth</guid>
+        <link>/2013/05/beyond-oauth</link>
+        <guid isPermaLink="true">/2013/05/beyond-oauth</guid>
         
         
       </item>
@@ -947,8 +947,8 @@ context.setSecurityContext(new TokenSecurityContext(username, realname));
 
 </description>
         <pubDate>Mon, 19 Nov 2012 00:00:00 +0100</pubDate>
-        <link>http://localhost:4000/2012/11/getting-started-playing-around-with-jax-rs-2-0-in-an-ee-container</link>
-        <guid isPermaLink="true">http://localhost:4000/2012/11/getting-started-playing-around-with-jax-rs-2-0-in-an-ee-container</guid>
+        <link>/2012/11/getting-started-playing-around-with-jax-rs-2-0-in-an-ee-container</link>
+        <guid isPermaLink="true">/2012/11/getting-started-playing-around-with-jax-rs-2-0-in-an-ee-container</guid>
         
         
       </item>
@@ -991,8 +991,8 @@ context.setSecurityContext(new TokenSecurityContext(username, realname));
 
 </description>
         <pubDate>Tue, 13 Nov 2012 00:00:00 +0100</pubDate>
-        <link>http://localhost:4000/2012/11/jax-rs-2-0-essential-bookmarks</link>
-        <guid isPermaLink="true">http://localhost:4000/2012/11/jax-rs-2-0-essential-bookmarks</guid>
+        <link>/2012/11/jax-rs-2-0-essential-bookmarks</link>
+        <guid isPermaLink="true">/2012/11/jax-rs-2-0-essential-bookmarks</guid>
         
         
       </item>
