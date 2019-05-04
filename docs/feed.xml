@@ -6,9 +6,26 @@
 </description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 06 Feb 2019 06:48:04 +0000</pubDate>
-    <lastBuildDate>Wed, 06 Feb 2019 06:48:04 +0000</lastBuildDate>
+    <pubDate>Sat, 04 May 2019 09:13:13 +0200</pubDate>
+    <lastBuildDate>Sat, 04 May 2019 09:13:13 +0200</lastBuildDate>
     <generator>Jekyll v3.3.0</generator>
+    
+      <item>
+        <title>REST Design Essentials</title>
+        <description>
+&lt;p&gt;&lt;a href=&quot;https://www.w3.org/People/Fielding/draft-ietf-uri-roy-urn-urc-00.txt&quot;&gt;How Roy would Implement URNs and URCs Today&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://www.xent.com/pipermail/fork/2001-September/004712.html&quot;&gt;WebDAV vs HTTP method semantics&lt;/a&gt;&lt;/p&gt;
+
+</description>
+        <pubDate>Sat, 02 Mar 2019 00:00:00 +0100</pubDate>
+        <link>/2019/03/rest-design-essentials</link>
+        <guid isPermaLink="true">/2019/03/rest-design-essentials</guid>
+        
+        
+        <category>rest</category>
+        
+      </item>
     
       <item>
         <title>Go Bookmarks</title>
@@ -43,24 +60,35 @@ handlers signature or using request context values):&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&quot;https://www.calhoun.io/pitfalls-of-context-values-and-how-to-avoid-or-mitigate-them/&quot;&gt;Pitfalls of context values and how to avoid or mitigate them in Go&lt;/a&gt;&lt;/p&gt;
 
+&lt;h2 id=&quot;testing&quot;&gt;Testing&lt;/h2&gt;
+
+&lt;p&gt;This talk discusses useful strategies for testing that mostly present in Go’s standard library but are
+are not well known.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://m.youtube.com/watch?v=yszygk1cpEc&quot;&gt;“Advanced Testing with Go by Mitchell Hashimoto”&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Silde deck summarizing a number of testing features in a concise way. Good place
+to look somethingup quickly.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://talks.golang.org/2014/testing.slide#1&quot;&gt;“Testing Techniques”&lt;/a&gt;&lt;/p&gt;
+
 &lt;h2 id=&quot;go-gotchas&quot;&gt;Go Gotchas&lt;/h2&gt;
 
 &lt;p&gt;These links address subtle issues about the Go language, that do not appear
 obvious at fiorst sight:&lt;/p&gt;
 
-&lt;p&gt;Go has a potential for memory leaks, described in this section
-&lt;a href=&quot;https://github.com/golang/go/wiki/SliceTricks#delete-without-preserving-order&quot;&gt;Delete without preserving order&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Go has a potential for memory leaks, described in this section&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/golang/go/wiki/SliceTricks#delete-without-preserving-order&quot;&gt;Delete without preserving order&lt;/a&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;other-reference-lists&quot;&gt;Other Reference Lists&lt;/h2&gt;
 
 &lt;ul&gt;
   &lt;li&gt;https://github.com/golang/go/wiki/Articles&lt;/li&gt;
   &lt;li&gt;https://awesome-go.com&lt;/li&gt;
-  &lt;li&gt;&lt;/li&gt;
 &lt;/ul&gt;
-
 </description>
-        <pubDate>Sun, 28 Jan 2018 00:00:00 +0000</pubDate>
+        <pubDate>Sun, 28 Jan 2018 00:00:00 +0100</pubDate>
         <link>/2018/01/go-bookmarks</link>
         <guid isPermaLink="true">/2018/01/go-bookmarks</guid>
         
@@ -186,7 +214,7 @@ your worrior can go to bed, exhausted, but still in honest awe
 of the language Rust as such.&lt;/p&gt;
 
 </description>
-        <pubDate>Fri, 29 Sep 2017 00:00:00 +0000</pubDate>
+        <pubDate>Fri, 29 Sep 2017 00:00:00 +0200</pubDate>
         <link>/2017/09/hyper-client-and-self-signed-certs</link>
         <guid isPermaLink="true">/2017/09/hyper-client-and-self-signed-certs</guid>
         
@@ -310,7 +338,7 @@ on a different thread than more IO bound tasks.&lt;/p&gt;
 &lt;p&gt;See the &lt;a href=&quot;https://github.com/algermissen/web-rust/blob/master/src/bin/ts3.rs&quot;&gt;test server source code&lt;/a&gt;.&lt;/p&gt;
 
 </description>
-        <pubDate>Thu, 18 May 2017 00:00:00 +0000</pubDate>
+        <pubDate>Thu, 18 May 2017 00:00:00 +0200</pubDate>
         <link>/2017/05/web-services-with-rust-part-3-accept-all-we-can</link>
         <guid isPermaLink="true">/2017/05/web-services-with-rust-part-3-accept-all-we-can</guid>
         
@@ -463,7 +491,7 @@ leverage the no-cost abstractions nature of Rust and asynchronous IO to squeeze 
 of the available resources, activities like HTML template rendering or JSON serialization/deserialization
 directly impact the capacity limit of a server.&lt;/p&gt;
 </description>
-        <pubDate>Wed, 26 Apr 2017 00:00:00 +0000</pubDate>
+        <pubDate>Wed, 26 Apr 2017 00:00:00 +0200</pubDate>
         <link>/2017/04/web-services-with-rust-part-2-baseline-revisited</link>
         <guid isPermaLink="true">/2017/04/web-services-with-rust-part-2-baseline-revisited</guid>
         
@@ -688,7 +716,7 @@ request handling threads (for example for rate limiting, metrics collection,
 logging).&lt;/p&gt;
 
 </description>
-        <pubDate>Thu, 13 Apr 2017 00:00:00 +0000</pubDate>
+        <pubDate>Thu, 13 Apr 2017 00:00:00 +0200</pubDate>
         <link>/2017/04/web-services-with-rust-part-1-exploring-hyper</link>
         <guid isPermaLink="true">/2017/04/web-services-with-rust-part-1-exploring-hyper</guid>
         
@@ -785,7 +813,7 @@ context.setSecurityContext(new TokenSecurityContext(username, realname));
 &lt;p&gt;Please have a look at the source code for the code details.&lt;/p&gt;
 
 </description>
-        <pubDate>Wed, 29 May 2013 00:00:00 +0000</pubDate>
+        <pubDate>Wed, 29 May 2013 00:00:00 +0200</pubDate>
         <link>/2013/05/using-iron-to-encapsulate-cookies</link>
         <guid isPermaLink="true">/2013/05/using-iron-to-encapsulate-cookies</guid>
         
@@ -826,7 +854,7 @@ context.setSecurityContext(new TokenSecurityContext(username, realname));
 &lt;p&gt;In any case, it is a fascinating space to explore once you get over the initial crypto-confusion barrier.&lt;/p&gt;
 
 </description>
-        <pubDate>Wed, 29 May 2013 00:00:00 +0000</pubDate>
+        <pubDate>Wed, 29 May 2013 00:00:00 +0200</pubDate>
         <link>/2013/05/beyond-oauth</link>
         <guid isPermaLink="true">/2013/05/beyond-oauth</guid>
         
@@ -918,7 +946,7 @@ context.setSecurityContext(new TokenSecurityContext(username, realname));
 &lt;p&gt;&lt;strong&gt;UPDATE&lt;/strong&gt;: You can find the releases, including the apidoc jars &lt;a href=&quot;http://repo1.maven.org/maven2/javax/ws/rs/javax.ws.rs-api/&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
 
 </description>
-        <pubDate>Mon, 19 Nov 2012 00:00:00 +0000</pubDate>
+        <pubDate>Mon, 19 Nov 2012 00:00:00 +0100</pubDate>
         <link>/2012/11/getting-started-playing-around-with-jax-rs-2-0-in-an-ee-container</link>
         <guid isPermaLink="true">/2012/11/getting-started-playing-around-with-jax-rs-2-0-in-an-ee-container</guid>
         
@@ -962,132 +990,9 @@ context.setSecurityContext(new TokenSecurityContext(username, realname));
 &lt;/ul&gt;
 
 </description>
-        <pubDate>Tue, 13 Nov 2012 00:00:00 +0000</pubDate>
+        <pubDate>Tue, 13 Nov 2012 00:00:00 +0100</pubDate>
         <link>/2012/11/jax-rs-2-0-essential-bookmarks</link>
         <guid isPermaLink="true">/2012/11/jax-rs-2-0-essential-bookmarks</guid>
-        
-        
-      </item>
-    
-      <item>
-        <title>JAX-RS 2.0 MVC</title>
-        <description>
-&lt;p&gt;It is not unusual for services that expose a technical REST API to also need human-targeted UI for configuration, status checks or reporting.&lt;/p&gt;
-
-&lt;p&gt;What I have seen a couple of times is that developers naturally use some form of REST framework (for example JAX-RS) for the technical API but then make use of yet another API technology (for example Spring or JSF) for the human-targeted UI.&lt;/p&gt;
-
-&lt;p&gt;This not only increases the technology mix (something I personally strive to avoid as much as possible), but it also introduces a distinction between technical and human API that should not be made in my opinion. From an API point of view an HTTP interface that serves HTML and AJAX-targeted JSON is as much a REST-API as is one that serves XML or ‘technical’ JSON.&lt;/p&gt;
-
-&lt;p&gt;Instead, you should treat both as aspects of one and the same API. For one you will likely find resources in both API-’parts’ that serve representations of the same concepts (for example calendar events, shopping carts or contract information). Such repesentations of should be produced by one and the same resource. This reduces the amount of code and will help you, for example, to apply corresponding cacheability properties to both representations.&lt;/p&gt;
-
-&lt;p&gt;In addition, it will encourage you to treat the human-targeted API-parts with the same care as the technical ones. For example, you should allow introspection into them using some form of home document. Above all, you’ll never know in which ways clients re-use those HTML pages or snippets you serve.&lt;/p&gt;
-
-&lt;p&gt;Having said that, what might – besides just habits – be the reason that developers do not think ‘REST-API’ when they think ‘GUI’? Is it because many REST frameworks out there have very poor support for serving document-oriented representations such as HTML pages?&lt;/p&gt;
-
-&lt;p&gt;While some JAX-RS implementations have proprietary support for templating, the new JAX-RS 2.0 filter API lets you roll your own with a couple of lines of code.&lt;/p&gt;
-
-&lt;p&gt;Instead of the ‘Web-container-only’-setup I used in the last blog I would like full Java EE6 support this time. Fortunately, Arun Gupta has provided an example of how get JAX-RS 2.0 to work in a Java EE 6 container.&lt;/p&gt;
-
-&lt;p&gt;First I created a project based on the archetype Arun uses:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mvn archetype:generate \
-   -DarchetypeGroupId=org.codehaus.mojo.archetypes \
-   -DarchetypeArtifactId=webapp-javaee6 \
-   -DgroupId=net.jalg \
-   -DartifactId=mvc \
-   -DinteractiveMode=false
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;and then added the neccessary repository and dependencies the way he describes. Because JAX-RS 2.0 and Jersey currently undergo some sort of last minute changes I have changed the Jersey dependencies to be on 2.0-SNAPSHOT to get the latest developments.&lt;/p&gt;
-
-&lt;p&gt;The templating support I have in mind would let me return any object from a JAX-RS resource method. In addition it would let me annotate the resource method to specify a template to use for constructing the representations. Like so:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;@Path(&quot;user/{userId}/account&quot;)
-public class Facade {
-    @PathParam(&quot;userId&quot;) String userId;
- 
-    @GET
-    @Produces(&quot;text/html&quot;)
-    @Path(&quot;contract-details&quot;)
-    @Template(&quot;templates/contract.vm&quot;)
-    public Contract getContractDetails() {
-        return new Contract(&quot;123456&quot;, userId, &quot;new&quot;);
-    }
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;The problem here is that the JAX-RS runtime will pick the MessageBodyWriter implementation based on the returned type. It will not, magically, invoke some sort of templating engine. So, how can we trick the runtime into choosing a different MessageBodyWriter? And how can we pass to that not only the returned object but also the path of the desired template?&lt;/p&gt;
-
-&lt;p&gt;Here the filter API comes in. We can use the @Template annotation to also act as a binding for a particular filter. This is done with the @NameBinding annotation from the new filter API:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;@NameBinding
-@Target({ ElementType.TYPE, ElementType.METHOD })
-@Retention(value = RetentionPolicy.RUNTIME)
-public @interface Template {
-  String value() default &quot;&quot;;
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Now the runtime will invoke all filters annotated with @Template when our getContractDetails() method is called and we can work the magic in a filter.&lt;/p&gt;
-
-&lt;p&gt;What happens in the filter below is that we replace the response entity with a wrapper object that holds the template path and the original response entity. The template path we can extract from the annotation, the original response entity we extract from the response context.&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;@Provider
-@Template
-public class EntityToModelAndViewWrapper implements ContainerResponseFilter {
- 
-    @Override
-    public void filter(ContainerRequestContext requestContext,
-      ContainerResponseContext responseContext) throws IOException {
- 
-        for (Annotation a : responseContext.getEntityAnnotations()) {
-            if (a.annotationType() == Template.class) {
-                String templatePath = ((Template) a).value();
-                ModelAndView mav = new ModelAndView(responseContext.getEntity(),templatePath);
-                responseContext.setEntity(mav,
-                   responseContext.getEntityAnnotations(),
-                responseContext.getMediaType());
-                break;
-            }
-        }
-    }
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;By changing the type of the response entity, we gain control over the MessageBodyWriter selection. And the runtime will now invoke the MessageBodyWriter we have provided for ModelAndView instances:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;@Provider
-...
-public class ModelToViewMBR implements MessageBodyWriter&amp;lt;ModelAndView&amp;gt; {
-  ...
-    @Override
-    void writeTo(ModelAndView mav, Class&amp;lt;?&amp;gt; arg1, Type arg2,
-            Annotation[] arg3, MediaType arg4,
-            MultivaluedMap&amp;lt;String, Object&amp;gt; arg5, OutputStream output)
-            throws IOException, WebApplicationException {
-        Map&amp;lt;String, Object&amp;gt; map = new HashMap&amp;lt;String,Object&amp;gt;();
-        map.put(&quot;entity&quot;, mav.getModel());
-        engine.merge(mav.getView(),output,map);
-    }
-    ...
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;In the writeTo() method we make the original response entity available to a templating engine under the name ‘entity’ and invoke the merge of template and entity.&lt;/p&gt;
-
-&lt;p&gt;The engine member is an instance of a template engine wrapper. You can see the details in the TemplateEngine class in the example source code.&lt;/p&gt;
-
-&lt;p&gt;In addition to the response entity it should not be too hard to make available to the template engine all the managed beans of the container runtime’s current session (the request). That way one would have the full power of EJB 3.1 and CDI at one’s disposal.&lt;/p&gt;
-
-</description>
-        <pubDate>Mon, 08 Oct 2012 00:00:00 +0000</pubDate>
-        <link>/2012/10/jax-rs-2-0-mvc</link>
-        <guid isPermaLink="true">/2012/10/jax-rs-2-0-mvc</guid>
         
         
       </item>

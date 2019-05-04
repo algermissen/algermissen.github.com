@@ -1,2 +1,13 @@
 My Web Site
 ===========
+
+Install:
+
+    sudo gem install bundler jekyll
+    bundle install
+
+Publish:
+
+    bundle exec jekyll build -d docs
+
+And push to git

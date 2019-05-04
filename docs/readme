@@ -1,6 +1,13 @@
-https://github.com/Shopify/liquid/wiki/Liquid-for-Designers
+My Web Site
+===========
 
+Install:
 
-jekyll build -d docs
+    sudo gem install bundler jekyll
+    bundle install
 
-jekyll serve -d docs -w
+Publish:
+
+    bundle exec jekyll build
+
+And push to git
